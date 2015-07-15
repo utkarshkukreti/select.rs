@@ -29,3 +29,11 @@ impl<T: AsRef<str>> Predicate for Class<T> {
         }).unwrap_or(false)
     }
 }
+
+pub struct Not<T>(pub T);
+
+impl<T: Predicate> Predicate for Not<T> {
+    fn matches(&self, node: &Node) -> bool {
+        !self.0.matches(node)
+    }
+}

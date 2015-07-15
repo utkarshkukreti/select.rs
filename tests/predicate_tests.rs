@@ -43,5 +43,12 @@ speculate! {
             assert_eq!(Class("foo").matches(&article), false);
             assert_eq!(Class("bar").matches(&article), false);
         }
+
+        test "Not()" {
+            assert_eq!(Not(Name("html")).matches(&html), false);
+            assert_eq!(Not(Name("html")).matches(&head), true);
+            assert_eq!(Not(Name("head")).matches(&html), true);
+            assert_eq!(Not(Name("head")).matches(&head), false);
+        }
     }
 }
