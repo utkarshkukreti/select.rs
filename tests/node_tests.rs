@@ -26,8 +26,12 @@ speculate! {
                                                   vec![])
                     },
                     node::Raw {
-                        id: 2, parent: Some(1), prev: None, next: None,
+                        id: 2, parent: Some(1), prev: None, next: Some(3),
                         data: node::Data::Text("baz".into())
+                    },
+                    node::Raw {
+                        id: 3, parent: Some(1), prev: Some(2), next: None,
+                        data: node::Data::Text("quux".into())
                     }
                 ]
             };
@@ -35,6 +39,7 @@ speculate! {
             let node0 = node::Node { dom: &dom, id: 0 };
             let node1 = node::Node { dom: &dom, id: 1 };
             let node2 = node::Node { dom: &dom, id: 2 };
+            let node3 = node::Node { dom: &dom, id: 3 };
         }
 
         test "Node::name()" {
@@ -52,6 +57,17 @@ speculate! {
             assert_eq!(node0.parent(), None);
             assert_eq!(node1.parent(), None);
             assert_eq!(node2.parent(), Some(node1));
+        }
+
+        test "Node::prev() / Node::next()" {
+            assert_eq!(node0.prev(), None);
+            assert_eq!(node0.next(), None);
+            assert_eq!(node1.prev(), None);
+            assert_eq!(node1.next(), None);
+            assert_eq!(node2.prev(), None);
+            assert_eq!(node2.next(), Some(node3));
+            assert_eq!(node3.prev(), Some(node2));
+            assert_eq!(node3.next(), None);
         }
     }
 }

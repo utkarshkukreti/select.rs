@@ -48,4 +48,22 @@ impl<'a> Node<'a> {
             }
         })
     }
+
+    pub fn prev(&self) -> Option<Node<'a>> {
+        self.dom.nodes[self.id].prev.map(|id| {
+            Node {
+                dom: self.dom,
+                id: id
+            }
+        })
+    }
+
+    pub fn next(&self) -> Option<Node<'a>> {
+        self.dom.nodes[self.id].next.map(|id| {
+            Node {
+                dom: self.dom,
+                id: id
+            }
+        })
+    }
 }
