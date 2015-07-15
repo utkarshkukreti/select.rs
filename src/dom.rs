@@ -2,5 +2,5 @@ use node;
 
 #[derive(Clone, Debug, PartialEq)]
 pub struct Dom {
-    nodes: Vec<node::Raw>
+    pub nodes: Vec<node::Raw>
 }

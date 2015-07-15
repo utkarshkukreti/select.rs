@@ -12,15 +12,15 @@ pub enum Data {
 
 #[derive(Clone, Debug, PartialEq)]
 pub struct Raw {
-    id: Ref,
-    parent: Option<Ref>,
-    prev: Option<Ref>,
-    next: Option<Ref>,
-    data: Data
+    pub id: Ref,
+    pub parent: Option<Ref>,
+    pub prev: Option<Ref>,
+    pub next: Option<Ref>,
+    pub data: Data
 }
 
 #[derive(Copy, Clone, Debug, PartialEq)]
 pub struct Node<'a> {
-    dom: &'a Dom,
-    id: Ref
+    pub dom: &'a Dom,
+    pub id: Ref
 }
