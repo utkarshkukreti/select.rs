@@ -39,4 +39,13 @@ impl<'a> Node<'a> {
             Data::Element(_, ref attrs, _) => attrs.get(name).map(|s| &s[..])
         }
     }
+
+    pub fn parent(&self) -> Option<Node<'a>> {
+        self.dom.nodes[self.id].parent.map(|id| {
+            Node {
+                dom: self.dom,
+                id: id
+            }
+        })
+    }
 }

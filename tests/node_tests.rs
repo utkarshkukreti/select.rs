@@ -24,12 +24,17 @@ speculate! {
                         data: node::Data::Element("div".into(),
                                                   attrs,
                                                   vec![])
+                    },
+                    node::Raw {
+                        id: 2, parent: Some(1), prev: None, next: None,
+                        data: node::Data::Text("baz".into())
                     }
                 ]
             };
 
             let node0 = node::Node { dom: &dom, id: 0 };
             let node1 = node::Node { dom: &dom, id: 1 };
+            let node2 = node::Node { dom: &dom, id: 2 };
         }
 
         test "Node::name()" {
@@ -41,6 +46,12 @@ speculate! {
             assert_eq!(node0.attr("class"), None);
             assert_eq!(node1.attr("id"), Some("bar"));
             assert_eq!(node1.attr("class"), None);
+        }
+
+        test "Node::parent()" {
+            assert_eq!(node0.parent(), None);
+            assert_eq!(node1.parent(), None);
+            assert_eq!(node2.parent(), Some(node1));
         }
     }
 }
