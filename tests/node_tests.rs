@@ -10,6 +10,9 @@ pub use select::node;
 speculate! {
     describe "node" {
         before {
+            let mut attrs = HashMap::new();
+            attrs.insert("id".into(), "bar".into());
+
             let dom = Dom {
                 nodes: vec![
                     node::Raw {
@@ -19,7 +22,7 @@ speculate! {
                     node::Raw {
                         id: 1, parent: None, prev: None, next: None,
                         data: node::Data::Element("div".into(),
-                                                  HashMap::new(),
+                                                  attrs,
                                                   vec![])
                     }
                 ]
@@ -32,6 +35,12 @@ speculate! {
         test "Node::name()" {
             assert_eq!(node0.name(), None);
             assert_eq!(node1.name(), Some("div"));
+        }
+
+        test "Node::attr()" {
+            assert_eq!(node0.attr("class"), None);
+            assert_eq!(node1.attr("id"), Some("bar"));
+            assert_eq!(node1.attr("class"), None);
         }
     }
 }

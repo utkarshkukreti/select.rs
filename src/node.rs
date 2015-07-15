@@ -32,4 +32,11 @@ impl<'a> Node<'a> {
             Data::Element(ref name, _, _) => Some(name)
         }
     }
+
+    pub fn attr(&self, name: &str) -> Option<&str> {
+        match self.dom.nodes[self.id].data {
+            Data::Text(..) => None,
+            Data::Element(_, ref attrs, _) => attrs.get(name).map(|s| &s[..])
+        }
+    }
 }
