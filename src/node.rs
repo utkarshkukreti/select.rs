@@ -24,3 +24,12 @@ pub struct Node<'a> {
     pub dom: &'a Dom,
     pub id: Ref
 }
+
+impl<'a> Node<'a> {
+    pub fn name(&self) -> Option<&str> {
+        match self.dom.nodes[self.id].data {
+            Data::Text(..) => None,
+            Data::Element(ref name, _, _) => Some(name)
+        }
+    }
+}
