@@ -2,3 +2,6 @@
 name = "select"
 version = "0.1.0"
 authors = ["Utkarsh Kukreti <utkarshkukreti@gmail.com>"]
+
+[dev-dependencies]
+speculate = "0.0.16"
