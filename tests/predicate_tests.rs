@@ -10,7 +10,7 @@ speculate! {
     describe "predicate" {
         before {
             let dom = Dom::from_str("<html><head></head><body>\
-<article id='post-0'></article>\
+<article id='post-0' class='post category-foo tag-bar'></article>\
 </body></html>");
             let html = node::Node { dom: &dom, id: 0 };
             let head = node::Node { dom: &dom, id: 1 };
@@ -33,6 +33,15 @@ speculate! {
         test "Id()" {
             assert_eq!(Id("post-0").matches(&html), false);
             assert_eq!(Id("post-0").matches(&article), true);
+        }
+
+        test "Class()" {
+            assert_eq!(Class("post").matches(&html), false);
+            assert_eq!(Class("post").matches(&article), true);
+            assert_eq!(Class("category-foo").matches(&article), true);
+            assert_eq!(Class("tag-bar").matches(&article), true);
+            assert_eq!(Class("foo").matches(&article), false);
+            assert_eq!(Class("bar").matches(&article), false);
         }
     }
 }
