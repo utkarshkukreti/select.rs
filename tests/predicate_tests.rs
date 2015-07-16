@@ -57,5 +57,12 @@ speculate! {
             assert_eq!(Attr("id", "post-0").matches(&html), false);
             assert_eq!(Attr("id", "post-0").matches(&article), true);
         }
+
+        test "Fn(&Node) -> bool" {
+            let f = |node: &node::Node| node.name() == Some("html");
+            assert_eq!(f.matches(&html), true);
+            assert_eq!(f.matches(&head), false);
+            assert_eq!(f.matches(&body), false);
+        }
     }
 }
