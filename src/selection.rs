@@ -8,6 +8,15 @@ pub struct Selection<'a> {
     pub bitset: BitSet
 }
 
+impl<'a> Selection<'a> {
+    pub fn iter(&'a self) -> Iter<'a> {
+        Iter {
+            selection: self,
+            next: 0
+        }
+    }
+}
+
 #[derive(Copy, Clone, Debug, PartialEq)]
 pub struct Iter<'a> {
     pub selection: &'a Selection<'a>,

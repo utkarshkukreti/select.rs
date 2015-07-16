@@ -15,10 +15,7 @@ speculate! {
                 dom: &dom,
                 bitset: [0, 2, 3].iter().cloned().collect()
             };
-            let mut iter = Iter {
-                selection: &selection,
-                next: 0
-            };
+            let mut iter = selection.iter();
             let html = iter.next().unwrap();
             let body = iter.next().unwrap();
             let article = iter.next().unwrap();
