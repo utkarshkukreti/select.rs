@@ -26,6 +26,13 @@ pub struct Node<'a> {
 }
 
 impl<'a> Node<'a> {
+    pub fn new(dom: &'a Dom, id: Ref) -> Node<'a> {
+        Node {
+            dom: dom,
+            id: id
+        }
+    }
+
     pub fn name(&self) -> Option<&str> {
         match self.dom.nodes[self.id].data {
             Data::Text(..) => None,
