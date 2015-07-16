@@ -9,3 +9,4 @@ speculate = "0.0.16"
 [dependencies]
 html5ever = "0.2.0"
 html5ever_dom_sink = "0.2.0"
+bit-set = "0.2.0"
