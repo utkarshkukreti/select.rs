@@ -22,7 +22,7 @@ impl<'a> Selection<'a> {
             dom: self.dom,
             bitset: self.iter().filter_map(|node| {
                 if p.matches(&node) {
-                    Some(node.id)
+                    Some(node.id())
                 } else {
                     None
                 }

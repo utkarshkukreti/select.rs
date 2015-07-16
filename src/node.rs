@@ -21,8 +21,8 @@ pub struct Raw {
 
 #[derive(Copy, Clone, Debug, PartialEq)]
 pub struct Node<'a> {
-    pub dom: &'a Dom,
-    pub id: Ref
+    dom: &'a Dom,
+    id: Ref
 }
 
 impl<'a> Node<'a> {
