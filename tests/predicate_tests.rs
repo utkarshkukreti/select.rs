@@ -57,5 +57,10 @@ speculate! {
             assert_eq!(Not(Name("head")).matches(&html), true);
             assert_eq!(Not(Name("head")).matches(&head), false);
         }
+
+        test "Attr()" {
+            assert_eq!(Attr("id", "post-0").matches(&html), false);
+            assert_eq!(Attr("id", "post-0").matches(&article), true);
+        }
     }
 }

@@ -43,3 +43,11 @@ impl<T: Predicate> Predicate for Not<T> {
         !self.0.matches(node)
     }
 }
+
+pub struct Attr<N, V>(pub N, pub V);
+
+impl<N: AsRef<str>, V: AsRef<str>> Predicate for Attr<N, V> {
+    fn matches(&self, node: &Node) -> bool {
+        node.attr(self.0.as_ref()) == Some(self.1.as_ref())
+    }
+}
