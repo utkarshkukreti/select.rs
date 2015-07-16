@@ -33,6 +33,10 @@ impl<'a> Node<'a> {
         }
     }
 
+    pub fn id(&self) -> Ref {
+        self.id
+    }
+
     pub fn name(&self) -> Option<&str> {
         match self.dom.nodes[self.id].data {
             Data::Text(..) => None,
