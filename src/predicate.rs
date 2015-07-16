@@ -12,18 +12,18 @@ impl Predicate for () {
 
 pub struct Name<T>(pub T);
 
-impl<T: AsRef<str>> Predicate for Name<T> {
+impl<'a> Predicate for Name<&'a str> {
     fn matches(&self, node: &Node) -> bool {
-        node.name() == Some(self.0.as_ref())
+        node.name() == Some(self.0)
     }
 }
 
 pub struct Class<T>(pub T);
 
-impl<T: AsRef<str>> Predicate for Class<T> {
+impl<'a> Predicate for Class<&'a str> {
     fn matches(&self, node: &Node) -> bool {
         node.attr("class").map(|classes| {
-            classes.split_whitespace().any(|class| class == self.0.as_ref())
+            classes.split_whitespace().any(|class| class == self.0)
         }).unwrap_or(false)
     }
 }
@@ -38,8 +38,8 @@ impl<T: Predicate> Predicate for Not<T> {
 
 pub struct Attr<N, V>(pub N, pub V);
 
-impl<N: AsRef<str>, V: AsRef<str>> Predicate for Attr<N, V> {
+impl<'a> Predicate for Attr<&'a str, &'a str> {
     fn matches(&self, node: &Node) -> bool {
-        node.attr(self.0.as_ref()) == Some(self.1.as_ref())
+        node.attr(self.0) == Some(self.1)
     }
 }
