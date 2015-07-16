@@ -91,13 +91,9 @@ impl Dom {
     pub fn find<'a, P: Predicate>(&'a self, p: P) -> Selection<'a> {
         Selection {
             dom: self,
-            bitset: self.nodes.iter().enumerate().filter_map(|(index, raw)| {
-                let node = Node { dom: self, id: raw.id };
-                if p.matches(&node) {
-                    Some(index)
-                } else {
-                    None
-                }
+            bitset: (0..self.nodes.len()).filter(|&id| {
+                let node = Node { dom: self, id: id };
+                p.matches(&node)
             }).collect()
         }
     }
