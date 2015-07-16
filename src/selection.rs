@@ -75,10 +75,7 @@ impl<'a> Iterator for Iter<'a> {
         while self.next < self.selection.dom.nodes.len() {
             self.next += 1;
             if self.selection.bitset.contains(&(self.next - 1)) {
-                return Some(Node {
-                    dom: &self.selection.dom,
-                    id: self.next - 1
-                });
+                return Some(self.selection.dom.nth(self.next - 1));
             }
         }
         None
