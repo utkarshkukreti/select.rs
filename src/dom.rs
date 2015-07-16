@@ -97,4 +97,12 @@ impl Dom {
             }).collect()
         }
     }
+
+    pub fn nth(&self, n: usize) -> Node {
+        assert!(n < self.nodes.len());
+        Node {
+            dom: self,
+            id: n
+        }
+    }
 }
