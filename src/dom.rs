@@ -1,4 +1,6 @@
-use node;
+use node::{self, Node};
+use predicate::Predicate;
+use selection::Selection;
 
 #[derive(Clone, Debug, PartialEq)]
 pub struct Dom {
@@ -83,6 +85,20 @@ impl Dom {
             }
 
             id
+        }
+    }
+
+    pub fn find<'a, P: Predicate>(&'a self, p: P) -> Selection<'a> {
+        Selection {
+            dom: self,
+            bitset: self.nodes.iter().enumerate().filter_map(|(index, raw)| {
+                let node = Node { dom: self, id: raw.id };
+                if p.matches(&node) {
+                    Some(index)
+                } else {
+                    None
+                }
+            }).collect()
         }
     }
 }
