@@ -10,64 +10,65 @@ pub use select::node;
 speculate! {
     describe "node" {
         before {
-            let mut attrs = HashMap::new();
-            attrs.insert("id".into(), "bar".into());
+            let dom = Dom::from_str("<html><head></head><body id=something>\
+                                     foo<bar>baz<quux class=another-thing>");
 
-            let dom = Dom {
-                nodes: vec![
-                    node::Raw {
-                        id: 0, parent: None, prev: None, next: None,
-                        data: node::Data::Text("foo".into())
-                    },
-                    node::Raw {
-                        id: 1, parent: None, prev: None, next: None,
-                        data: node::Data::Element("div".into(),
-                                                  attrs,
-                                                  vec![])
-                    },
-                    node::Raw {
-                        id: 2, parent: Some(1), prev: None, next: Some(3),
-                        data: node::Data::Text("baz".into())
-                    },
-                    node::Raw {
-                        id: 3, parent: Some(1), prev: Some(2), next: None,
-                        data: node::Data::Text("quux".into())
-                    }
-                ]
-            };
-
-            let node0 = dom.nth(0);
-            let node1 = dom.nth(1);
-            let node2 = dom.nth(2);
-            let node3 = dom.nth(3);
+            let html = dom.nth(0);
+            let head = dom.nth(1);
+            let body = dom.nth(2);
+            let foo = dom.nth(3);
+            let bar = dom.nth(4);
+            let baz = dom.nth(5);
+            let quux = dom.nth(6);
         }
 
         test "Node::name()" {
-            assert_eq!(node0.name(), None);
-            assert_eq!(node1.name(), Some("div"));
+            assert_eq!(html.name(), Some("html"));
+            assert_eq!(head.name(), Some("head"));
+            assert_eq!(body.name(), Some("body"));
+            assert_eq!(foo.name(), None);
+            assert_eq!(bar.name(), Some("bar"));
+            assert_eq!(baz.name(), None);
+            assert_eq!(quux.name(), Some("quux"));
         }
 
         test "Node::attr()" {
-            assert_eq!(node0.attr("class"), None);
-            assert_eq!(node1.attr("id"), Some("bar"));
-            assert_eq!(node1.attr("class"), None);
+            assert_eq!(html.attr("id"), None);
+            assert_eq!(head.attr("id"), None);
+            assert_eq!(body.attr("id"), Some("something"));
+            assert_eq!(body.attr("class"), None);
+            assert_eq!(foo.attr("id"), None);
+            assert_eq!(bar.attr("id"), None);
+            assert_eq!(baz.attr("id"), None);
+            assert_eq!(quux.attr("id"), None);
+            assert_eq!(quux.attr("class"), Some("another-thing"));
         }
 
         test "Node::parent()" {
-            assert_eq!(node0.parent(), None);
-            assert_eq!(node1.parent(), None);
-            assert_eq!(node2.parent(), Some(node1));
+            assert_eq!(html.parent(), None);
+            assert_eq!(head.parent(), Some(html));
+            assert_eq!(body.parent(), Some(html));
+            assert_eq!(foo.parent(), Some(body));
+            assert_eq!(bar.parent(), Some(body));
+            assert_eq!(baz.parent(), Some(bar));
+            assert_eq!(quux.parent(), Some(bar));
         }
 
         test "Node::prev() / Node::next()" {
-            assert_eq!(node0.prev(), None);
-            assert_eq!(node0.next(), None);
-            assert_eq!(node1.prev(), None);
-            assert_eq!(node1.next(), None);
-            assert_eq!(node2.prev(), None);
-            assert_eq!(node2.next(), Some(node3));
-            assert_eq!(node3.prev(), Some(node2));
-            assert_eq!(node3.next(), None);
+            assert_eq!(html.prev(), None);
+            assert_eq!(html.next(), None);
+            assert_eq!(head.prev(), None);
+            assert_eq!(head.next(), Some(body));
+            assert_eq!(body.prev(), Some(head));
+            assert_eq!(body.next(), None);
+            assert_eq!(foo.prev(), None);
+            assert_eq!(foo.next(), Some(bar));
+            assert_eq!(bar.prev(), Some(foo));
+            assert_eq!(bar.next(), None);
+            assert_eq!(baz.prev(), None);
+            assert_eq!(baz.next(), Some(quux));
+            assert_eq!(quux.prev(), Some(baz));
+            assert_eq!(quux.next(), None);
         }
     }
 }
