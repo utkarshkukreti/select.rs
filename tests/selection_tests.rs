@@ -24,5 +24,28 @@ speculate! {
             assert_eq!(body.name(), Some("body"));
             assert_eq!(article.attr("id"), Some("post-0"));
         }
+
+        test "Selection::filter()" {
+            use select::predicate::*;
+
+            let dom = Dom::from_str(include_str!("fixtures/struct.Vec.html"));
+            let all = dom.find(());
+
+            assert_eq!(all.filter(()).iter().count(), 11445);
+
+            let divs = all.filter(Name("div"));
+            assert_eq!(divs.iter().count(), 208);
+            for div in divs.iter() {
+                assert_eq!(div.name(), Some("div"))
+            }
+
+            assert_eq!(all.filter(Id("main")).iter().count(), 1);
+
+            let structs = all.filter(Class("struct"));
+            assert_eq!(structs.iter().count(), 168);
+            for struct_ in structs.iter() {
+                assert!(struct_.attr("class").unwrap().contains("struct"))
+            };
+        }
     }
 }

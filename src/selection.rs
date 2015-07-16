@@ -1,6 +1,7 @@
 use dom::Dom;
 use bit_set::BitSet;
 use node::Node;
+use predicate::Predicate;
 
 #[derive(Clone, Debug, PartialEq)]
 pub struct Selection<'a> {
@@ -13,6 +14,19 @@ impl<'a> Selection<'a> {
         Iter {
             selection: self,
             next: 0
+        }
+    }
+
+    pub fn filter<P: Predicate>(&'a self, p: P) -> Selection<'a> {
+        Selection {
+            dom: self.dom,
+            bitset: self.iter().filter_map(|node| {
+                if p.matches(&node) {
+                    Some(node.id)
+                } else {
+                    None
+                }
+            }).collect()
         }
     }
 }
