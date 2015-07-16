@@ -41,29 +41,14 @@ impl<'a> Node<'a> {
     }
 
     pub fn parent(&self) -> Option<Node<'a>> {
-        self.dom.nodes[self.id].parent.map(|id| {
-            Node {
-                dom: self.dom,
-                id: id
-            }
-        })
+        self.dom.nodes[self.id].parent.map(|id| self.dom.nth(id))
     }
 
     pub fn prev(&self) -> Option<Node<'a>> {
-        self.dom.nodes[self.id].prev.map(|id| {
-            Node {
-                dom: self.dom,
-                id: id
-            }
-        })
+        self.dom.nodes[self.id].prev.map(|id| self.dom.nth(id))
     }
 
     pub fn next(&self) -> Option<Node<'a>> {
-        self.dom.nodes[self.id].next.map(|id| {
-            Node {
-                dom: self.dom,
-                id: id
-            }
-        })
+        self.dom.nodes[self.id].next.map(|id| self.dom.nth(id))
     }
 }
