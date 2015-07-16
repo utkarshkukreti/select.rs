@@ -92,8 +92,7 @@ impl Dom {
         Selection {
             dom: self,
             bitset: (0..self.nodes.len()).filter(|&id| {
-                let node = Node { dom: self, id: id };
-                p.matches(&node)
+                p.matches(&self.nth(id))
             }).collect()
         }
     }

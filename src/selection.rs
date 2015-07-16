@@ -40,8 +40,7 @@ impl<'a> Selection<'a> {
         return Selection {
             dom: self.dom,
             bitset: bitset.iter().filter(|&id| {
-                let node = node::Node { dom: self.dom, id: id };
-                p.matches(&node)
+                p.matches(&self.dom.nth(id))
             }).collect()
         };
 
