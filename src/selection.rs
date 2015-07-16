@@ -1,6 +1,6 @@
 use dom::Dom;
 use bit_set::BitSet;
-use node::Node;
+use node::{self, Node};
 use predicate::Predicate;
 
 #[derive(Clone, Debug, PartialEq)]
@@ -27,6 +27,38 @@ impl<'a> Selection<'a> {
                     None
                 }
             }).collect()
+        }
+    }
+
+    pub fn find<P: Predicate>(&'a self, p: P) -> Selection<'a> {
+        let mut bitset = BitSet::new();
+
+        for id in self.bitset.iter() {
+            recur(self.dom, &mut bitset, id);
+        }
+
+        return Selection {
+            dom: self.dom,
+            bitset: bitset.iter().filter(|&id| {
+                let node = node::Node { dom: self.dom, id: id };
+                p.matches(&node)
+            }).collect()
+        };
+
+        fn recur(dom: &Dom, bitset: &mut BitSet, id: node::Ref) {
+            if bitset.contains(&id) {
+                return
+            }
+
+            match dom.nodes[id].data {
+                node::Data::Text(..) => {},
+                node::Data::Element(_, _, ref children) => {
+                    for &child in children {
+                        recur(dom, bitset, child);
+                        bitset.insert(child);
+                    }
+                }
+            }
         }
     }
 }
