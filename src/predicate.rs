@@ -18,14 +18,6 @@ impl<T: AsRef<str>> Predicate for Name<T> {
     }
 }
 
-pub struct Id<T>(pub T);
-
-impl<T: AsRef<str>> Predicate for Id<T> {
-    fn matches(&self, node: &Node) -> bool {
-        node.attr("id") == Some(self.0.as_ref())
-    }
-}
-
 pub struct Class<T>(pub T);
 
 impl<T: AsRef<str>> Predicate for Class<T> {

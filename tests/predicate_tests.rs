@@ -37,11 +37,6 @@ speculate! {
             assert_eq!(Name("body").matches(&body), true);
         }
 
-        test "Id()" {
-            assert_eq!(Id("post-0").matches(&html), false);
-            assert_eq!(Id("post-0").matches(&article), true);
-        }
-
         test "Class()" {
             assert_eq!(Class("post").matches(&html), false);
             assert_eq!(Class("post").matches(&article), true);

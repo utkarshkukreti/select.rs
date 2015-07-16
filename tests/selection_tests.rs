@@ -39,7 +39,7 @@ speculate! {
                 assert_eq!(div.name(), Some("div"))
             }
 
-            assert_eq!(all.filter(Id("main")).iter().count(), 1);
+            assert_eq!(all.filter(Attr("id", "main")).iter().count(), 1);
 
             let structs = all.filter(Class("struct"));
             assert_eq!(structs.iter().count(), 168);
