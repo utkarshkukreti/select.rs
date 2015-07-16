@@ -18,6 +18,13 @@ speculate! {
             let article = node::Node { dom: &dom, id: 3 };
         }
 
+        test "()" {
+            assert_eq!(().matches(&html), true);
+            assert_eq!(().matches(&head), true);
+            assert_eq!(().matches(&body), true);
+            assert_eq!(().matches(&article), true);
+        }
+
         test "Name()" {
             assert_eq!(Name("html").matches(&html), true);
             assert_eq!(Name("head").matches(&html), false);

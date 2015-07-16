@@ -4,6 +4,12 @@ pub trait Predicate {
     fn matches(&self, node: &Node) -> bool;
 }
 
+impl Predicate for () {
+    fn matches(&self, _: &Node) -> bool {
+        true
+    }
+}
+
 pub struct Name<T>(pub T);
 
 impl<T: AsRef<str>> Predicate for Name<T> {
