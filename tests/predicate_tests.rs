@@ -12,10 +12,10 @@ speculate! {
             let dom = Dom::from_str("<html><head></head><body>\
 <article id='post-0' class='post category-foo tag-bar'></article>\
 </body></html>");
-            let html = node::Node { dom: &dom, id: 0 };
-            let head = node::Node { dom: &dom, id: 1 };
-            let body = node::Node { dom: &dom, id: 2 };
-            let article = node::Node { dom: &dom, id: 3 };
+            let html = dom.nth(0);
+            let head = dom.nth(1);
+            let body = dom.nth(2);
+            let article = dom.nth(3);
         }
 
         test "()" {

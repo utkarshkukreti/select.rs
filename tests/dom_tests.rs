@@ -15,17 +15,17 @@ speculate! {
             // html, head, and body are automatically added by the parser.
             assert_eq!(dom.nodes.len(), 11);
 
-            let html = node::Node { dom: &dom, id: 0 };
-            let head = node::Node { dom: &dom, id: 1 };
-            let body = node::Node { dom: &dom, id: 2 };
-            let a = node::Node { dom: &dom, id: 3 };
-            let d = node::Node { dom: &dom, id: 4 };
-            let e = node::Node { dom: &dom, id: 5 };
-            let f = node::Node { dom: &dom, id: 6 };
-            let g = node::Node { dom: &dom, id: 7 };
-            let h = node::Node { dom: &dom, id: 8 };
-            let i = node::Node { dom: &dom, id: 9 };
-            let j = node::Node { dom: &dom, id: 10 };
+            let html = dom.nth(0);
+            let head = dom.nth(1);
+            let body = dom.nth(2);
+            let a = dom.nth(3);
+            let d = dom.nth(4);
+            let e = dom.nth(5);
+            let f = dom.nth(6);
+            let g = dom.nth(7);
+            let h = dom.nth(8);
+            let i = dom.nth(9);
+            let j = dom.nth(10);
 
             assert_eq!(html.name(), Some("html"));
 

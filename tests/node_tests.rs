@@ -36,10 +36,10 @@ speculate! {
                 ]
             };
 
-            let node0 = node::Node { dom: &dom, id: 0 };
-            let node1 = node::Node { dom: &dom, id: 1 };
-            let node2 = node::Node { dom: &dom, id: 2 };
-            let node3 = node::Node { dom: &dom, id: 3 };
+            let node0 = dom.nth(0);
+            let node1 = dom.nth(1);
+            let node2 = dom.nth(2);
+            let node3 = dom.nth(3);
         }
 
         test "Node::name()" {
