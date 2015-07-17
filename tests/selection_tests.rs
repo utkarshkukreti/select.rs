@@ -11,10 +11,8 @@ speculate! {
             let dom = Dom::from_str("<html><head></head><body>\
 <article id='post-0' class='post category-foo tag-bar'></article>\
 </body></html>");
-            let selection = Selection {
-                dom: &dom,
-                bitset: [0, 2, 3].iter().cloned().collect()
-            };
+            let selection = Selection::new(&dom,
+                                           [0, 2, 3].iter().cloned().collect());
             let mut iter = selection.iter();
             let html = iter.next().unwrap();
             let body = iter.next().unwrap();

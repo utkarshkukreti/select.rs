@@ -89,12 +89,9 @@ impl Dom {
     }
 
     pub fn find<'a, P: Predicate>(&'a self, p: P) -> Selection<'a> {
-        Selection {
-            dom: self,
-            bitset: (0..self.nodes.len()).filter(|&id| {
-                p.matches(&self.nth(id))
-            }).collect()
-        }
+        Selection::new(self, (0..self.nodes.len()).filter(|&id| {
+            p.matches(&self.nth(id))
+        }).collect())
     }
 
     pub fn nth(&self, n: usize) -> Node {

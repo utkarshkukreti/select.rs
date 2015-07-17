@@ -5,8 +5,8 @@ use predicate::Predicate;
 
 #[derive(Clone, Debug, PartialEq)]
 pub struct Selection<'a> {
-    pub dom: &'a Dom,
-    pub bitset: BitSet
+    dom: &'a Dom,
+    bitset: BitSet
 }
 
 impl<'a> Selection<'a> {
