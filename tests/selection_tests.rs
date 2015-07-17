@@ -52,15 +52,13 @@ speculate! {
             let dom = Dom::from_str(include_str!("fixtures/struct.Vec.html"));
             let all = dom.find(());
 
-            let structs = all.find(Class("struct"));
-
-            let struct_divs = structs.find(Name("div"));
+            let struct_divs = all.find(Class("struct")).find(Name("div"));
             assert_eq!(struct_divs.iter().count(), 204);
             for struct_div in struct_divs.iter() {
                 assert_eq!(struct_div.name(), Some("div"));
             };
 
-            let struct_as = structs.find(Name("a"));
+            let struct_as = all.find(Class("struct")).find(Name("a"));
             assert_eq!(struct_as.iter().count(), 1260);
             for struct_a in struct_as.iter() {
                 assert_eq!(struct_a.name(), Some("a"));

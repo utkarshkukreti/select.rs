@@ -24,7 +24,7 @@ impl<'a> Selection<'a> {
         }
     }
 
-    pub fn filter<P: Predicate>(&'a self, p: P) -> Selection<'a> {
+    pub fn filter<P: Predicate>(&self, p: P) -> Selection<'a> {
         Selection {
             dom: self.dom,
             bitset: self.iter().filter_map(|node| {
@@ -37,7 +37,7 @@ impl<'a> Selection<'a> {
         }
     }
 
-    pub fn find<P: Predicate>(&'a self, p: P) -> Selection<'a> {
+    pub fn find<P: Predicate>(&self, p: P) -> Selection<'a> {
         let mut bitset = BitSet::new();
 
         for id in self.bitset.iter() {
