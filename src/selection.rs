@@ -10,6 +10,13 @@ pub struct Selection<'a> {
 }
 
 impl<'a> Selection<'a> {
+    pub fn new(dom: &'a Dom, bitset: BitSet) -> Selection<'a> {
+        Selection {
+            dom: dom,
+            bitset: bitset
+        }
+    }
+
     pub fn iter(&'a self) -> Iter<'a> {
         Iter {
             selection: self,
