@@ -2,38 +2,38 @@ use std::collections::HashMap;
 
 use dom::Dom;
 
-pub type Ref = usize;
+pub type Id = usize;
 
 #[derive(Clone, Debug, PartialEq)]
 pub enum Data {
     Text(String),
-    Element(String, HashMap<String, String>, Vec<Ref>)
+    Element(String, HashMap<String, String>, Vec<Id>)
 }
 
 #[derive(Clone, Debug, PartialEq)]
 pub struct Raw {
-    pub id: Ref,
-    pub parent: Option<Ref>,
-    pub prev: Option<Ref>,
-    pub next: Option<Ref>,
+    pub id: Id,
+    pub parent: Option<Id>,
+    pub prev: Option<Id>,
+    pub next: Option<Id>,
     pub data: Data
 }
 
 #[derive(Copy, Clone, Debug, PartialEq)]
 pub struct Node<'a> {
     dom: &'a Dom,
-    id: Ref
+    id: Id
 }
 
 impl<'a> Node<'a> {
-    pub fn new(dom: &'a Dom, id: Ref) -> Node<'a> {
+    pub fn new(dom: &'a Dom, id: Id) -> Node<'a> {
         Node {
             dom: dom,
             id: id
         }
     }
 
-    pub fn id(&self) -> Ref {
+    pub fn id(&self) -> Id {
         self.id
     }
 
@@ -68,7 +68,7 @@ impl<'a> Node<'a> {
         recur(&self.dom, self.id, &mut string);
         return string;
 
-        fn recur(dom: &Dom, id: Ref, string: &mut String) {
+        fn recur(dom: &Dom, id: Id, string: &mut String) {
             match dom.nodes[id].data {
                 Data::Text(ref text) => string.push_str(text),
                 Data::Element(_, _, ref children) => {

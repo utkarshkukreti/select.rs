@@ -24,8 +24,8 @@ impl Dom {
 
         fn recur(dom: &mut Dom,
                  node: &owned_dom::Node,
-                 parent: Option<node::Ref>,
-                 prev: Option<node::Ref>) -> Option<node::Ref> {
+                 parent: Option<node::Id>,
+                 prev: Option<node::Id>) -> Option<node::Id> {
             match node.node {
                 common::Document => {
                     let mut prev = None;
@@ -59,8 +59,8 @@ impl Dom {
 
         fn append(dom: &mut Dom,
                   data: node::Data,
-                  parent: Option<node::Ref>,
-                  prev: Option<node::Ref>) -> node::Ref {
+                  parent: Option<node::Id>,
+                  prev: Option<node::Id>) -> node::Id {
             let id = dom.nodes.len();
 
             dom.nodes.push(node::Raw {

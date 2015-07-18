@@ -51,7 +51,7 @@ impl<'a> Selection<'a> {
             }).collect()
         };
 
-        fn recur(dom: &Dom, bitset: &mut BitSet, id: node::Ref) {
+        fn recur(dom: &Dom, bitset: &mut BitSet, id: node::Id) {
             if bitset.contains(&id) {
                 return
             }
