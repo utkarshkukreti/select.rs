@@ -70,5 +70,15 @@ speculate! {
             assert_eq!(quux.prev(), Some(baz));
             assert_eq!(quux.next(), None);
         }
+
+        test "Node::text()" {
+            assert_eq!(html.text(), "foobaz");
+            assert_eq!(head.text(), "");
+            assert_eq!(body.text(), "foobaz");
+            assert_eq!(foo.text(), "foo");
+            assert_eq!(bar.text(), "baz");
+            assert_eq!(baz.text(), "baz");
+            assert_eq!(quux.text(), "");
+        }
     }
 }

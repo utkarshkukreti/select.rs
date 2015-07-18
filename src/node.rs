@@ -62,4 +62,21 @@ impl<'a> Node<'a> {
     pub fn next(&self) -> Option<Node<'a>> {
         self.dom.nodes[self.id].next.map(|id| self.dom.nth(id))
     }
+
+    pub fn text(&self) -> String {
+        let mut string = String::new();
+        recur(&self.dom, self.id, &mut string);
+        return string;
+
+        fn recur(dom: &Dom, id: Ref, string: &mut String) {
+            match dom.nodes[id].data {
+                Data::Text(ref text) => string.push_str(text),
+                Data::Element(_, _, ref children) => {
+                    for &child in children {
+                        recur(dom, child, string)
+                    }
+                }
+            }
+        }
+    }
 }
