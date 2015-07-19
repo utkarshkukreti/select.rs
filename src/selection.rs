@@ -76,6 +76,24 @@ impl<'a> Selection<'a> {
             }).collect()
         }
     }
+
+    pub fn prev(&self) -> Selection<'a> {
+        Selection {
+            dom: self.dom,
+            bitset: self.iter().filter_map(|node| {
+                node.prev().map(|prev| prev.id())
+            }).collect()
+        }
+    }
+
+    pub fn next(&self) -> Selection<'a> {
+        Selection {
+            dom: self.dom,
+            bitset: self.iter().filter_map(|node| {
+                node.next().map(|next| next.id())
+            }).collect()
+        }
+    }
 }
 
 #[derive(Copy, Clone, Debug, PartialEq)]

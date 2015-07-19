@@ -73,5 +73,16 @@ speculate! {
             assert_eq!(dom.find(Name("div")).parent().iter().count(), 8);
             assert_eq!(dom.find(Name("span")).parent().iter().count(), 205);
         }
+
+        test "Selection::prev() / Selection::next()" {
+            use select::predicate::*;
+
+            let dom = Dom::from_str(include_str!("fixtures/struct.Vec.html"));
+
+            assert_eq!(dom.find(Name("div")).prev().iter().count(), 208);
+            assert_eq!(dom.find(Name("div")).next().iter().count(), 203);
+            assert_eq!(dom.find(Name("span")).prev().iter().count(), 1729);
+            assert_eq!(dom.find(Name("span")).next().iter().count(), 1690);
+        }
     }
 }
