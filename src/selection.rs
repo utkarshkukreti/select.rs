@@ -67,6 +67,15 @@ impl<'a> Selection<'a> {
             }
         }
     }
+
+    pub fn parent(&self) -> Selection<'a> {
+        Selection {
+            dom: self.dom,
+            bitset: self.iter().filter_map(|node| {
+                node.parent().map(|parent| parent.id())
+            }).collect()
+        }
+    }
 }
 
 #[derive(Copy, Clone, Debug, PartialEq)]

@@ -64,5 +64,14 @@ speculate! {
                 assert_eq!(struct_a.name(), Some("a"));
             };
         }
+
+        test "Selection::parent()" {
+            use select::predicate::*;
+
+            let dom = Dom::from_str(include_str!("fixtures/struct.Vec.html"));
+
+            assert_eq!(dom.find(Name("div")).parent().iter().count(), 8);
+            assert_eq!(dom.find(Name("span")).parent().iter().count(), 205);
+        }
     }
 }
