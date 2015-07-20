@@ -49,3 +49,11 @@ impl<F: Fn(&Node) -> bool> Predicate for F {
         self(node)
     }
 }
+
+pub struct Element;
+
+impl Predicate for Element {
+    fn matches(&self, node: &Node) -> bool {
+        node.name().is_some()
+    }
+}

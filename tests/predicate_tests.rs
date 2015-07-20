@@ -10,12 +10,13 @@ speculate! {
     describe "predicate" {
         before {
             let dom = Dom::from_str("<html><head></head><body>\
-<article id='post-0' class='post category-foo tag-bar'></article>\
+<article id='post-0' class='post category-foo tag-bar'>foo</article>\
 </body></html>");
             let html = dom.nth(0);
             let head = dom.nth(1);
             let body = dom.nth(2);
             let article = dom.nth(3);
+            let foo = dom.nth(4);
         }
 
         test "()" {
@@ -63,6 +64,14 @@ speculate! {
             assert_eq!(f.matches(&html), true);
             assert_eq!(f.matches(&head), false);
             assert_eq!(f.matches(&body), false);
+        }
+
+        test "Element" {
+            assert_eq!(super::Element.matches(&html), true);
+            assert_eq!(super::Element.matches(&head), true);
+            assert_eq!(super::Element.matches(&body), true);
+            assert_eq!(super::Element.matches(&article), true);
+            assert_eq!(super::Element.matches(&foo), false);
         }
     }
 }
