@@ -57,3 +57,11 @@ impl Predicate for Element {
         node.name().is_some()
     }
 }
+
+pub struct Text;
+
+impl Predicate for Text {
+    fn matches(&self, node: &Node) -> bool {
+        node.name().is_none()
+    }
+}
