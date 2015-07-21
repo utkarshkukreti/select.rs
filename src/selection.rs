@@ -94,6 +94,21 @@ impl<'a> Selection<'a> {
             }).collect()
         }
     }
+
+    pub fn parents(&self) -> Selection<'a> {
+        let mut bitset = BitSet::new();
+        for mut node in self.iter() {
+            while let Some(parent) = node.parent() {
+                bitset.insert(parent.id());
+                node = parent;
+            }
+        }
+
+        Selection {
+            dom: self.dom,
+            bitset: bitset
+        }
+    }
 }
 
 #[derive(Copy, Clone, Debug, PartialEq)]
