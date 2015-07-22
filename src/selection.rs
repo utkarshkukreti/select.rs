@@ -109,6 +109,25 @@ impl<'a> Selection<'a> {
             bitset: bitset
         }
     }
+
+    pub fn children(&self) -> Selection<'a> {
+        let mut bitset = BitSet::new();
+        for node in self.iter() {
+            match self.dom.nodes[node.id()].data {
+                node::Data::Text(_) => {},
+                node::Data::Element(_, _, ref children) => {
+                    for &child in children {
+                        bitset.insert(child);
+                    }
+                }
+            }
+        }
+
+        Selection {
+            dom: self.dom,
+            bitset: bitset
+        }
+    }
 }
 
 #[derive(Copy, Clone, Debug, PartialEq)]

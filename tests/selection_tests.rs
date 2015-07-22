@@ -93,5 +93,23 @@ speculate! {
             assert_eq!(dom.find(Name("div")).parents().iter().count(), 10);
             assert_eq!(dom.find(Name("span")).parents().iter().count(), 308);
         }
+
+        test "Selection::children()" {
+            use select::predicate::*;
+
+            let dom = Dom::from_str(include_str!("fixtures/struct.Vec.html"));
+
+            let div_children = dom.find(Name("div")).children();
+            assert_eq!(div_children.iter().count(), 1210);
+            for div_child in div_children.iter() {
+                assert_eq!(div_child.parent().unwrap().name(), Some("div"));
+            }
+
+            let span_children = dom.find(Name("span")).children();
+            assert_eq!(span_children.iter().count(), 1986);
+            for span_child in span_children.iter() {
+                assert_eq!(span_child.parent().unwrap().name(), Some("span"));
+            };
+        }
     }
 }
