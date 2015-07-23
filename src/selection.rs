@@ -27,12 +27,8 @@ impl<'a> Selection<'a> {
     pub fn filter<P: Predicate>(&self, p: P) -> Selection<'a> {
         Selection {
             dom: self.dom,
-            bitset: self.iter().filter_map(|node| {
-                if p.matches(&node) {
-                    Some(node.id())
-                } else {
-                    None
-                }
+            bitset: self.bitset.iter().filter(|&id| {
+                p.matches(&self.dom.nth(id))
             }).collect()
         }
     }
