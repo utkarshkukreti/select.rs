@@ -65,3 +65,11 @@ impl Predicate for Text {
         node.name().is_none()
     }
 }
+
+pub struct Or<A, B>(pub A, pub B);
+
+impl<A: Predicate, B: Predicate> Predicate for Or<A, B> {
+    fn matches(&self, node: &Node) -> bool {
+        self.0.matches(node) || self.1.matches(node)
+    }
+}
