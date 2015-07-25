@@ -1,7 +1,10 @@
 use node::Node;
 
-pub trait Predicate {
+pub trait Predicate: Sized {
     fn matches(&self, node: &Node) -> bool;
+    fn or<T: Predicate>(self, other: T) -> Or<Self, T> {
+        Or(self, other)
+    }
 }
 
 impl Predicate for () {
