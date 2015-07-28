@@ -13,6 +13,7 @@ impl Predicate for () {
     }
 }
 
+#[derive(Copy, Clone, Debug, PartialEq)]
 pub struct Name<T>(pub T);
 
 impl<'a> Predicate for Name<&'a str> {
@@ -21,6 +22,7 @@ impl<'a> Predicate for Name<&'a str> {
     }
 }
 
+#[derive(Copy, Clone, Debug, PartialEq)]
 pub struct Class<T>(pub T);
 
 impl<'a> Predicate for Class<&'a str> {
@@ -31,6 +33,7 @@ impl<'a> Predicate for Class<&'a str> {
     }
 }
 
+#[derive(Copy, Clone, Debug, PartialEq)]
 pub struct Not<T>(pub T);
 
 impl<T: Predicate> Predicate for Not<T> {
@@ -39,6 +42,7 @@ impl<T: Predicate> Predicate for Not<T> {
     }
 }
 
+#[derive(Copy, Clone, Debug, PartialEq)]
 pub struct Attr<N, V>(pub N, pub V);
 
 impl<'a> Predicate for Attr<&'a str, &'a str> {
@@ -53,6 +57,7 @@ impl<F: Fn(&Node) -> bool> Predicate for F {
     }
 }
 
+#[derive(Copy, Clone, Debug, PartialEq)]
 pub struct Element;
 
 impl Predicate for Element {
@@ -61,6 +66,7 @@ impl Predicate for Element {
     }
 }
 
+#[derive(Copy, Clone, Debug, PartialEq)]
 pub struct Text;
 
 impl Predicate for Text {
@@ -69,6 +75,7 @@ impl Predicate for Text {
     }
 }
 
+#[derive(Copy, Clone, Debug, PartialEq)]
 pub struct Or<A, B>(pub A, pub B);
 
 impl<A: Predicate, B: Predicate> Predicate for Or<A, B> {
