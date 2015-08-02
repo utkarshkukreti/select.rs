@@ -4,7 +4,7 @@ version = "0.1.0"
 authors = ["Utkarsh Kukreti <utkarshkukreti@gmail.com>"]
 
 [dev-dependencies]
-speculate = "0.0.16"
+speculate = "0.0.17"
 
 [dependencies]
 html5ever = "0.2.0"
