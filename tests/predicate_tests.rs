@@ -90,5 +90,14 @@ speculate! {
             assert_eq!(html_or_head.matches(&article), false);
             assert_eq!(html_or_head.matches(&foo), false);
         }
+
+        test "And()" {
+            let article_and_post_0 = And(Name("article"), Attr("id", "post-0"));
+            assert_eq!(article_and_post_0.matches(&html), false);
+            assert_eq!(article_and_post_0.matches(&head), false);
+            assert_eq!(article_and_post_0.matches(&body), false);
+            assert_eq!(article_and_post_0.matches(&article), true);
+            assert_eq!(article_and_post_0.matches(&foo), false);
+        }
     }
 }

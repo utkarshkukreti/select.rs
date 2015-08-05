@@ -83,3 +83,12 @@ impl<A: Predicate, B: Predicate> Predicate for Or<A, B> {
         self.0.matches(node) || self.1.matches(node)
     }
 }
+
+#[derive(Copy, Clone, Debug, PartialEq)]
+pub struct And<A, B>(pub A, pub B);
+
+impl<A: Predicate, B: Predicate> Predicate for And<A, B> {
+    fn matches(&self, node: &Node) -> bool {
+        self.0.matches(node) && self.1.matches(node)
+    }
+}
