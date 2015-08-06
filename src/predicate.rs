@@ -5,6 +5,9 @@ pub trait Predicate: Sized {
     fn or<T: Predicate>(self, other: T) -> Or<Self, T> {
         Or(self, other)
     }
+    fn and<T: Predicate>(self, other: T) -> And<Self, T> {
+        And(self, other)
+    }
 }
 
 impl Predicate for () {
