@@ -1,6 +1,8 @@
 use std::collections::HashMap;
 
 use dom::Dom;
+use predicate::Predicate;
+use selection::Selection;
 
 pub type Id = usize;
 
@@ -78,5 +80,9 @@ impl<'a> Node<'a> {
                 }
             }
         }
+    }
+
+    pub fn find<P: Predicate>(&self, p: P) -> Selection<'a> {
+        Selection::new(self.dom, [self.id].iter().cloned().collect()).find(p)
     }
 }

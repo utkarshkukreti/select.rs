@@ -80,5 +80,17 @@ speculate! {
             assert_eq!(baz.text(), "baz");
             assert_eq!(quux.text(), "");
         }
+
+        test "Node::find()" {
+            {
+                use select::predicate::*;
+                let dom = Dom::from_str(include_str!("fixtures/struct.Vec.html"));
+                let main = dom.find(Attr("id", "main"));
+                let main = main.iter().next().unwrap();
+
+                assert_eq!(main.find(Name("span")).iter().count(), 1785);
+                assert_eq!(main.find(Name("div")).iter().count(), 204);
+            };
+        }
     }
 }
