@@ -1,5 +1,5 @@
 use dom::Dom;
-use bit_set::BitSet;
+use bit_set::{self, BitSet};
 use node::{self, Node};
 use predicate::Predicate;
 
@@ -20,7 +20,7 @@ impl<'a> Selection<'a> {
     pub fn iter(&'a self) -> Iter<'a> {
         Iter {
             selection: self,
-            next: 0
+            inner: self.bitset.iter()
         }
     }
 
@@ -126,22 +126,16 @@ impl<'a> Selection<'a> {
     }
 }
 
-#[derive(Copy, Clone, Debug, PartialEq)]
+#[derive(Clone)]
 pub struct Iter<'a> {
-    pub selection: &'a Selection<'a>,
-    pub next: usize
+    selection: &'a Selection<'a>,
+    inner: bit_set::Iter<'a, u32>
 }
 
 impl<'a> Iterator for Iter<'a> {
     type Item = Node<'a>;
 
     fn next(&mut self) -> Option<Node<'a>> {
-        while self.next < self.selection.dom.nodes.len() {
-            self.next += 1;
-            if self.selection.bitset.contains(&(self.next - 1)) {
-                return Some(self.selection.dom.nth(self.next - 1));
-            }
-        }
-        None
+        self.inner.next().map(|id| self.selection.dom.nth(id))
     }
 }
