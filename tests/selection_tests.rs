@@ -111,5 +111,14 @@ speculate! {
                 assert_eq!(span_child.parent().unwrap().name(), Some("span"));
             };
         }
+
+        test "Selection::first()" {
+            use select::predicate::*;
+
+            let dom = Dom::from_str(include_str!("fixtures/struct.Vec.html"));
+
+            assert!(dom.find(Name("div")).first().is_some());
+            assert!(dom.find(Name("divv")).first().is_none());
+        }
     }
 }

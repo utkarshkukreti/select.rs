@@ -124,6 +124,10 @@ impl<'a> Selection<'a> {
             bitset: bitset
         }
     }
+
+    pub fn first(&self) -> Option<Node<'a>> {
+        self.bitset.iter().next().map(|id| self.dom.nth(id))
+    }
 }
 
 #[derive(Clone)]
