@@ -2,6 +2,10 @@
 
 > A library to extract useful data from HTML documents, suitable for web scraping.
 
+Note: All the API is currently unstable and will change as I use this library
+more in real world projects. If you have any suggestions or feedback, please
+open an issue or send me an email.
+
 ## Examples
 
 ### from `examples/stackoverflow.rs`
