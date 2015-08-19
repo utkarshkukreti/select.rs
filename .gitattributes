@@ -1,2 +1,4 @@
 /tests/fixtures/**/* -diff
+/tests/fixtures/**/* linguist-vendored
 /examples/*.html -diff
+/examples/*.html linguist-vendored
