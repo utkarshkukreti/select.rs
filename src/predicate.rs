@@ -8,6 +8,9 @@ pub trait Predicate: Sized {
     fn and<T: Predicate>(self, other: T) -> And<Self, T> {
         And(self, other)
     }
+    fn not(self) -> Not<Self> {
+        Not(self)
+    }
 }
 
 impl Predicate for () {
