@@ -85,4 +85,8 @@ impl<'a> Node<'a> {
     pub fn find<P: Predicate>(&self, p: P) -> Selection<'a> {
         Selection::new(self.dom, [self.ref_].iter().cloned().collect()).find(p)
     }
+
+    pub fn is<P: Predicate>(&self, p: P) -> bool {
+        p.matches(self)
+    }
 }

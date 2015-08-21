@@ -92,5 +92,15 @@ speculate! {
                 assert_eq!(main.find(Name("div")).iter().count(), 204);
             };
         }
+
+        test "Node::is()" {
+            {
+                use select::predicate::*;
+                let dom = Dom::from_str(include_str!("fixtures/struct.Vec.html"));
+                for div in dom.find(Name("div")).iter() {
+                    assert!(div.is(Name("div")));
+                }
+            };
+        }
     }
 }
