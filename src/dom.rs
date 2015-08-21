@@ -24,8 +24,8 @@ impl Dom {
 
         fn recur(dom: &mut Dom,
                  node: &owned_dom::Node,
-                 parent: Option<node::Id>,
-                 prev: Option<node::Id>) -> Option<node::Id> {
+                 parent: Option<node::Ref>,
+                 prev: Option<node::Ref>) -> Option<node::Ref> {
             match node.node {
                 common::Document => {
                     let mut prev = None;
@@ -47,24 +47,24 @@ impl Dom {
                          attr.value.clone().into())
                     }).collect();
                     let data = node::Data::Element(name, attrs, vec![]);
-                    let id = append(dom, data, parent, prev);
+                    let ref_ = append(dom, data, parent, prev);
                     let mut prev = None;
                     for child in &node.children {
-                        prev = recur(dom, &child, Some(id), prev)
+                        prev = recur(dom, &child, Some(ref_), prev)
                     }
-                    Some(id)
+                    Some(ref_)
                 }
             }
         }
 
         fn append(dom: &mut Dom,
                   data: node::Data,
-                  parent: Option<node::Id>,
-                  prev: Option<node::Id>) -> node::Id {
-            let id = dom.nodes.len();
+                  parent: Option<node::Ref>,
+                  prev: Option<node::Ref>) -> node::Ref {
+            let ref_ = dom.nodes.len();
 
             dom.nodes.push(node::Raw {
-                id: id,
+                ref_: ref_,
                 parent: parent,
                 prev: prev,
                 next: None,
@@ -74,23 +74,23 @@ impl Dom {
             if let Some(parent) = parent {
                 match &mut dom.nodes[parent].data {
                     &mut node::Data::Element(_, _, ref mut children) => {
-                        children.push(id);
+                        children.push(ref_);
                     },
                     _ => unreachable!()
                 }
             }
 
             if let Some(prev) = prev {
-                dom.nodes[prev].next = Some(id);
+                dom.nodes[prev].next = Some(ref_);
             }
 
-            id
+            ref_
         }
     }
 
     pub fn find<'a, P: Predicate>(&'a self, p: P) -> Selection<'a> {
-        Selection::new(self, (0..self.nodes.len()).filter(|&id| {
-            p.matches(&self.nth(id))
+        Selection::new(self, (0..self.nodes.len()).filter(|&ref_| {
+            p.matches(&self.nth(ref_))
         }).collect())
     }
 

@@ -27,8 +27,8 @@ impl<'a> Selection<'a> {
     pub fn filter<P: Predicate>(&self, p: P) -> Selection<'a> {
         Selection {
             dom: self.dom,
-            bitset: self.bitset.iter().filter(|&id| {
-                p.matches(&self.dom.nth(id))
+            bitset: self.bitset.iter().filter(|&ref_| {
+                p.matches(&self.dom.nth(ref_))
             }).collect()
         }
     }
@@ -36,23 +36,23 @@ impl<'a> Selection<'a> {
     pub fn find<P: Predicate>(&self, p: P) -> Selection<'a> {
         let mut bitset = BitSet::new();
 
-        for id in self.bitset.iter() {
-            recur(self.dom, &mut bitset, id);
+        for ref_ in self.bitset.iter() {
+            recur(self.dom, &mut bitset, ref_);
         }
 
         return Selection {
             dom: self.dom,
-            bitset: bitset.iter().filter(|&id| {
-                p.matches(&self.dom.nth(id))
+            bitset: bitset.iter().filter(|&ref_| {
+                p.matches(&self.dom.nth(ref_))
             }).collect()
         };
 
-        fn recur(dom: &Dom, bitset: &mut BitSet, id: node::Id) {
-            if bitset.contains(&id) {
+        fn recur(dom: &Dom, bitset: &mut BitSet, ref_: node::Ref) {
+            if bitset.contains(&ref_) {
                 return
             }
 
-            match dom.nodes[id].data {
+            match dom.nodes[ref_].data {
                 node::Data::Text(..) => {},
                 node::Data::Element(_, _, ref children) => {
                     for &child in children {
@@ -68,7 +68,7 @@ impl<'a> Selection<'a> {
         Selection {
             dom: self.dom,
             bitset: self.iter().filter_map(|node| {
-                node.parent().map(|parent| parent.id())
+                node.parent().map(|parent| parent.ref_())
             }).collect()
         }
     }
@@ -77,7 +77,7 @@ impl<'a> Selection<'a> {
         Selection {
             dom: self.dom,
             bitset: self.iter().filter_map(|node| {
-                node.prev().map(|prev| prev.id())
+                node.prev().map(|prev| prev.ref_())
             }).collect()
         }
     }
@@ -86,7 +86,7 @@ impl<'a> Selection<'a> {
         Selection {
             dom: self.dom,
             bitset: self.iter().filter_map(|node| {
-                node.next().map(|next| next.id())
+                node.next().map(|next| next.ref_())
             }).collect()
         }
     }
@@ -95,7 +95,7 @@ impl<'a> Selection<'a> {
         let mut bitset = BitSet::new();
         for mut node in self.iter() {
             while let Some(parent) = node.parent() {
-                bitset.insert(parent.id());
+                bitset.insert(parent.ref_());
                 node = parent;
             }
         }
@@ -109,7 +109,7 @@ impl<'a> Selection<'a> {
     pub fn children(&self) -> Selection<'a> {
         let mut bitset = BitSet::new();
         for node in self.iter() {
-            match self.dom.nodes[node.id()].data {
+            match self.dom.nodes[node.ref_()].data {
                 node::Data::Text(_) => {},
                 node::Data::Element(_, _, ref children) => {
                     for &child in children {
@@ -126,7 +126,7 @@ impl<'a> Selection<'a> {
     }
 
     pub fn first(&self) -> Option<Node<'a>> {
-        self.bitset.iter().next().map(|id| self.dom.nth(id))
+        self.bitset.iter().next().map(|ref_| self.dom.nth(ref_))
     }
 }
 
@@ -140,6 +140,6 @@ impl<'a> Iterator for Iter<'a> {
     type Item = Node<'a>;
 
     fn next(&mut self) -> Option<Node<'a>> {
-        self.inner.next().map(|id| self.selection.dom.nth(id))
+        self.inner.next().map(|ref_| self.selection.dom.nth(ref_))
     }
 }

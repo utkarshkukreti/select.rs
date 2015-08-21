@@ -4,74 +4,74 @@ use dom::Dom;
 use predicate::Predicate;
 use selection::Selection;
 
-pub type Id = usize;
+pub type Ref = usize;
 
 #[derive(Clone, Debug, PartialEq)]
 pub enum Data {
     Text(String),
-    Element(String, HashMap<String, String>, Vec<Id>)
+    Element(String, HashMap<String, String>, Vec<Ref>)
 }
 
 #[derive(Clone, Debug, PartialEq)]
 pub struct Raw {
-    pub id: Id,
-    pub parent: Option<Id>,
-    pub prev: Option<Id>,
-    pub next: Option<Id>,
+    pub ref_: Ref,
+    pub parent: Option<Ref>,
+    pub prev: Option<Ref>,
+    pub next: Option<Ref>,
     pub data: Data
 }
 
 #[derive(Copy, Clone, Debug, PartialEq)]
 pub struct Node<'a> {
     dom: &'a Dom,
-    id: Id
+    ref_: Ref
 }
 
 impl<'a> Node<'a> {
-    pub fn new(dom: &'a Dom, id: Id) -> Node<'a> {
+    pub fn new(dom: &'a Dom, ref_: Ref) -> Node<'a> {
         Node {
             dom: dom,
-            id: id
+            ref_: ref_
         }
     }
 
-    pub fn id(&self) -> Id {
-        self.id
+    pub fn ref_(&self) -> Ref {
+        self.ref_
     }
 
     pub fn name(&self) -> Option<&str> {
-        match self.dom.nodes[self.id].data {
+        match self.dom.nodes[self.ref_].data {
             Data::Text(..) => None,
             Data::Element(ref name, _, _) => Some(name)
         }
     }
 
     pub fn attr(&self, name: &str) -> Option<&str> {
-        match self.dom.nodes[self.id].data {
+        match self.dom.nodes[self.ref_].data {
             Data::Text(..) => None,
             Data::Element(_, ref attrs, _) => attrs.get(name).map(|s| &s[..])
         }
     }
 
     pub fn parent(&self) -> Option<Node<'a>> {
-        self.dom.nodes[self.id].parent.map(|id| self.dom.nth(id))
+        self.dom.nodes[self.ref_].parent.map(|ref_| self.dom.nth(ref_))
     }
 
     pub fn prev(&self) -> Option<Node<'a>> {
-        self.dom.nodes[self.id].prev.map(|id| self.dom.nth(id))
+        self.dom.nodes[self.ref_].prev.map(|ref_| self.dom.nth(ref_))
     }
 
     pub fn next(&self) -> Option<Node<'a>> {
-        self.dom.nodes[self.id].next.map(|id| self.dom.nth(id))
+        self.dom.nodes[self.ref_].next.map(|ref_| self.dom.nth(ref_))
     }
 
     pub fn text(&self) -> String {
         let mut string = String::new();
-        recur(&self.dom, self.id, &mut string);
+        recur(&self.dom, self.ref_, &mut string);
         return string;
 
-        fn recur(dom: &Dom, id: Id, string: &mut String) {
-            match dom.nodes[id].data {
+        fn recur(dom: &Dom, ref_: Ref, string: &mut String) {
+            match dom.nodes[ref_].data {
                 Data::Text(ref text) => string.push_str(text),
                 Data::Element(_, _, ref children) => {
                     for &child in children {
@@ -83,6 +83,6 @@ impl<'a> Node<'a> {
     }
 
     pub fn find<P: Predicate>(&self, p: P) -> Selection<'a> {
-        Selection::new(self.dom, [self.id].iter().cloned().collect()).find(p)
+        Selection::new(self.dom, [self.ref_].iter().cloned().collect()).find(p)
     }
 }
