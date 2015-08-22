@@ -57,6 +57,12 @@ impl<'a> Predicate for Attr<&'a str, &'a str> {
     }
 }
 
+impl<'a> Predicate for Attr<&'a str, ()> {
+    fn matches(&self, node: &Node) -> bool {
+        node.attr(self.0).is_some()
+    }
+}
+
 impl<F: Fn(&Node) -> bool> Predicate for F {
     fn matches(&self, node: &Node) -> bool {
         self(node)
