@@ -9,38 +9,36 @@ pub struct Dom {
 
 impl Dom {
     pub fn from_str(str: &str) -> Dom {
-        use html5ever::{parse, one_input};
-        use html5ever_dom_sink::common;
-        use html5ever_dom_sink::owned_dom::{self, OwnedDom};
+        use html5ever::{parse, one_input, rcdom};
 
         let mut dom = Dom {
             nodes: vec![]
         };
 
-        let owned_dom: OwnedDom = parse(one_input(str.into()),
-                                        Default::default());
-        recur(&mut dom, &owned_dom.document, None, None);
+        let rc_dom: rcdom::RcDom = parse(one_input(str.into()),
+                                         Default::default());
+        recur(&mut dom, &rc_dom.document, None, None);
         return dom;
 
         fn recur(dom: &mut Dom,
-                 node: &owned_dom::Node,
+                 node: &rcdom::Handle,
                  parent: Option<node::Ref>,
                  prev: Option<node::Ref>) -> Option<node::Ref> {
-            match node.node {
-                common::Document => {
+            match node.borrow().node {
+                rcdom::Document => {
                     let mut prev = None;
-                    for child in &node.children {
+                    for child in &node.borrow().children {
                         prev = recur(dom, &child, None, prev)
                     }
                     None
                 },
-                common::Doctype(..) => None,
-                common::Text(ref text) => {
+                rcdom::Doctype(..) => None,
+                rcdom::Text(ref text) => {
                     let data = node::Data::Text(text.into());
                     Some(append(dom, data, parent, prev))
                 },
-                common::Comment(..) => None,
-                common::Element(ref name, ref attrs) => {
+                rcdom::Comment(..) => None,
+                rcdom::Element(ref name, ref attrs) => {
                     let name = name.local.as_slice().into();
                     let attrs = attrs.iter().map(|attr| {
                         (attr.name.local.as_slice().into(),
@@ -49,7 +47,7 @@ impl Dom {
                     let data = node::Data::Element(name, attrs, vec![]);
                     let ref_ = append(dom, data, parent, prev);
                     let mut prev = None;
-                    for child in &node.children {
+                    for child in &node.borrow().children {
                         prev = recur(dom, &child, Some(ref_), prev)
                     }
                     Some(ref_)
