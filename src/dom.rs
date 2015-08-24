@@ -37,7 +37,10 @@ impl Dom {
                     let data = node::Data::Text(text.into());
                     Some(append(dom, data, parent, prev))
                 },
-                rcdom::Comment(..) => None,
+                rcdom::Comment(ref comment) => {
+                    let data = node::Data::Comment(comment.into());
+                    Some(append(dom, data, parent, prev))
+                },
                 rcdom::Element(ref name, ref attrs) => {
                     let name = name.local.as_slice().into();
                     let attrs = attrs.iter().map(|attr| {

@@ -59,7 +59,8 @@ impl<'a> Selection<'a> {
                         recur(dom, bitset, child);
                         bitset.insert(child);
                     }
-                }
+                },
+                node::Data::Comment(..) => {}
             }
         }
     }
@@ -115,7 +116,8 @@ impl<'a> Selection<'a> {
                     for &child in children {
                         bitset.insert(child);
                     }
-                }
+                },
+                node::Data::Comment(..) => {}
             }
         }
 

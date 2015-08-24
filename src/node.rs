@@ -9,7 +9,8 @@ pub type Ref = usize;
 #[derive(Clone, Debug, PartialEq)]
 pub enum Data {
     Text(String),
-    Element(String, HashMap<String, String>, Vec<Ref>)
+    Element(String, HashMap<String, String>, Vec<Ref>),
+    Comment(String)
 }
 
 #[derive(Clone, Debug, PartialEq)]
@@ -41,15 +42,15 @@ impl<'a> Node<'a> {
 
     pub fn name(&self) -> Option<&str> {
         match self.dom.nodes[self.ref_].data {
-            Data::Text(..) => None,
-            Data::Element(ref name, _, _) => Some(name)
+            Data::Element(ref name, _, _) => Some(name),
+            _ => None
         }
     }
 
     pub fn attr(&self, name: &str) -> Option<&str> {
         match self.dom.nodes[self.ref_].data {
-            Data::Text(..) => None,
-            Data::Element(_, ref attrs, _) => attrs.get(name).map(|s| &s[..])
+            Data::Element(_, ref attrs, _) => attrs.get(name).map(|s| &s[..]),
+            _ => None
         }
     }
 
@@ -77,7 +78,8 @@ impl<'a> Node<'a> {
                     for &child in children {
                         recur(dom, child, string)
                     }
-                }
+                },
+                Data::Comment(_) => {}
             }
         }
     }

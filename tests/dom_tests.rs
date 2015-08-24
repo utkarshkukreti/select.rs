@@ -10,10 +10,10 @@ pub use select::node;
 speculate! {
     describe "dom" {
         test "Dom::from_str()" {
-            let dom = Dom::from_str("<a b=c>d<e><f></e>g<h><i></i><j>");
+            let dom = Dom::from_str("<a b=c>d<e><f></e>g<h><i></i><j><!--k-->");
 
             // html, head, and body are automatically added by the parser.
-            assert_eq!(dom.nodes.len(), 11);
+            assert_eq!(dom.nodes.len(), 12);
 
             let html = dom.nth(0);
             let head = dom.nth(1);
@@ -26,6 +26,7 @@ speculate! {
             let h = dom.nth(8);
             let i = dom.nth(9);
             let j = dom.nth(10);
+            let k = dom.nth(11);
 
             assert_eq!(html.name(), Some("html"));
 
@@ -54,13 +55,16 @@ speculate! {
 
             assert_eq!(j.name(), Some("j"));
             assert_eq!(j.parent(), Some(h));
+
+            assert_eq!(k.name(), None);
+            assert_eq!(k.parent(), Some(j));
         }
 
         test "Dom::find()" {
             use select::predicate::*;
 
             let dom = Dom::from_str(include_str!("fixtures/struct.Vec.html"));
-            assert_eq!(dom.find(()).iter().count(), 11445);
+            assert_eq!(dom.find(()).iter().count(), 11446);
             assert_eq!(dom.find(Name("div")).iter().count(), 208);
             assert_eq!(dom.find(Attr("id", "main")).iter().count(), 1);
             assert_eq!(dom.find(Class("struct")).iter().count(), 168);

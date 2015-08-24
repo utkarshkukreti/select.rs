@@ -29,7 +29,7 @@ speculate! {
             let dom = Dom::from_str(include_str!("fixtures/struct.Vec.html"));
             let all = dom.find(());
 
-            assert_eq!(all.filter(()).iter().count(), 11445);
+            assert_eq!(all.filter(()).iter().count(), 11446);
 
             let divs = all.filter(Name("div"));
             assert_eq!(divs.iter().count(), 208);
