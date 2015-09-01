@@ -40,6 +40,10 @@ impl<'a> Node<'a> {
         self.ref_
     }
 
+    pub fn data(&self) -> &Data {
+        &self.dom.nodes[self.ref_].data
+    }
+
     pub fn name(&self) -> Option<&str> {
         match self.dom.nodes[self.ref_].data {
             Data::Element(ref name, _, _) => Some(name),
