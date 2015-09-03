@@ -48,12 +48,12 @@ impl Dom {
                          attr.value.clone().into())
                     }).collect();
                     let data = node::Data::Element(name, attrs, vec![]);
-                    let ref_ = append(dom, data, parent, prev);
+                    let index = append(dom, data, parent, prev);
                     let mut prev = None;
                     for child in &node.borrow().children {
-                        prev = recur(dom, &child, Some(ref_), prev)
+                        prev = recur(dom, &child, Some(index), prev)
                     }
-                    Some(ref_)
+                    Some(index)
                 }
             }
         }
@@ -62,10 +62,10 @@ impl Dom {
                   data: node::Data,
                   parent: Option<usize>,
                   prev: Option<usize>) -> usize {
-            let ref_ = dom.nodes.len();
+            let index = dom.nodes.len();
 
             dom.nodes.push(node::Raw {
-                ref_: ref_,
+                index: index,
                 parent: parent,
                 prev: prev,
                 next: None,
@@ -75,23 +75,23 @@ impl Dom {
             if let Some(parent) = parent {
                 match &mut dom.nodes[parent].data {
                     &mut node::Data::Element(_, _, ref mut children) => {
-                        children.push(ref_);
+                        children.push(index);
                     },
                     _ => unreachable!()
                 }
             }
 
             if let Some(prev) = prev {
-                dom.nodes[prev].next = Some(ref_);
+                dom.nodes[prev].next = Some(index);
             }
 
-            ref_
+            index
         }
     }
 
     pub fn find<'a, P: Predicate>(&'a self, p: P) -> Selection<'a> {
-        Selection::new(self, (0..self.nodes.len()).filter(|&ref_| {
-            p.matches(&self.nth(ref_))
+        Selection::new(self, (0..self.nodes.len()).filter(|&index| {
+            p.matches(&self.nth(index))
         }).collect())
     }
 
