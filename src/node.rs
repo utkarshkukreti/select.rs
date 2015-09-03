@@ -4,39 +4,37 @@ use dom::Dom;
 use predicate::Predicate;
 use selection::Selection;
 
-pub type Ref = usize;
-
 #[derive(Clone, Debug, PartialEq)]
 pub enum Data {
     Text(String),
-    Element(String, HashMap<String, String>, Vec<Ref>),
+    Element(String, HashMap<String, String>, Vec<usize>),
     Comment(String)
 }
 
 #[derive(Clone, Debug, PartialEq)]
 pub struct Raw {
-    pub ref_: Ref,
-    pub parent: Option<Ref>,
-    pub prev: Option<Ref>,
-    pub next: Option<Ref>,
+    pub ref_: usize,
+    pub parent: Option<usize>,
+    pub prev: Option<usize>,
+    pub next: Option<usize>,
     pub data: Data
 }
 
 #[derive(Copy, Clone, Debug, PartialEq)]
 pub struct Node<'a> {
     dom: &'a Dom,
-    ref_: Ref
+    ref_: usize
 }
 
 impl<'a> Node<'a> {
-    pub fn new(dom: &'a Dom, ref_: Ref) -> Node<'a> {
+    pub fn new(dom: &'a Dom, ref_: usize) -> Node<'a> {
         Node {
             dom: dom,
             ref_: ref_
         }
     }
 
-    pub fn ref_(&self) -> Ref {
+    pub fn ref_(&self) -> usize {
         self.ref_
     }
 
@@ -75,7 +73,7 @@ impl<'a> Node<'a> {
         recur(&self.dom, self.ref_, &mut string);
         return string;
 
-        fn recur(dom: &Dom, ref_: Ref, string: &mut String) {
+        fn recur(dom: &Dom, ref_: usize, string: &mut String) {
             match dom.nodes[ref_].data {
                 Data::Text(ref text) => string.push_str(text),
                 Data::Element(_, _, ref children) => {

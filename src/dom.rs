@@ -22,8 +22,8 @@ impl Dom {
 
         fn recur(dom: &mut Dom,
                  node: &rcdom::Handle,
-                 parent: Option<node::Ref>,
-                 prev: Option<node::Ref>) -> Option<node::Ref> {
+                 parent: Option<usize>,
+                 prev: Option<usize>) -> Option<usize> {
             match node.borrow().node {
                 rcdom::Document => {
                     let mut prev = None;
@@ -60,8 +60,8 @@ impl Dom {
 
         fn append(dom: &mut Dom,
                   data: node::Data,
-                  parent: Option<node::Ref>,
-                  prev: Option<node::Ref>) -> node::Ref {
+                  parent: Option<usize>,
+                  prev: Option<usize>) -> usize {
             let ref_ = dom.nodes.len();
 
             dom.nodes.push(node::Raw {
