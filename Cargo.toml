@@ -1,6 +1,6 @@
 [package]
 name = "select"
-version = "0.1.0"
+version = "0.1.1"
 authors = ["Utkarsh Kukreti <utkarshkukreti@gmail.com>"]
 description = "A library to extract useful data from HTML documents, suitable for web scraping."
 license = "MIT"
