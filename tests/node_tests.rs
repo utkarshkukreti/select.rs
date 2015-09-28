@@ -102,5 +102,11 @@ speculate! {
                 }
             };
         }
+
+        test "Node::as_text()" {
+            assert_eq!(foo.as_text(), Some("foo"));
+            assert_eq!(bar.as_text(), None);
+            assert_eq!(baz.as_text(), Some("baz"));
+        }
     }
 }

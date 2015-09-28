@@ -93,4 +93,11 @@ impl<'a> Node<'a> {
     pub fn is<P: Predicate>(&self, p: P) -> bool {
         p.matches(self)
     }
+
+    pub fn as_text(&self) -> Option<&str> {
+        match self.data() {
+            &Data::Text(ref text) => Some(&text),
+            _ => None
+        }
+    }
 }
