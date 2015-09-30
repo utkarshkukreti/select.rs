@@ -100,4 +100,11 @@ impl<'a> Node<'a> {
             _ => None
         }
     }
+
+    pub fn as_comment(&self) -> Option<&str> {
+        match self.data() {
+            &Data::Comment(ref comment) => Some(&comment),
+            _ => None
+        }
+    }
 }

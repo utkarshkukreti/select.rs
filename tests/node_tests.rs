@@ -11,7 +11,8 @@ speculate! {
     describe "node" {
         before {
             let dom = Dom::from_str("<html><head></head><body id=something>\
-                                     foo<bar>baz<quux class=another-thing>");
+                                     foo<bar>baz<quux class=another-thing>\
+                                     <!--comment-->");
 
             let html = dom.nth(0);
             let head = dom.nth(1);
@@ -20,6 +21,7 @@ speculate! {
             let bar = dom.nth(4);
             let baz = dom.nth(5);
             let quux = dom.nth(6);
+            let comment = dom.nth(7);
         }
 
         test "Node::name()" {
@@ -107,6 +109,11 @@ speculate! {
             assert_eq!(foo.as_text(), Some("foo"));
             assert_eq!(bar.as_text(), None);
             assert_eq!(baz.as_text(), Some("baz"));
+        }
+
+        test "Node::as_comment()" {
+            assert_eq!(foo.as_comment(), None);
+            assert_eq!(comment.as_comment(), Some("comment"));
         }
     }
 }
