@@ -1,4 +1,4 @@
-use node::Node;
+use node::{self, Node};
 
 pub trait Predicate: Sized {
     fn matches(&self, node: &Node) -> bool;
@@ -74,7 +74,10 @@ pub struct Element;
 
 impl Predicate for Element {
     fn matches(&self, node: &Node) -> bool {
-        node.name().is_some()
+        match node.data() {
+            &node::Data::Element(..) => true,
+            _ => false
+        }
     }
 }
 
