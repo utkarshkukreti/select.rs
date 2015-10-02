@@ -86,7 +86,10 @@ pub struct Text;
 
 impl Predicate for Text {
     fn matches(&self, node: &Node) -> bool {
-        node.name().is_none()
+        match node.data() {
+            &node::Data::Text(..) => true,
+            _ => false
+        }
     }
 }
 

@@ -11,12 +11,14 @@ speculate! {
         before {
             let dom = Dom::from_str("<html><head></head><body>\
 <article id='post-0' class='post category-foo tag-bar'>foo</article>\
+<!--A Comment-->\
 </body></html>");
             let html = dom.nth(0);
             let head = dom.nth(1);
             let body = dom.nth(2);
             let article = dom.nth(3);
             let foo = dom.nth(4);
+            let comment = dom.nth(5);
         }
 
         test "()" {
@@ -82,6 +84,7 @@ speculate! {
             assert_eq!(super::Text.matches(&body), false);
             assert_eq!(super::Text.matches(&article), false);
             assert_eq!(super::Text.matches(&foo), true);
+            assert_eq!(super::Text.matches(&comment), false);
         }
 
         test "Or()" {
