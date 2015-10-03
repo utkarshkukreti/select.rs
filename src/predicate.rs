@@ -94,6 +94,18 @@ impl Predicate for Text {
 }
 
 #[derive(Copy, Clone, Debug, PartialEq)]
+pub struct Comment;
+
+impl Predicate for Comment {
+    fn matches(&self, node: &Node) -> bool {
+        match node.data() {
+            &node::Data::Comment(..) => true,
+            _ => false
+        }
+    }
+}
+
+#[derive(Copy, Clone, Debug, PartialEq)]
 pub struct Or<A, B>(pub A, pub B);
 
 impl<A: Predicate, B: Predicate> Predicate for Or<A, B> {

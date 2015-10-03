@@ -87,6 +87,15 @@ speculate! {
             assert_eq!(super::Text.matches(&comment), false);
         }
 
+        test "Comment" {
+            assert_eq!(super::Comment.matches(&html), false);
+            assert_eq!(super::Comment.matches(&head), false);
+            assert_eq!(super::Comment.matches(&body), false);
+            assert_eq!(super::Comment.matches(&article), false);
+            assert_eq!(super::Comment.matches(&foo), false);
+            assert_eq!(super::Comment.matches(&comment), true);
+        }
+
         test "Or()" {
             let html_or_head = Or(Name("html"), Name("head"));
             assert_eq!(html_or_head.matches(&html), true);
