@@ -11,5 +11,5 @@ repository = "https://github.com/utkarshkukreti/select.rs"
 speculate = "0.0.17"
 
 [dependencies]
-html5ever = "0.2.5"
+html5ever = "0.2.6"
 bit-set = "0.2.0"
