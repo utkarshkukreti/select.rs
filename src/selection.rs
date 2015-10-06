@@ -1,18 +1,18 @@
-use dom::Dom;
+use document::Document;
 use bit_set::{self, BitSet};
 use node::{self, Node};
 use predicate::Predicate;
 
 #[derive(Clone, Debug, PartialEq)]
 pub struct Selection<'a> {
-    dom: &'a Dom,
+    document: &'a Document,
     bitset: BitSet
 }
 
 impl<'a> Selection<'a> {
-    pub fn new(dom: &'a Dom, bitset: BitSet) -> Selection<'a> {
+    pub fn new(document: &'a Document, bitset: BitSet) -> Selection<'a> {
         Selection {
-            dom: dom,
+            document: document,
             bitset: bitset
         }
     }
@@ -26,9 +26,9 @@ impl<'a> Selection<'a> {
 
     pub fn filter<P: Predicate>(&self, p: P) -> Selection<'a> {
         Selection {
-            dom: self.dom,
+            document: self.document,
             bitset: self.bitset.iter().filter(|&index| {
-                p.matches(&self.dom.nth(index))
+                p.matches(&self.document.nth(index))
             }).collect()
         }
     }
@@ -37,26 +37,26 @@ impl<'a> Selection<'a> {
         let mut bitset = BitSet::new();
 
         for index in self.bitset.iter() {
-            recur(self.dom, &mut bitset, index);
+            recur(self.document, &mut bitset, index);
         }
 
         return Selection {
-            dom: self.dom,
+            document: self.document,
             bitset: bitset.iter().filter(|&index| {
-                p.matches(&self.dom.nth(index))
+                p.matches(&self.document.nth(index))
             }).collect()
         };
 
-        fn recur(dom: &Dom, bitset: &mut BitSet, index: usize) {
+        fn recur(document: &Document, bitset: &mut BitSet, index: usize) {
             if bitset.contains(&index) {
                 return
             }
 
-            match dom.nodes[index].data {
+            match document.nodes[index].data {
                 node::Data::Text(..) => {},
                 node::Data::Element(_, _, ref children) => {
                     for &child in children {
-                        recur(dom, bitset, child);
+                        recur(document, bitset, child);
                         bitset.insert(child);
                     }
                 },
@@ -67,7 +67,7 @@ impl<'a> Selection<'a> {
 
     pub fn parent(&self) -> Selection<'a> {
         Selection {
-            dom: self.dom,
+            document: self.document,
             bitset: self.iter().filter_map(|node| {
                 node.parent().map(|parent| parent.index())
             }).collect()
@@ -76,7 +76,7 @@ impl<'a> Selection<'a> {
 
     pub fn prev(&self) -> Selection<'a> {
         Selection {
-            dom: self.dom,
+            document: self.document,
             bitset: self.iter().filter_map(|node| {
                 node.prev().map(|prev| prev.index())
             }).collect()
@@ -85,7 +85,7 @@ impl<'a> Selection<'a> {
 
     pub fn next(&self) -> Selection<'a> {
         Selection {
-            dom: self.dom,
+            document: self.document,
             bitset: self.iter().filter_map(|node| {
                 node.next().map(|next| next.index())
             }).collect()
@@ -102,7 +102,7 @@ impl<'a> Selection<'a> {
         }
 
         Selection {
-            dom: self.dom,
+            document: self.document,
             bitset: bitset
         }
     }
@@ -110,7 +110,7 @@ impl<'a> Selection<'a> {
     pub fn children(&self) -> Selection<'a> {
         let mut bitset = BitSet::new();
         for node in self.iter() {
-            match self.dom.nodes[node.index()].data {
+            match self.document.nodes[node.index()].data {
                 node::Data::Text(_) => {},
                 node::Data::Element(_, _, ref children) => {
                     for &child in children {
@@ -122,13 +122,13 @@ impl<'a> Selection<'a> {
         }
 
         Selection {
-            dom: self.dom,
+            document: self.document,
             bitset: bitset
         }
     }
 
     pub fn first(&self) -> Option<Node<'a>> {
-        self.bitset.iter().next().map(|index| self.dom.nth(index))
+        self.bitset.iter().next().map(|index| self.document.nth(index))
     }
 }
 
@@ -142,6 +142,6 @@ impl<'a> Iterator for Iter<'a> {
     type Item = Node<'a>;
 
     fn next(&mut self) -> Option<Node<'a>> {
-        self.inner.next().map(|index| self.selection.dom.nth(index))
+        self.inner.next().map(|index| self.selection.document.nth(index))
     }
 }

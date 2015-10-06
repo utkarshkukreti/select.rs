@@ -2,23 +2,23 @@
 #![plugin(speculate)]
 
 extern crate select;
-pub use select::dom::Dom;
+pub use select::document::Document;
 pub use select::node;
 pub use select::predicate::*;
 
 speculate! {
     describe "predicate" {
         before {
-            let dom = Dom::from_str("<html><head></head><body>\
+            let document = Document::from_str("<html><head></head><body>\
 <article id='post-0' class='post category-foo tag-bar'>foo</article>\
 <!--A Comment-->\
 </body></html>");
-            let html = dom.nth(0);
-            let head = dom.nth(1);
-            let body = dom.nth(2);
-            let article = dom.nth(3);
-            let foo = dom.nth(4);
-            let comment = dom.nth(5);
+            let html = document.nth(0);
+            let head = document.nth(1);
+            let body = document.nth(2);
+            let article = document.nth(3);
+            let foo = document.nth(4);
+            let comment = document.nth(5);
         }
 
         test "()" {

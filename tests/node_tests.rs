@@ -4,24 +4,24 @@
 pub use std::collections::HashMap;
 
 extern crate select;
-pub use select::dom::Dom;
+pub use select::document::Document;
 pub use select::node;
 
 speculate! {
     describe "node" {
         before {
-            let dom = Dom::from_str("<html><head></head><body id=something>\
+            let document = Document::from_str("<html><head></head><body id=something>\
                                      foo<bar>baz<quux class=another-thing>\
                                      <!--comment-->");
 
-            let html = dom.nth(0);
-            let head = dom.nth(1);
-            let body = dom.nth(2);
-            let foo = dom.nth(3);
-            let bar = dom.nth(4);
-            let baz = dom.nth(5);
-            let quux = dom.nth(6);
-            let comment = dom.nth(7);
+            let html = document.nth(0);
+            let head = document.nth(1);
+            let body = document.nth(2);
+            let foo = document.nth(3);
+            let bar = document.nth(4);
+            let baz = document.nth(5);
+            let quux = document.nth(6);
+            let comment = document.nth(7);
         }
 
         test "Node::name()" {
@@ -86,8 +86,8 @@ speculate! {
         test "Node::find()" {
             {
                 use select::predicate::*;
-                let dom = Dom::from_str(include_str!("fixtures/struct.Vec.html"));
-                let main = dom.find(Attr("id", "main"));
+                let document = Document::from_str(include_str!("fixtures/struct.Vec.html"));
+                let main = document.find(Attr("id", "main"));
                 let main = main.iter().next().unwrap();
 
                 assert_eq!(main.find(Name("span")).iter().count(), 1785);
@@ -98,8 +98,8 @@ speculate! {
         test "Node::is()" {
             {
                 use select::predicate::*;
-                let dom = Dom::from_str(include_str!("fixtures/struct.Vec.html"));
-                for div in dom.find(Name("div")).iter() {
+                let document = Document::from_str(include_str!("fixtures/struct.Vec.html"));
+                for div in document.find(Name("div")).iter() {
                     assert!(div.is(Name("div")));
                 }
             };

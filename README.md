@@ -12,23 +12,23 @@ open an issue or send me an email.
 
 ```rust
 extern crate select;
-use select::dom::Dom;
+use select::document::Document;
 use select::predicate::*;
 
 pub fn main() {
     // stackoverflow.html was fetched from
     // http://stackoverflow.com/questions/tagged/rust?sort=votes&pageSize=50 on
     // Aug 10, 2015.
-    let dom = Dom::from_str(include_str!("stackoverflow.html"));
+    let document = Document::from_str(include_str!("stackoverflow.html"));
 
     println!("# Menu");
-    for node in dom.find(Attr("id", "hmenus")).find(Name("a")).iter() {
+    for node in document.find(Attr("id", "hmenus")).find(Name("a")).iter() {
         println!("{} ({:?})", node.text(), node.attr("href").unwrap());
     }
     println!("");
 
     println!("# Top 5 Questions");
-    for node in dom.find(Class("question-summary")).iter().take(5) {
+    for node in document.find(Class("question-summary")).iter().take(5) {
         let question = node.find(Class("question-hyperlink")).first().unwrap();
         let votes = node.find(Class("vote-count-post")).first().unwrap().text();
         let answers = node.find(Class("status")).find(Name("strong")).first().unwrap().text();
@@ -46,7 +46,7 @@ pub fn main() {
     }
 
     println!("# Top 10 Related Tags");
-    for node in dom.find(Attr("id", "h-related-tags")).parent().find(Name("div")).iter().take(10) {
+    for node in document.find(Attr("id", "h-related-tags")).parent().find(Name("div")).iter().take(10) {
         let tag = node.find(Name("a")).first().unwrap().text();
         let count = node.find(Class("item-multiplier-count")).first().unwrap().text();
         println!("{} ({})", tag, count);

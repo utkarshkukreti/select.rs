@@ -2,16 +2,16 @@
 #![plugin(speculate)]
 
 extern crate select;
-pub use select::dom::Dom;
+pub use select::document::Document;
 pub use select::selection::*;
 
 speculate! {
     describe "selection" {
         test "Iter" {
-            let dom = Dom::from_str("<html><head></head><body>\
+            let document = Document::from_str("<html><head></head><body>\
 <article id='post-0' class='post category-foo tag-bar'></article>\
 </body></html>");
-            let selection = Selection::new(&dom,
+            let selection = Selection::new(&document,
                                            [0, 2, 3].iter().cloned().collect());
             let mut iter = selection.iter();
             let html = iter.next().unwrap();
@@ -26,8 +26,8 @@ speculate! {
         test "Selection::filter()" {
             use select::predicate::*;
 
-            let dom = Dom::from_str(include_str!("fixtures/struct.Vec.html"));
-            let all = dom.find(());
+            let document = Document::from_str(include_str!("fixtures/struct.Vec.html"));
+            let all = document.find(());
 
             assert_eq!(all.filter(()).iter().count(), 11446);
 
@@ -49,8 +49,8 @@ speculate! {
         test "Selection::find()" {
             use select::predicate::*;
 
-            let dom = Dom::from_str(include_str!("fixtures/struct.Vec.html"));
-            let all = dom.find(());
+            let document = Document::from_str(include_str!("fixtures/struct.Vec.html"));
+            let all = document.find(());
 
             let struct_divs = all.find(Class("struct")).find(Name("div"));
             assert_eq!(struct_divs.iter().count(), 204);
@@ -68,44 +68,44 @@ speculate! {
         test "Selection::parent()" {
             use select::predicate::*;
 
-            let dom = Dom::from_str(include_str!("fixtures/struct.Vec.html"));
+            let document = Document::from_str(include_str!("fixtures/struct.Vec.html"));
 
-            assert_eq!(dom.find(Name("div")).parent().iter().count(), 8);
-            assert_eq!(dom.find(Name("span")).parent().iter().count(), 205);
+            assert_eq!(document.find(Name("div")).parent().iter().count(), 8);
+            assert_eq!(document.find(Name("span")).parent().iter().count(), 205);
         }
 
         test "Selection::prev() / Selection::next()" {
             use select::predicate::*;
 
-            let dom = Dom::from_str(include_str!("fixtures/struct.Vec.html"));
+            let document = Document::from_str(include_str!("fixtures/struct.Vec.html"));
 
-            assert_eq!(dom.find(Name("div")).prev().iter().count(), 208);
-            assert_eq!(dom.find(Name("div")).next().iter().count(), 203);
-            assert_eq!(dom.find(Name("span")).prev().iter().count(), 1729);
-            assert_eq!(dom.find(Name("span")).next().iter().count(), 1690);
+            assert_eq!(document.find(Name("div")).prev().iter().count(), 208);
+            assert_eq!(document.find(Name("div")).next().iter().count(), 203);
+            assert_eq!(document.find(Name("span")).prev().iter().count(), 1729);
+            assert_eq!(document.find(Name("span")).next().iter().count(), 1690);
         }
 
         test "Selection::parents()" {
             use select::predicate::*;
 
-            let dom = Dom::from_str(include_str!("fixtures/struct.Vec.html"));
+            let document = Document::from_str(include_str!("fixtures/struct.Vec.html"));
 
-            assert_eq!(dom.find(Name("div")).parents().iter().count(), 10);
-            assert_eq!(dom.find(Name("span")).parents().iter().count(), 308);
+            assert_eq!(document.find(Name("div")).parents().iter().count(), 10);
+            assert_eq!(document.find(Name("span")).parents().iter().count(), 308);
         }
 
         test "Selection::children()" {
             use select::predicate::*;
 
-            let dom = Dom::from_str(include_str!("fixtures/struct.Vec.html"));
+            let document = Document::from_str(include_str!("fixtures/struct.Vec.html"));
 
-            let div_children = dom.find(Name("div")).children();
+            let div_children = document.find(Name("div")).children();
             assert_eq!(div_children.iter().count(), 1210);
             for div_child in div_children.iter() {
                 assert_eq!(div_child.parent().unwrap().name(), Some("div"));
             }
 
-            let span_children = dom.find(Name("span")).children();
+            let span_children = document.find(Name("span")).children();
             assert_eq!(span_children.iter().count(), 1986);
             for span_child in span_children.iter() {
                 assert_eq!(span_child.parent().unwrap().name(), Some("span"));
@@ -115,10 +115,10 @@ speculate! {
         test "Selection::first()" {
             use select::predicate::*;
 
-            let dom = Dom::from_str(include_str!("fixtures/struct.Vec.html"));
+            let document = Document::from_str(include_str!("fixtures/struct.Vec.html"));
 
-            assert!(dom.find(Name("div")).first().is_some());
-            assert!(dom.find(Name("divv")).first().is_none());
+            assert!(document.find(Name("div")).first().is_some());
+            assert!(document.find(Name("divv")).first().is_none());
         }
     }
 }

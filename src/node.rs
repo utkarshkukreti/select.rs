@@ -1,6 +1,6 @@
 use std::collections::HashMap;
 
-use dom::Dom;
+use document::Document;
 use predicate::Predicate;
 use selection::Selection;
 
@@ -22,14 +22,14 @@ pub struct Raw {
 
 #[derive(Copy, Clone, Debug, PartialEq)]
 pub struct Node<'a> {
-    dom: &'a Dom,
+    document: &'a Document,
     index: usize
 }
 
 impl<'a> Node<'a> {
-    pub fn new(dom: &'a Dom, index: usize) -> Node<'a> {
+    pub fn new(document: &'a Document, index: usize) -> Node<'a> {
         Node {
-            dom: dom,
+            document: document,
             index: index
         }
     }
@@ -39,46 +39,46 @@ impl<'a> Node<'a> {
     }
 
     pub fn data(&self) -> &Data {
-        &self.dom.nodes[self.index].data
+        &self.document.nodes[self.index].data
     }
 
     pub fn name(&self) -> Option<&str> {
-        match self.dom.nodes[self.index].data {
+        match self.document.nodes[self.index].data {
             Data::Element(ref name, _, _) => Some(name),
             _ => None
         }
     }
 
     pub fn attr(&self, name: &str) -> Option<&str> {
-        match self.dom.nodes[self.index].data {
+        match self.document.nodes[self.index].data {
             Data::Element(_, ref attrs, _) => attrs.get(name).map(|s| &s[..]),
             _ => None
         }
     }
 
     pub fn parent(&self) -> Option<Node<'a>> {
-        self.dom.nodes[self.index].parent.map(|index| self.dom.nth(index))
+        self.document.nodes[self.index].parent.map(|index| self.document.nth(index))
     }
 
     pub fn prev(&self) -> Option<Node<'a>> {
-        self.dom.nodes[self.index].prev.map(|index| self.dom.nth(index))
+        self.document.nodes[self.index].prev.map(|index| self.document.nth(index))
     }
 
     pub fn next(&self) -> Option<Node<'a>> {
-        self.dom.nodes[self.index].next.map(|index| self.dom.nth(index))
+        self.document.nodes[self.index].next.map(|index| self.document.nth(index))
     }
 
     pub fn text(&self) -> String {
         let mut string = String::new();
-        recur(&self.dom, self.index, &mut string);
+        recur(&self.document, self.index, &mut string);
         return string;
 
-        fn recur(dom: &Dom, index: usize, string: &mut String) {
-            match dom.nodes[index].data {
+        fn recur(document: &Document, index: usize, string: &mut String) {
+            match document.nodes[index].data {
                 Data::Text(ref text) => string.push_str(text),
                 Data::Element(_, _, ref children) => {
                     for &child in children {
-                        recur(dom, child, string)
+                        recur(document, child, string)
                     }
                 },
                 Data::Comment(_) => {}
@@ -87,7 +87,7 @@ impl<'a> Node<'a> {
     }
 
     pub fn find<P: Predicate>(&self, p: P) -> Selection<'a> {
-        Selection::new(self.dom, [self.index].iter().cloned().collect()).find(p)
+        Selection::new(self.document, [self.index].iter().cloned().collect()).find(p)
     }
 
     pub fn is<P: Predicate>(&self, p: P) -> bool {
