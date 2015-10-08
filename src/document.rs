@@ -34,18 +34,18 @@ impl Document {
                 },
                 rcdom::Doctype(..) => None,
                 rcdom::Text(ref text) => {
-                    let data = node::Data::Text(text.into());
+                    let data = node::Data::Text(text.clone());
                     Some(append(document, data, parent, prev))
                 },
                 rcdom::Comment(ref comment) => {
-                    let data = node::Data::Comment(comment.into());
+                    let data = node::Data::Comment(comment.clone());
                     Some(append(document, data, parent, prev))
                 },
                 rcdom::Element(ref name, ref _element, ref attrs) => {
                     let name = name.local.as_slice().into();
                     let attrs = attrs.iter().map(|attr| {
                         (attr.name.local.as_slice().into(),
-                         attr.value.clone().into())
+                         attr.value.clone())
                     }).collect();
                     let data = node::Data::Element(name, attrs, vec![]);
                     let index = append(document, data, parent, prev);

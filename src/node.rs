@@ -1,14 +1,16 @@
 use std::collections::HashMap;
 
+use tendril::StrTendril;
+
 use document::Document;
 use predicate::Predicate;
 use selection::Selection;
 
 #[derive(Clone, Debug, PartialEq)]
 pub enum Data {
-    Text(String),
-    Element(String, HashMap<String, String>, Vec<usize>),
-    Comment(String)
+    Text(StrTendril),
+    Element(String, HashMap<String, StrTendril>, Vec<usize>),
+    Comment(StrTendril)
 }
 
 #[derive(Clone, Debug, PartialEq)]
