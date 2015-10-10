@@ -1,5 +1,6 @@
 use std::collections::HashMap;
 
+use string_cache::Atom;
 use tendril::StrTendril;
 
 use document::Document;
@@ -9,7 +10,7 @@ use selection::Selection;
 #[derive(Clone, Debug, PartialEq)]
 pub enum Data {
     Text(StrTendril),
-    Element(String, HashMap<String, StrTendril>, Vec<usize>),
+    Element(Atom, HashMap<Atom, StrTendril>, Vec<usize>),
     Comment(StrTendril)
 }
 
@@ -53,7 +54,9 @@ impl<'a> Node<'a> {
 
     pub fn attr(&self, name: &str) -> Option<&str> {
         match self.document.nodes[self.index].data {
-            Data::Element(_, ref attrs, _) => attrs.get(name).map(|s| &s[..]),
+            Data::Element(_, ref attrs, _) => {
+                attrs.get(&Atom::from_slice(name)).map(|s| &s[..])
+            },
             _ => None
         }
     }

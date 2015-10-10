@@ -42,10 +42,9 @@ impl Document {
                     Some(append(document, data, parent, prev))
                 },
                 rcdom::Element(ref name, ref _element, ref attrs) => {
-                    let name = name.local.as_slice().into();
+                    let name = name.local.clone();
                     let attrs = attrs.iter().map(|attr| {
-                        (attr.name.local.as_slice().into(),
-                         attr.value.clone())
+                        (attr.name.local.clone(), attr.value.clone())
                     }).collect();
                     let data = node::Data::Element(name, attrs, vec![]);
                     let index = append(document, data, parent, prev);
