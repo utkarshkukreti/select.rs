@@ -41,6 +41,10 @@ impl<'a> Node<'a> {
         self.index
     }
 
+    pub fn raw(&self) -> &Raw {
+        &self.document.nodes[self.index]
+    }
+
     pub fn data(&self) -> &Data {
         &self.document.nodes[self.index].data
     }
