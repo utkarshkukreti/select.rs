@@ -46,7 +46,7 @@ impl<'a> Node<'a> {
     }
 
     pub fn data(&self) -> &Data {
-        &self.document.nodes[self.index].data
+        &self.raw().data
     }
 
     pub fn name(&self) -> Option<&str> {
@@ -66,15 +66,15 @@ impl<'a> Node<'a> {
     }
 
     pub fn parent(&self) -> Option<Node<'a>> {
-        self.document.nodes[self.index].parent.map(|index| self.document.nth(index))
+        self.raw().parent.map(|index| self.document.nth(index))
     }
 
     pub fn prev(&self) -> Option<Node<'a>> {
-        self.document.nodes[self.index].prev.map(|index| self.document.nth(index))
+        self.raw().prev.map(|index| self.document.nth(index))
     }
 
     pub fn next(&self) -> Option<Node<'a>> {
-        self.document.nodes[self.index].next.map(|index| self.document.nth(index))
+        self.raw().next.map(|index| self.document.nth(index))
     }
 
     pub fn text(&self) -> String {
