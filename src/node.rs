@@ -50,15 +50,15 @@ impl<'a> Node<'a> {
     }
 
     pub fn name(&self) -> Option<&str> {
-        match self.document.nodes[self.index].data {
-            Data::Element(ref name, _, _) => Some(name),
+        match self.data() {
+            &Data::Element(ref name, _, _) => Some(name),
             _ => None
         }
     }
 
     pub fn attr(&self, name: &str) -> Option<&str> {
-        match self.document.nodes[self.index].data {
-            Data::Element(_, ref attrs, _) => {
+        match self.data() {
+            &Data::Element(_, ref attrs, _) => {
                 attrs.get(&Atom::from_slice(name)).map(|s| &s[..])
             },
             _ => None
