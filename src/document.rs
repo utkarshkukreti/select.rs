@@ -2,12 +2,15 @@ use node::{self, Node};
 use predicate::Predicate;
 use selection::Selection;
 
+/// Represents an HTML document
 #[derive(Clone, Debug, PartialEq)]
 pub struct Document {
     pub nodes: Vec<node::Raw>
 }
 
 impl Document {
+
+    /// Parses from a single string in memory.
     pub fn from_str(str: &str) -> Document {
         use html5ever::{parse, one_input, rcdom};
 
@@ -88,12 +91,33 @@ impl Document {
         }
     }
 
+    /// Produces a Selection of nodes matching the given predicates
+    ///
+    /// # Examples
+    /// ```rust
+    /// # use select::document::Document;
+    /// # use select::predicate::*;
+    /// let document = Document::from_str(r#"
+    /// <ul> <li>one</li> <li>two</li> <li>three</li> </ul>"#);
+    /// for node in document.find(Name("ul")).find(Name("li")).iter() {
+    ///     println!("{}", node.text());
+    /// }
+    /// ```
+    ///
+    /// produces:
+    ///
+    /// ```
+    /// one
+    /// two
+    /// three
+    /// ```
     pub fn find<'a, P: Predicate>(&'a self, p: P) -> Selection<'a> {
         Selection::new(self, (0..self.nodes.len()).filter(|&index| {
             p.matches(&self.nth(index))
         }).collect())
     }
 
+    /// Lets you access the *n*th Node of the Document.
     pub fn nth(&self, n: usize) -> Node {
         assert!(n < self.nodes.len());
         Node::new(self, n)
