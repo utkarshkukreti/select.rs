@@ -2,12 +2,14 @@ use node::{self, Node};
 use predicate::Predicate;
 use selection::Selection;
 
+/// An HTML document.
 #[derive(Clone, Debug, PartialEq)]
 pub struct Document {
     pub nodes: Vec<node::Raw>
 }
 
 impl Document {
+    /// Parses the given `&str` into a `Document`.
     pub fn from_str(str: &str) -> Document {
         use html5ever::{parse, one_input, rcdom};
 
@@ -88,12 +90,18 @@ impl Document {
         }
     }
 
+    /// Returns a `Selection` containing nodes passing the given predicate `p`.
     pub fn find<'a, P: Predicate>(&'a self, p: P) -> Selection<'a> {
         Selection::new(self, (0..self.nodes.len()).filter(|&index| {
             p.matches(&self.nth(index))
         }).collect())
     }
 
+    /// Returns the `n`th node of the document as a `Node`, indexed from 0.
+    ///
+    /// # Panics
+    ///
+    /// Panics if `n` is not less than the number of nodes in `self`.
     pub fn nth(&self, n: usize) -> Node {
         assert!(n < self.nodes.len());
         Node::new(self, n)
