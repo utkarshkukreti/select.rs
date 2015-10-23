@@ -1,5 +1,6 @@
 use node::{self, Node};
 
+/// A trait implemented by all `Node` matchers.
 pub trait Predicate: Sized {
     fn matches(&self, node: &Node) -> bool;
     fn or<T: Predicate>(self, other: T) -> Or<Self, T> {
@@ -13,12 +14,14 @@ pub trait Predicate: Sized {
     }
 }
 
+/// Matches any Node.
 impl Predicate for () {
     fn matches(&self, _: &Node) -> bool {
         true
     }
 }
 
+/// Matches Element Node with name `T`.
 #[derive(Copy, Clone, Debug, PartialEq)]
 pub struct Name<T>(pub T);
 
@@ -28,6 +31,7 @@ impl<'a> Predicate for Name<&'a str> {
     }
 }
 
+/// Matches Element Node containing class `T`.
 #[derive(Copy, Clone, Debug, PartialEq)]
 pub struct Class<T>(pub T);
 
@@ -39,6 +43,7 @@ impl<'a> Predicate for Class<&'a str> {
     }
 }
 
+/// Matches if the Predicate `T` does not match.
 #[derive(Copy, Clone, Debug, PartialEq)]
 pub struct Not<T>(pub T);
 
@@ -48,6 +53,8 @@ impl<T: Predicate> Predicate for Not<T> {
     }
 }
 
+/// Matches Element Node containing attribute `N` with value `V` if `V` is an
+/// `&str`, or any value if `V` is `()`.
 #[derive(Copy, Clone, Debug, PartialEq)]
 pub struct Attr<N, V>(pub N, pub V);
 
@@ -63,12 +70,14 @@ impl<'a> Predicate for Attr<&'a str, ()> {
     }
 }
 
+/// Matches if the function returns true.
 impl<F: Fn(&Node) -> bool> Predicate for F {
     fn matches(&self, node: &Node) -> bool {
         self(node)
     }
 }
 
+/// Matches any Element Node.
 #[derive(Copy, Clone, Debug, PartialEq)]
 pub struct Element;
 
@@ -81,6 +90,7 @@ impl Predicate for Element {
     }
 }
 
+/// Matches any Text Node.
 #[derive(Copy, Clone, Debug, PartialEq)]
 pub struct Text;
 
@@ -93,6 +103,7 @@ impl Predicate for Text {
     }
 }
 
+/// Matches any Comment Node.
 #[derive(Copy, Clone, Debug, PartialEq)]
 pub struct Comment;
 
@@ -105,6 +116,7 @@ impl Predicate for Comment {
     }
 }
 
+/// Matches if either inner Predicate `A` or `B` matches the Node.
 #[derive(Copy, Clone, Debug, PartialEq)]
 pub struct Or<A, B>(pub A, pub B);
 
@@ -114,6 +126,7 @@ impl<A: Predicate, B: Predicate> Predicate for Or<A, B> {
     }
 }
 
+/// Matches if the inner Predicate `A` and `B` both match the Node.
 #[derive(Copy, Clone, Debug, PartialEq)]
 pub struct And<A, B>(pub A, pub B);
 
