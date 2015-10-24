@@ -7,6 +7,7 @@ use document::Document;
 use predicate::Predicate;
 use selection::Selection;
 
+/// The Node type specific data stored by every Node.
 #[derive(Clone, Debug, PartialEq)]
 pub enum Data {
     Text(StrTendril),
@@ -14,6 +15,8 @@ pub enum Data {
     Comment(StrTendril)
 }
 
+/// Internal representation of a Node. Not of much use without a reference to a
+/// Document.
 #[derive(Clone, Debug, PartialEq)]
 pub struct Raw {
     pub index: usize,
@@ -23,6 +26,7 @@ pub struct Raw {
     pub data: Data
 }
 
+/// A Node.
 #[derive(Copy, Clone, Debug, PartialEq)]
 pub struct Node<'a> {
     document: &'a Document,
