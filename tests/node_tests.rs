@@ -115,5 +115,15 @@ speculate! {
             assert_eq!(foo.as_comment(), None);
             assert_eq!(comment.as_comment(), Some("comment"));
         }
+
+        test "Node::html()" {
+            assert_eq!(html.html(), "<html><head></head><body id=\"something\">\
+                                     foo<bar>baz<quux class=\"another-thing\">\
+                                     <!--comment--></quux></bar></body></html>");
+            assert_eq!(head.html(), "<head></head>");
+            assert_eq!(foo.html(), "foo");
+            assert_eq!(quux.html(), "<quux class=\"another-thing\"><!--comment--></quux>");
+            assert_eq!(comment.html(), "<!--comment-->");
+        }
     }
 }

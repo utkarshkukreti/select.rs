@@ -1,6 +1,8 @@
 use std::collections::HashMap;
+use std::io;
 
-use string_cache::Atom;
+use html5ever::serialize;
+use string_cache::{Atom, Namespace, QualName};
 use tendril::StrTendril;
 
 use document::Document;
@@ -99,6 +101,12 @@ impl<'a> Node<'a> {
         }
     }
 
+    pub fn html(&self) -> String {
+        let mut buf = Vec::new();
+        serialize::serialize(&mut buf, self, Default::default()).unwrap();
+        String::from_utf8(buf).unwrap()
+    }
+
     pub fn find<P: Predicate>(&self, p: P) -> Selection<'a> {
         Selection::new(self.document, [self.index].iter().cloned().collect()).find(p)
     }
@@ -118,6 +126,42 @@ impl<'a> Node<'a> {
         match self.data() {
             &Data::Comment(ref comment) => Some(&comment),
             _ => None
+        }
+    }
+}
+
+impl<'a> serialize::Serializable for Node<'a> {
+    fn serialize<'w, W: io::Write>(&self,
+                                   serializer: &mut serialize::Serializer<'w, W>,
+                                   traversal_scope: serialize::TraversalScope)
+                                   -> io::Result<()> {
+        match *self.data() {
+            Data::Text(ref text) => serializer.write_text(&text),
+            Data::Element(ref name, ref attrs, ref children) => {
+                let ns = Namespace(Atom::from_slice(""));
+                let name = QualName::new(ns.clone(), name.clone());
+
+                // FIXME: I couldn't get this to work without this awful HashMap
+                // hack.
+                let attrs = attrs.iter().map(|(name, value)| {
+                    (QualName::new(ns.clone(), name.clone()), &**value)
+                }).collect::<HashMap<QualName, &str>>();
+                let attrs = attrs.iter().map(|(name, value)| (name, *value));
+
+                try!(serializer.start_elem(name.clone(), attrs));
+
+                for &child in children {
+                    let child = self.document.nth(child);
+                    try!(serialize::Serializable::serialize(&child,
+                                                            serializer,
+                                                            traversal_scope));
+                }
+
+                try!(serializer.end_elem(name.clone()));
+
+                Ok(())
+            },
+            Data::Comment(ref comment) => serializer.write_comment(&comment)
         }
     }
 }
