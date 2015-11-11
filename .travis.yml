@@ -1,6 +1,9 @@
 language: rust
-rust: nightly
+rust:
+  - stable
+  - beta
+  - nightly
 script:
   - cargo build --verbose
-  - cargo test --verbose
-  - cargo bench --verbose
+  - "[ $TRAVIS_RUST_VERSION = nightly ] && cargo test --verbose || exit 0"
+  - "[ $TRAVIS_RUST_VERSION = nightly ] && cargo bench --verbose || exit 0"
