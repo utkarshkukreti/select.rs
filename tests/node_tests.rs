@@ -125,5 +125,15 @@ speculate! {
             assert_eq!(quux.html(), "<quux class=\"another-thing\"><!--comment--></quux>");
             assert_eq!(comment.html(), "<!--comment-->");
         }
+
+        test "Node::inner_html()" {
+            assert_eq!(html.inner_html(), "<head></head><body id=\"something\">\
+                                           foo<bar>baz<quux class=\"another-thing\">\
+                                           <!--comment--></quux></bar></body>");
+            assert_eq!(head.inner_html(), "");
+            assert_eq!(foo.inner_html(), "");
+            assert_eq!(quux.inner_html(), "<!--comment-->");
+            assert_eq!(comment.inner_html(), "");
+        }
     }
 }

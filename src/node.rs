@@ -107,6 +107,18 @@ impl<'a> Node<'a> {
         String::from_utf8(buf).unwrap()
     }
 
+    pub fn inner_html(&self) -> String {
+        let mut buf = Vec::new();
+        if let &Data::Element(_, _, ref children) = self.data() {
+            for &child in children {
+                serialize::serialize(&mut buf,
+                                     &self.document.nth(child),
+                                     Default::default()).unwrap();
+            }
+        }
+        String::from_utf8(buf).unwrap()
+    }
+
     pub fn find<P: Predicate>(&self, p: P) -> Selection<'a> {
         Selection::new(self.document, [self.index].iter().cloned().collect()).find(p)
     }
