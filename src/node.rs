@@ -65,7 +65,7 @@ impl<'a> Node<'a> {
     pub fn attr(&self, name: &str) -> Option<&str> {
         match self.data() {
             &Data::Element(_, ref attrs, _) => {
-                attrs.get(&Atom::from_slice(name)).map(|s| &s[..])
+                attrs.get(&Atom::from_slice(name)).map(|s| &**s)
             },
             _ => None
         }
