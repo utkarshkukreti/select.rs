@@ -74,8 +74,8 @@ impl Document {
             });
 
             if let Some(parent) = parent {
-                match &mut document.nodes[parent].data {
-                    &mut node::Data::Element(_, _, ref mut children) => {
+                match document.nodes[parent].data {
+                    node::Data::Element(_, _, ref mut children) => {
                         children.push(index);
                     },
                     _ => unreachable!()
