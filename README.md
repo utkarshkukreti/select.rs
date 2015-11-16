@@ -13,7 +13,7 @@ open an issue or send me an email.
 ```rust
 extern crate select;
 use select::document::Document;
-use select::predicate::*;
+use select::predicate::{Attr, Class, Name};
 
 pub fn main() {
     // stackoverflow.html was fetched from
