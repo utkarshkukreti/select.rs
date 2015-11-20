@@ -17,9 +17,9 @@ impl Document {
             nodes: vec![]
         };
 
-        let rc_document: rcdom::RcDom = parse(one_input(str.into()),
+        let rc_dom: rcdom::RcDom = parse(one_input(str.into()),
                                          Default::default());
-        recur(&mut document, &rc_document.document, None, None);
+        recur(&mut document, &rc_dom.document, None, None);
         return document;
 
         fn recur(document: &mut Document,
