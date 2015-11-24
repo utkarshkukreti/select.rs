@@ -83,8 +83,8 @@ pub struct Element;
 
 impl Predicate for Element {
     fn matches(&self, node: &Node) -> bool {
-        match node.data() {
-            &node::Data::Element(..) => true,
+        match *node.data() {
+            node::Data::Element(..) => true,
             _ => false
         }
     }
@@ -96,8 +96,8 @@ pub struct Text;
 
 impl Predicate for Text {
     fn matches(&self, node: &Node) -> bool {
-        match node.data() {
-            &node::Data::Text(..) => true,
+        match *node.data() {
+            node::Data::Text(..) => true,
             _ => false
         }
     }
@@ -109,8 +109,8 @@ pub struct Comment;
 
 impl Predicate for Comment {
     fn matches(&self, node: &Node) -> bool {
-        match node.data() {
-            &node::Data::Comment(..) => true,
+        match *node.data() {
+            node::Data::Comment(..) => true,
             _ => false
         }
     }
