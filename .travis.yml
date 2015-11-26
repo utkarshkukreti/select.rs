@@ -5,5 +5,5 @@ rust:
   - nightly
 script:
   - cargo build --verbose
-  - "[ $TRAVIS_RUST_VERSION = nightly ] && cargo test --verbose || exit 0"
-  - "[ $TRAVIS_RUST_VERSION = nightly ] && cargo bench --verbose || exit 0"
+  - "if [ $TRAVIS_RUST_VERSION = nightly ]; then cargo test --verbose; fi"
+  - "if [ $TRAVIS_RUST_VERSION = nightly ]; then cargo bench --verbose; fi"
