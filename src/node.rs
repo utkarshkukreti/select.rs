@@ -65,7 +65,7 @@ impl<'a> Node<'a> {
     pub fn attr(&self, name: &str) -> Option<&str> {
         match *self.data() {
             Data::Element(_, ref attrs, _) => {
-                attrs.get(&Atom::from_slice(name)).map(|s| &**s)
+                attrs.get(&name.into()).map(|s| &**s)
             },
             _ => None
         }
@@ -150,7 +150,7 @@ impl<'a> serialize::Serializable for Node<'a> {
         match *self.data() {
             Data::Text(ref text) => serializer.write_text(&text),
             Data::Element(ref name, ref attrs, ref children) => {
-                let ns = Namespace(Atom::from_slice(""));
+                let ns = Namespace("".into());
                 let name = QualName::new(ns.clone(), name.clone());
 
                 // FIXME: I couldn't get this to work without this awful HashMap
