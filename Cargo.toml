@@ -8,7 +8,7 @@ homepage = "https://github.com/utkarshkukreti/select.rs"
 repository = "https://github.com/utkarshkukreti/select.rs"
 
 [dev-dependencies]
-speculate = "0.0.17"
+speculate = "0.0.18"
 
 [dependencies]
 html5ever = "0.2.6"
