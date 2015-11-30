@@ -109,7 +109,7 @@ impl<'a> Node<'a> {
 
     pub fn inner_html(&self) -> String {
         let mut buf = Vec::new();
-        if let &Data::Element(_, _, ref children) = self.data() {
+        if let Data::Element(_, _, ref children) = *self.data() {
             for &child in children {
                 serialize::serialize(&mut buf,
                                      &self.document.nth(child),
