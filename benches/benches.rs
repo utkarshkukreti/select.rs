@@ -6,6 +6,9 @@ extern crate test;
 extern crate html5ever;
 extern crate select;
 
+pub use select::document::Document;
+pub use select::predicate::*;
+
 speculate! {
     context "struct.Vec.html (228,512 bytes)" {
         before {
@@ -23,6 +26,32 @@ speculate! {
 
         bench "constructing select::document::Document" |b| {
             b.iter(|| select::document::Document::from_str(str));
+        }
+
+        context "Document::find()" {
+            before {
+                let document = Document::from_str(str);
+            }
+
+            bench "() (11446 Nodes)" |b| {
+                assert_eq!(document.find(()).iter().count(), 11446);
+                b.iter(|| document.find(()));
+            }
+
+            bench "Text (6926 Nodes)" |b| {
+                assert_eq!(document.find(Text).iter().count(), 6926);
+                b.iter(|| document.find(Text));
+            }
+
+            bench "Element (4519 Nodes)" |b| {
+                assert_eq!(document.find(Element).iter().count(), 4519);
+                b.iter(|| document.find(Element));
+            }
+
+            bench "Comment (1 Node)" |b| {
+                assert_eq!(document.find(Comment).iter().count(), 1);
+                b.iter(|| document.find(Comment));
+            }
         }
     }
 }
