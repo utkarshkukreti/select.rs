@@ -24,8 +24,8 @@ speculate! {
             });
         };}
 
-        bench "constructing select::document::Document" |b| {
-            b.iter(|| select::document::Document::from_str(str));
+        bench "constructing Document" |b| {
+            b.iter(|| Document::from_str(str));
         }
 
         context "Document::find()" {
