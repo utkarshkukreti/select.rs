@@ -13,7 +13,7 @@ use selection::Selection;
 #[derive(Clone, Debug, PartialEq)]
 pub enum Data {
     Text(StrTendril),
-    Element(Atom, HashMap<Atom, StrTendril>, Vec<usize>),
+    Element(Atom, Vec<(Atom, StrTendril)>, Vec<usize>),
     Comment(StrTendril)
 }
 
@@ -65,7 +65,10 @@ impl<'a> Node<'a> {
     pub fn attr(&self, name: &str) -> Option<&str> {
         match *self.data() {
             Data::Element(_, ref attrs, _) => {
-                attrs.get(&name.into()).map(|s| &**s)
+                let name = Atom::from(name);
+                attrs.iter()
+                    .find(|&&(ref name_, _)| name == *name_)
+                    .map(|&(_, ref value)| value.as_ref())
             },
             _ => None
         }
@@ -155,7 +158,7 @@ impl<'a> serialize::Serializable for Node<'a> {
 
                 // FIXME: I couldn't get this to work without this awful HashMap
                 // hack.
-                let attrs = attrs.iter().map(|(name, value)| {
+                let attrs = attrs.iter().map(|&(ref name, ref value)| {
                     (QualName::new(ns.clone(), name.clone()), &**value)
                 }).collect::<HashMap<QualName, &str>>();
                 let attrs = attrs.iter().map(|(name, value)| (name, *value));
