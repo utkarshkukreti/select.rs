@@ -124,6 +124,11 @@ speculate! {
             assert_eq!(foo.html(), "foo");
             assert_eq!(quux.html(), "<quux class=\"another-thing\"><!--comment--></quux>");
             assert_eq!(comment.html(), "<!--comment-->");
+
+            let document = Document::from_str("<div a=b c=d e=f g=h i=j>");
+            let div = document.nth(3);
+            assert_eq!(div.name(), Some("div"));
+            assert_eq!(div.html(), r#"<div a="b" c="d" e="f" g="h" i="j"></div>"#);
         }
 
         test "Node::inner_html()" {

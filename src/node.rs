@@ -1,4 +1,3 @@
-use std::collections::HashMap;
 use std::io;
 
 use html5ever::serialize;
@@ -156,12 +155,13 @@ impl<'a> serialize::Serializable for Node<'a> {
                 let ns = Namespace("".into());
                 let name = QualName::new(ns.clone(), name.clone());
 
-                // FIXME: I couldn't get this to work without this awful HashMap
-                // hack.
+                // FIXME: I couldn't get this to work without this awful hack.
                 let attrs = attrs.iter().map(|&(ref name, ref value)| {
-                    (QualName::new(ns.clone(), name.clone()), &**value)
-                }).collect::<HashMap<QualName, &str>>();
-                let attrs = attrs.iter().map(|(name, value)| (name, *value));
+                    (QualName::new(ns.clone(), name.clone()), value.as_ref())
+                }).collect::<Vec<(QualName, &str)>>();
+                let attrs = attrs.iter().map(|&(ref name, ref value)| {
+                    (name, *value)
+                });
 
                 try!(serializer.start_elem(name.clone(), attrs));
 
