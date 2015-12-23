@@ -142,6 +142,13 @@ impl<'a> Node<'a> {
             _ => None
         }
     }
+
+    pub fn children(&self) -> Selection<'a> {
+        Selection::new(self.document, match *self.data() {
+            Data::Element(_, _, ref children) => children.iter().cloned().collect(),
+            _                                 => [].iter().cloned().collect()
+        })
+    }
 }
 
 impl<'a> serialize::Serializable for Node<'a> {

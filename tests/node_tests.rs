@@ -140,5 +140,19 @@ speculate! {
             assert_eq!(quux.inner_html(), "<!--comment-->");
             assert_eq!(comment.inner_html(), "");
         }
+
+        test "Node::children()" {
+            let children = html.children();
+            let mut children = children.iter();
+            assert_eq!(children.next().unwrap().name(), Some("head"));
+            assert_eq!(children.next().unwrap().name(), Some("body"));
+            assert_eq!(children.next(), None);
+
+            assert_eq!(body.children().iter().count(), 2);
+
+            assert_eq!(baz.children().iter().count(), 0);
+
+            assert_eq!(quux.children().iter().count(), 1);
+        }
     }
 }
