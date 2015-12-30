@@ -6,7 +6,7 @@ pub fn main() {
     // stackoverflow.html was fetched from
     // http://stackoverflow.com/questions/tagged/rust?sort=votes&pageSize=50 on
     // Aug 10, 2015.
-    let document = Document::from_str(include_str!("stackoverflow.html"));
+    let document = Document::from(include_str!("stackoverflow.html"));
 
     println!("# Menu");
     for node in document.find(Attr("id", "hmenus")).find(Name("a")).iter() {

@@ -9,8 +9,8 @@ pub use select::node;
 
 speculate! {
     describe "document" {
-        test "Document::from_str()" {
-            let document = Document::from_str("<a b=c>d<e><f></e>g<h><i></i><j><!--k-->");
+        test "Document::from(&str)" {
+            let document = Document::from("<a b=c>d<e><f></e>g<h><i></i><j><!--k-->");
 
             // html, head, and body are automatically added by the parser.
             assert_eq!(document.nodes.len(), 12);
@@ -63,7 +63,7 @@ speculate! {
         test "Document::find()" {
             use select::predicate::*;
 
-            let document = Document::from_str(include_str!("fixtures/struct.Vec.html"));
+            let document = Document::from(include_str!("fixtures/struct.Vec.html"));
             assert_eq!(document.find(()).iter().count(), 11446);
             assert_eq!(document.find(Name("div")).iter().count(), 208);
             assert_eq!(document.find(Attr("id", "main")).iter().count(), 1);

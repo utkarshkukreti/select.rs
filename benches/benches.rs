@@ -25,12 +25,12 @@ speculate! {
         };}
 
         bench "constructing Document" |b| {
-            b.iter(|| Document::from_str(str));
+            b.iter(|| Document::from(str));
         }
 
         context "Document::find()" {
             before {
-                let document = Document::from_str(str);
+                let document = Document::from(str);
             }
 
             bench "() (11446 Nodes)" |b| {
@@ -57,7 +57,7 @@ speculate! {
         context "Node::attr()" {
             before {
                 let html = "<div a=b c=d e=f g=h i=j k=l m=n o=p q=r s=t u=v w=x y=z>";
-                let document = Document::from_str(html);
+                let document = Document::from(html);
                 let node = document.nth(3);
                 assert_eq!(node.name(), Some("div"));
             }

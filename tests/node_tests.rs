@@ -10,9 +10,9 @@ pub use select::node;
 speculate! {
     describe "node" {
         before {
-            let document = Document::from_str("<html><head></head><body id=something>\
-                                     foo<bar>baz<quux class=another-thing>\
-                                     <!--comment-->");
+            let document = Document::from("<html><head></head><body id=something>\
+                                           foo<bar>baz<quux class=another-thing>\
+                                           <!--comment-->");
 
             let html = document.nth(0);
             let head = document.nth(1);
@@ -86,7 +86,7 @@ speculate! {
         test "Node::find()" {
             {
                 use select::predicate::*;
-                let document = Document::from_str(include_str!("fixtures/struct.Vec.html"));
+                let document = Document::from(include_str!("fixtures/struct.Vec.html"));
                 let main = document.find(Attr("id", "main"));
                 let main = main.iter().next().unwrap();
 
@@ -98,7 +98,7 @@ speculate! {
         test "Node::is()" {
             {
                 use select::predicate::*;
-                let document = Document::from_str(include_str!("fixtures/struct.Vec.html"));
+                let document = Document::from(include_str!("fixtures/struct.Vec.html"));
                 for div in document.find(Name("div")).iter() {
                     assert!(div.is(Name("div")));
                 }
@@ -125,7 +125,7 @@ speculate! {
             assert_eq!(quux.html(), "<quux class=\"another-thing\"><!--comment--></quux>");
             assert_eq!(comment.html(), "<!--comment-->");
 
-            let document = Document::from_str("<div a=b c=d e=f g=h i=j>");
+            let document = Document::from("<div a=b c=d e=f g=h i=j>");
             let div = document.nth(3);
             assert_eq!(div.name(), Some("div"));
             assert_eq!(div.html(), r#"<div a="b" c="d" e="f" g="h" i="j"></div>"#);

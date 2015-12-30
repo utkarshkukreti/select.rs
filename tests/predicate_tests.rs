@@ -9,7 +9,7 @@ pub use select::predicate::*;
 speculate! {
     describe "predicate" {
         before {
-            let document = Document::from_str("<html><head></head><body>\
+            let document = Document::from("<html><head></head><body>\
 <article id='post-0' class='post category-foo tag-bar'>foo</article>\
 <!--A Comment-->\
 </body></html>");
