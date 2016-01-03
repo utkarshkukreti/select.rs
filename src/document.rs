@@ -1,3 +1,5 @@
+use tendril::StrTendril;
+
 use node::{self, Node};
 use predicate::Predicate;
 use selection::Selection;
@@ -27,16 +29,16 @@ impl Document {
     }
 }
 
-impl<'a> From<&'a str> for Document {
-    /// Parses the given `&str` into a `Document`.
-    fn from(str: &str) -> Document {
+impl From<StrTendril> for Document {
+    /// Parses the given `StrTendril` into a `Document`.
+    fn from(tendril: StrTendril) -> Document {
         use html5ever::{parse, one_input, rcdom};
 
         let mut document = Document {
             nodes: vec![]
         };
 
-        let rc_dom: rcdom::RcDom = parse(one_input(str.into()),
+        let rc_dom: rcdom::RcDom = parse(one_input(tendril),
                                          Default::default());
         recur(&mut document, &rc_dom.document, None, None);
         return document;
@@ -107,5 +109,12 @@ impl<'a> From<&'a str> for Document {
 
             index
         }
+    }
+}
+
+impl<'a> From<&'a str> for Document {
+    /// Parses the given `&str` into a `Document`.
+    fn from(str: &str) -> Document {
+        Document::from(StrTendril::from(str))
     }
 }
