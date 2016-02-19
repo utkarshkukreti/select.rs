@@ -32,14 +32,15 @@ impl Document {
 impl From<StrTendril> for Document {
     /// Parses the given `StrTendril` into a `Document`.
     fn from(tendril: StrTendril) -> Document {
-        use html5ever::{parse, one_input, rcdom};
+        use html5ever::{parse_document, rcdom};
+        use tendril::stream::TendrilSink;
 
         let mut document = Document {
             nodes: vec![]
         };
 
-        let rc_dom: rcdom::RcDom = parse(one_input(tendril),
-                                         Default::default());
+        let rc_dom = parse_document(rcdom::RcDom::default(),
+                                    Default::default()).one(tendril);
         recur(&mut document, &rc_dom.document, None, None);
         return document;
 

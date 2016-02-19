@@ -4,6 +4,8 @@
 extern crate test;
 
 extern crate html5ever;
+extern crate tendril;
+
 extern crate select;
 
 pub use select::document::Document;
@@ -16,10 +18,12 @@ speculate! {
         }
 
         bench "constructing html5ever::rcdom::RcDom" |b| {{
-            use html5ever::{parse, one_input, rcdom};
+            use html5ever::{parse_document, rcdom};
+            use tendril::stream::TendrilSink;
+
             b.iter(|| {
-                let rc_dom: rcdom::RcDom = parse(one_input(str.into()),
-                                                 Default::default());
+                let rc_dom = parse_document(rcdom::RcDom::default(),
+                                            Default::default()).one(str);
                 rc_dom
             });
         };}
