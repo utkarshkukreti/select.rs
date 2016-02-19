@@ -12,6 +12,6 @@ speculate = "0.0.19"
 
 [dependencies]
 html5ever = "0.5.2"
-bit-set = "0.2.0"
+bit-set = "0.3.0"
 tendril = "0.2.2"
 string_cache = "0.2.9"

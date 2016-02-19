@@ -48,7 +48,7 @@ impl<'a> Selection<'a> {
         };
 
         fn recur(document: &Document, bitset: &mut BitSet, index: usize) {
-            if bitset.contains(&index) {
+            if bitset.contains(index) {
                 return
             }
 
