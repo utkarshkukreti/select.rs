@@ -21,11 +21,11 @@ speculate! {
             let comment = document.nth(5);
         }
 
-        test "()" {
-            assert_eq!(().matches(&html), true);
-            assert_eq!(().matches(&head), true);
-            assert_eq!(().matches(&body), true);
-            assert_eq!(().matches(&article), true);
+        test "Any" {
+            assert_eq!(super::Any.matches(&html), true);
+            assert_eq!(super::Any.matches(&head), true);
+            assert_eq!(super::Any.matches(&body), true);
+            assert_eq!(super::Any.matches(&article), true);
         }
 
         test "Name()" {

@@ -27,9 +27,9 @@ speculate! {
             use select::predicate::*;
 
             let document = Document::from(include_str!("fixtures/struct.Vec.html"));
-            let all = document.find(());
+            let all = document.find(Any);
 
-            assert_eq!(all.filter(()).iter().count(), 11446);
+            assert_eq!(all.filter(Any).iter().count(), 11446);
 
             let divs = all.filter(Name("div"));
             assert_eq!(divs.iter().count(), 208);
@@ -50,7 +50,7 @@ speculate! {
             use select::predicate::*;
 
             let document = Document::from(include_str!("fixtures/struct.Vec.html"));
-            let all = document.find(());
+            let all = document.find(Any);
 
             let struct_divs = all.find(Class("struct")).find(Name("div"));
             assert_eq!(struct_divs.iter().count(), 204);

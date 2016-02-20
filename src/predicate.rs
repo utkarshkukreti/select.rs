@@ -15,13 +15,6 @@ pub trait Predicate: Sized {
 }
 
 /// Matches any Node.
-impl Predicate for () {
-    fn matches(&self, _: &Node) -> bool {
-        true
-    }
-}
-
-/// Matches any Node.
 #[derive(Copy, Clone, Debug, PartialEq)]
 pub struct Any;
 

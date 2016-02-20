@@ -37,9 +37,9 @@ speculate! {
                 let document = Document::from(str);
             }
 
-            bench "() (11446 Nodes)" |b| {
-                assert_eq!(document.find(()).iter().count(), 11446);
-                b.iter(|| document.find(()));
+            bench "Any (11446 Nodes)" |b| {
+                assert_eq!(document.find(Any).iter().count(), 11446);
+                b.iter(|| document.find(Any));
             }
 
             bench "Text (6926 Nodes)" |b| {

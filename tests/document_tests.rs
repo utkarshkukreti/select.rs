@@ -64,7 +64,7 @@ speculate! {
             use select::predicate::*;
 
             let document = Document::from(include_str!("fixtures/struct.Vec.html"));
-            assert_eq!(document.find(()).iter().count(), 11446);
+            assert_eq!(document.find(Any).iter().count(), 11446);
             assert_eq!(document.find(Name("div")).iter().count(), 208);
             assert_eq!(document.find(Attr("id", "main")).iter().count(), 1);
             assert_eq!(document.find(Class("struct")).iter().count(), 168);
