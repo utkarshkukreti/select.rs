@@ -21,6 +21,16 @@ impl Predicate for () {
     }
 }
 
+/// Matches any Node.
+#[derive(Copy, Clone, Debug, PartialEq)]
+pub struct Any;
+
+impl Predicate for Any {
+    fn matches(&self, _: &Node) -> bool {
+        true
+    }
+}
+
 /// Matches Element Node with name `T`.
 #[derive(Copy, Clone, Debug, PartialEq)]
 pub struct Name<T>(pub T);
