@@ -15,18 +15,18 @@ speculate! {
             // html, head, and body are automatically added by the parser.
             assert_eq!(document.nodes.len(), 12);
 
-            let html = document.nth(0);
-            let head = document.nth(1);
-            let body = document.nth(2);
-            let a = document.nth(3);
-            let d = document.nth(4);
-            let e = document.nth(5);
-            let f = document.nth(6);
-            let g = document.nth(7);
-            let h = document.nth(8);
-            let i = document.nth(9);
-            let j = document.nth(10);
-            let k = document.nth(11);
+            let html = document.nth(0).unwrap();
+            let head = document.nth(1).unwrap();
+            let body = document.nth(2).unwrap();
+            let a = document.nth(3).unwrap();
+            let d = document.nth(4).unwrap();
+            let e = document.nth(5).unwrap();
+            let f = document.nth(6).unwrap();
+            let g = document.nth(7).unwrap();
+            let h = document.nth(8).unwrap();
+            let i = document.nth(9).unwrap();
+            let j = document.nth(10).unwrap();
+            let k = document.nth(11).unwrap();
 
             assert_eq!(html.name(), Some("html"));
 

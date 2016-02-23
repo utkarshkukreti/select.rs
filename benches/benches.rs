@@ -62,7 +62,7 @@ speculate! {
             before {
                 let html = "<div a=b c=d e=f g=h i=j k=l m=n o=p q=r s=t u=v w=x y=z>";
                 let document = Document::from(html);
-                let node = document.nth(3);
+                let node = document.nth(3).unwrap();
                 assert_eq!(node.name(), Some("div"));
             }
 

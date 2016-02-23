@@ -35,10 +35,14 @@ pub struct Node<'a> {
 }
 
 impl<'a> Node<'a> {
-    pub fn new(document: &'a Document, index: usize) -> Node<'a> {
-        Node {
-            document: document,
-            index: index
+    pub fn new(document: &'a Document, index: usize) -> Option<Node<'a>> {
+        if index < document.nodes.len() {
+            Some(Node {
+                document: document,
+                index: index
+            })
+        } else {
+            None
         }
     }
 
@@ -74,15 +78,15 @@ impl<'a> Node<'a> {
     }
 
     pub fn parent(&self) -> Option<Node<'a>> {
-        self.raw().parent.map(|index| self.document.nth(index))
+        self.raw().parent.map(|index| self.document.nth(index).unwrap())
     }
 
     pub fn prev(&self) -> Option<Node<'a>> {
-        self.raw().prev.map(|index| self.document.nth(index))
+        self.raw().prev.map(|index| self.document.nth(index).unwrap())
     }
 
     pub fn next(&self) -> Option<Node<'a>> {
-        self.raw().next.map(|index| self.document.nth(index))
+        self.raw().next.map(|index| self.document.nth(index).unwrap())
     }
 
     pub fn text(&self) -> String {
@@ -114,7 +118,7 @@ impl<'a> Node<'a> {
         if let Data::Element(_, _, ref children) = *self.data() {
             for &child in children {
                 serialize::serialize(&mut buf,
-                                     &self.document.nth(child),
+                                     &self.document.nth(child).unwrap(),
                                      Default::default()).unwrap();
             }
         }
@@ -173,7 +177,7 @@ impl<'a> serialize::Serializable for Node<'a> {
                 try!(serializer.start_elem(name.clone(), attrs));
 
                 for &child in children {
-                    let child = self.document.nth(child);
+                    let child = self.document.nth(child).unwrap();
                     try!(serialize::Serializable::serialize(&child,
                                                             serializer,
                                                             traversal_scope));

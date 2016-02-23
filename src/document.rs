@@ -14,17 +14,13 @@ impl Document {
     /// Returns a `Selection` containing nodes passing the given predicate `p`.
     pub fn find<'a, P: Predicate>(&'a self, p: P) -> Selection<'a> {
         Selection::new(self, (0..self.nodes.len()).filter(|&index| {
-            p.matches(&self.nth(index))
+            p.matches(&self.nth(index).unwrap())
         }).collect())
     }
 
-    /// Returns the `n`th node of the document as a `Node`, indexed from 0.
-    ///
-    /// # Panics
-    ///
-    /// Panics if `n` is not less than the number of nodes in `self`.
-    pub fn nth(&self, n: usize) -> Node {
-        assert!(n < self.nodes.len());
+    /// Returns the `n`th node of the document as a `Some(Node)`, indexed from
+    /// 0, or `None` if n is greater than or equal to the number of nodes.
+    pub fn nth(&self, n: usize) -> Option<Node> {
         Node::new(self, n)
     }
 }

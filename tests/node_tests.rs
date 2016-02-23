@@ -14,14 +14,14 @@ speculate! {
                                            foo<bar>baz<quux class=another-thing>\
                                            <!--comment-->");
 
-            let html = document.nth(0);
-            let head = document.nth(1);
-            let body = document.nth(2);
-            let foo = document.nth(3);
-            let bar = document.nth(4);
-            let baz = document.nth(5);
-            let quux = document.nth(6);
-            let comment = document.nth(7);
+            let html = document.nth(0).unwrap();
+            let head = document.nth(1).unwrap();
+            let body = document.nth(2).unwrap();
+            let foo = document.nth(3).unwrap();
+            let bar = document.nth(4).unwrap();
+            let baz = document.nth(5).unwrap();
+            let quux = document.nth(6).unwrap();
+            let comment = document.nth(7).unwrap();
         }
 
         test "Node::name()" {
@@ -126,7 +126,7 @@ speculate! {
             assert_eq!(comment.html(), "<!--comment-->");
 
             let document = Document::from("<div a=b c=d e=f g=h i=j>");
-            let div = document.nth(3);
+            let div = document.nth(3).unwrap();
             assert_eq!(div.name(), Some("div"));
             assert_eq!(div.html(), r#"<div a="b" c="d" e="f" g="h" i="j"></div>"#);
         }

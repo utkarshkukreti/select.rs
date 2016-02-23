@@ -13,12 +13,12 @@ speculate! {
 <article id='post-0' class='post category-foo tag-bar'>foo</article>\
 <!--A Comment-->\
 </body></html>");
-            let html = document.nth(0);
-            let head = document.nth(1);
-            let body = document.nth(2);
-            let article = document.nth(3);
-            let foo = document.nth(4);
-            let comment = document.nth(5);
+            let html = document.nth(0).unwrap();
+            let head = document.nth(1).unwrap();
+            let body = document.nth(2).unwrap();
+            let article = document.nth(3).unwrap();
+            let foo = document.nth(4).unwrap();
+            let comment = document.nth(5).unwrap();
         }
 
         test "Any" {
