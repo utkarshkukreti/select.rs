@@ -11,7 +11,7 @@ repository = "https://github.com/utkarshkukreti/select.rs"
 speculate = "0.0.19"
 
 [dependencies]
-html5ever = "0.5.2"
-bit-set = "0.3.0"
+html5ever = "0.5.3"
+bit-set = "0.4.0"
 tendril = "0.2.2"
-string_cache = "0.2.9"
+string_cache = "0.2.11"
