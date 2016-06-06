@@ -33,7 +33,7 @@ speculate! {
 
             let divs = all.filter(Name("div"));
             assert_eq!(divs.iter().count(), 208);
-            for div in divs.iter() {
+            for div in &divs {
                 assert_eq!(div.name(), Some("div"))
             }
 
@@ -41,7 +41,7 @@ speculate! {
 
             let structs = all.filter(Class("struct"));
             assert_eq!(structs.iter().count(), 168);
-            for struct_ in structs.iter() {
+            for struct_ in &structs {
                 assert!(struct_.attr("class").unwrap().contains("struct"))
             };
         }
@@ -54,13 +54,13 @@ speculate! {
 
             let struct_divs = all.find(Class("struct")).find(Name("div"));
             assert_eq!(struct_divs.iter().count(), 204);
-            for struct_div in struct_divs.iter() {
+            for struct_div in &struct_divs {
                 assert_eq!(struct_div.name(), Some("div"));
             };
 
             let struct_as = all.find(Class("struct")).find(Name("a"));
             assert_eq!(struct_as.iter().count(), 1260);
-            for struct_a in struct_as.iter() {
+            for struct_a in &struct_as {
                 assert_eq!(struct_a.name(), Some("a"));
             };
         }
@@ -101,13 +101,13 @@ speculate! {
 
             let div_children = document.find(Name("div")).children();
             assert_eq!(div_children.iter().count(), 1210);
-            for div_child in div_children.iter() {
+            for div_child in &div_children {
                 assert_eq!(div_child.parent().unwrap().name(), Some("div"));
             }
 
             let span_children = document.find(Name("span")).children();
             assert_eq!(span_children.iter().count(), 1986);
-            for span_child in span_children.iter() {
+            for span_child in &span_children {
                 assert_eq!(span_child.parent().unwrap().name(), Some("span"));
             };
         }

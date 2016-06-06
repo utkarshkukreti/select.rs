@@ -36,7 +36,7 @@ impl<'a> Selection<'a> {
     pub fn find<P: Predicate>(&self, p: P) -> Selection<'a> {
         let mut bitset = BitSet::new();
 
-        for index in self.bitset.iter() {
+        for index in &self.bitset {
             recur(self.document, &mut bitset, index);
         }
 
@@ -94,7 +94,7 @@ impl<'a> Selection<'a> {
 
     pub fn parents(&self) -> Selection<'a> {
         let mut bitset = BitSet::new();
-        for mut node in self.iter() {
+        for mut node in self {
             while let Some(parent) = node.parent() {
                 bitset.insert(parent.index());
                 node = parent;
@@ -109,7 +109,7 @@ impl<'a> Selection<'a> {
 
     pub fn children(&self) -> Selection<'a> {
         let mut bitset = BitSet::new();
-        for node in self.iter() {
+        for node in self {
             match self.document.nodes[node.index()].data {
                 node::Data::Text(_) => {},
                 node::Data::Element(_, _, ref children) => {
@@ -143,5 +143,14 @@ impl<'a> Iterator for Iter<'a> {
 
     fn next(&mut self) -> Option<Node<'a>> {
         self.inner.next().map(|index| self.selection.document.nth(index).unwrap())
+    }
+}
+
+impl<'a> IntoIterator for &'a Selection<'a> {
+    type Item = Node<'a>;
+    type IntoIter = Iter<'a>;
+
+    fn into_iter(self) -> Self::IntoIter {
+        self.iter()
     }
 }

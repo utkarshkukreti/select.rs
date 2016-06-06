@@ -22,7 +22,7 @@ pub fn main() {
     let document = Document::from(include_str!("stackoverflow.html"));
 
     println!("# Menu");
-    for node in document.find(Attr("id", "hmenus")).find(Name("a")).iter() {
+    for node in &document.find(Attr("id", "hmenus")).find(Name("a")) {
         println!("{} ({:?})", node.text(), node.attr("href").unwrap());
     }
     println!("");
