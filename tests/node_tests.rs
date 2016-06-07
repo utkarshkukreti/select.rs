@@ -99,7 +99,7 @@ speculate! {
             {
                 use select::predicate::*;
                 let document = Document::from(include_str!("fixtures/struct.Vec.html"));
-                for div in document.find(Name("div")).iter() {
+                for div in &document.find(Name("div")) {
                     assert!(div.is(Name("div")));
                 }
             };
