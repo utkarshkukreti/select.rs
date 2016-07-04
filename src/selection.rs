@@ -130,6 +130,10 @@ impl<'a> Selection<'a> {
     pub fn first(&self) -> Option<Node<'a>> {
         self.bitset.iter().next().map(|index| self.document.nth(index).unwrap())
     }
+
+    pub fn len(&self) -> usize {
+        self.bitset.len()
+    }
 }
 
 #[derive(Clone)]
