@@ -115,3 +115,10 @@ impl<'a> From<&'a str> for Document {
         Document::from(StrTendril::from(str))
     }
 }
+
+impl From<String> for Document {
+    /// Parses the given `String` into a `Document`.
+    fn from(string: String) -> Document {
+        Document::from(StrTendril::from(string))
+    }
+}
