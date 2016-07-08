@@ -60,6 +60,18 @@ speculate! {
             assert_eq!(k.parent(), Some(j));
         }
 
+        test "Docucment::from_read()" {
+            use select::predicate::*;
+            use std::io::Cursor;
+
+            let html = "<html><body><p>Hello</p></body></html>";
+            let cursor = Cursor::new(html);
+            let document = Document::from_read(cursor);
+
+            assert!(document.is_ok());
+            assert_eq!(document.unwrap().find(Name("p")).len(), 1);
+        }
+
         test "Document::find()" {
             use select::predicate::*;
 
