@@ -1,8 +1,10 @@
-use tendril::StrTendril;
+use tendril::{StrTendril, ByteTendril, ReadExt};
 
 use node::{self, Node};
 use predicate::Predicate;
 use selection::Selection;
+
+use std::io;
 
 /// An HTML document.
 #[derive(Clone, Debug, PartialEq)]
@@ -22,6 +24,18 @@ impl Document {
     /// 0, or `None` if n is greater than or equal to the number of nodes.
     pub fn nth(&self, n: usize) -> Option<Node> {
         Node::new(self, n)
+    }
+
+    pub fn from_read<R: io::Read>(mut readable: R) -> io::Result<Document> {
+        let mut byte_tendril = ByteTendril::new();
+        try!(readable.read_to_tendril(&mut byte_tendril));
+
+        match byte_tendril.try_reinterpret() {
+            Ok(str_tendril) => Ok(Document::from(str_tendril)),
+            Err(_) => Err(io::Error::new(
+                    io::ErrorKind::InvalidData,
+                    "stream did not contain valid UTF-8")),
+        }
     }
 }
 
