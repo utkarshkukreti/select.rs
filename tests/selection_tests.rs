@@ -29,18 +29,18 @@ speculate! {
             let document = Document::from(include_str!("fixtures/struct.Vec.html"));
             let all = document.find(Any);
 
-            assert_eq!(all.filter(Any).iter().count(), 11446);
+            assert_eq!(all.filter(Any).len(), 11446);
 
             let divs = all.filter(Name("div"));
-            assert_eq!(divs.iter().count(), 208);
+            assert_eq!(divs.len(), 208);
             for div in &divs {
                 assert_eq!(div.name(), Some("div"))
             }
 
-            assert_eq!(all.filter(Attr("id", "main")).iter().count(), 1);
+            assert_eq!(all.filter(Attr("id", "main")).len(), 1);
 
             let structs = all.filter(Class("struct"));
-            assert_eq!(structs.iter().count(), 168);
+            assert_eq!(structs.len(), 168);
             for struct_ in &structs {
                 assert!(struct_.attr("class").unwrap().contains("struct"))
             };
@@ -53,13 +53,13 @@ speculate! {
             let all = document.find(Any);
 
             let struct_divs = all.find(Class("struct")).find(Name("div"));
-            assert_eq!(struct_divs.iter().count(), 204);
+            assert_eq!(struct_divs.len(), 204);
             for struct_div in &struct_divs {
                 assert_eq!(struct_div.name(), Some("div"));
             };
 
             let struct_as = all.find(Class("struct")).find(Name("a"));
-            assert_eq!(struct_as.iter().count(), 1260);
+            assert_eq!(struct_as.len(), 1260);
             for struct_a in &struct_as {
                 assert_eq!(struct_a.name(), Some("a"));
             };
@@ -70,8 +70,8 @@ speculate! {
 
             let document = Document::from(include_str!("fixtures/struct.Vec.html"));
 
-            assert_eq!(document.find(Name("div")).parent().iter().count(), 8);
-            assert_eq!(document.find(Name("span")).parent().iter().count(), 205);
+            assert_eq!(document.find(Name("div")).parent().len(), 8);
+            assert_eq!(document.find(Name("span")).parent().len(), 205);
         }
 
         test "Selection::prev() / Selection::next()" {
@@ -79,10 +79,10 @@ speculate! {
 
             let document = Document::from(include_str!("fixtures/struct.Vec.html"));
 
-            assert_eq!(document.find(Name("div")).prev().iter().count(), 208);
-            assert_eq!(document.find(Name("div")).next().iter().count(), 203);
-            assert_eq!(document.find(Name("span")).prev().iter().count(), 1729);
-            assert_eq!(document.find(Name("span")).next().iter().count(), 1690);
+            assert_eq!(document.find(Name("div")).prev().len(), 208);
+            assert_eq!(document.find(Name("div")).next().len(), 203);
+            assert_eq!(document.find(Name("span")).prev().len(), 1729);
+            assert_eq!(document.find(Name("span")).next().len(), 1690);
         }
 
         test "Selection::parents()" {
@@ -90,8 +90,8 @@ speculate! {
 
             let document = Document::from(include_str!("fixtures/struct.Vec.html"));
 
-            assert_eq!(document.find(Name("div")).parents().iter().count(), 10);
-            assert_eq!(document.find(Name("span")).parents().iter().count(), 308);
+            assert_eq!(document.find(Name("div")).parents().len(), 10);
+            assert_eq!(document.find(Name("span")).parents().len(), 308);
         }
 
         test "Selection::children()" {
@@ -100,13 +100,13 @@ speculate! {
             let document = Document::from(include_str!("fixtures/struct.Vec.html"));
 
             let div_children = document.find(Name("div")).children();
-            assert_eq!(div_children.iter().count(), 1210);
+            assert_eq!(div_children.len(), 1210);
             for div_child in &div_children {
                 assert_eq!(div_child.parent().unwrap().name(), Some("div"));
             }
 
             let span_children = document.find(Name("span")).children();
-            assert_eq!(span_children.iter().count(), 1986);
+            assert_eq!(span_children.len(), 1986);
             for span_child in &span_children {
                 assert_eq!(span_child.parent().unwrap().name(), Some("span"));
             };

@@ -90,8 +90,8 @@ speculate! {
                 let main = document.find(Attr("id", "main"));
                 let main = main.iter().next().unwrap();
 
-                assert_eq!(main.find(Name("span")).iter().count(), 1785);
-                assert_eq!(main.find(Name("div")).iter().count(), 204);
+                assert_eq!(main.find(Name("span")).len(), 1785);
+                assert_eq!(main.find(Name("div")).len(), 204);
             };
         }
 
@@ -148,11 +148,11 @@ speculate! {
             assert_eq!(children.next().unwrap().name(), Some("body"));
             assert_eq!(children.next(), None);
 
-            assert_eq!(body.children().iter().count(), 2);
+            assert_eq!(body.children().len(), 2);
 
-            assert_eq!(baz.children().iter().count(), 0);
+            assert_eq!(baz.children().len(), 0);
 
-            assert_eq!(quux.children().iter().count(), 1);
+            assert_eq!(quux.children().len(), 1);
         }
     }
 }
