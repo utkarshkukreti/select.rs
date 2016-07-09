@@ -120,5 +120,28 @@ speculate! {
             assert!(document.find(Name("div")).first().is_some());
             assert!(document.find(Name("divv")).first().is_none());
         }
+
+        test "Selection::len() == Selection::iter().count()" {
+            use select::predicate::*;
+
+            let document = Document::from(include_str!("fixtures/struct.Vec.html"));
+
+            macro_rules! check {
+                ($($selector:expr),*) => {{
+                    $({
+                        let selection = document.find($selector);
+                        assert_eq!(selection.len(), selection.iter().count());
+                    })*
+                }}
+            }
+
+            check! {
+                Any,
+                Attr("id", "main"),
+                Class("struct"),
+                Name("div"),
+                Name("span")
+            }
+        }
     }
 }
