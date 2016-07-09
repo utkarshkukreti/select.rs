@@ -9,15 +9,16 @@ use std::io;
 /// An HTML document.
 #[derive(Clone, Debug, PartialEq)]
 pub struct Document {
-    pub nodes: Vec<node::Raw>
+    pub nodes: Vec<node::Raw>,
 }
 
 impl Document {
     /// Returns a `Selection` containing nodes passing the given predicate `p`.
     pub fn find<'a, P: Predicate>(&'a self, p: P) -> Selection<'a> {
-        Selection::new(self, (0..self.nodes.len()).filter(|&index| {
-            p.matches(&self.nth(index).unwrap())
-        }).collect())
+        Selection::new(self,
+                       (0..self.nodes.len())
+                           .filter(|&index| p.matches(&self.nth(index).unwrap()))
+                           .collect())
     }
 
     /// Returns the `n`th node of the document as a `Some(Node)`, indexed from
@@ -32,9 +33,10 @@ impl Document {
 
         match byte_tendril.try_reinterpret() {
             Ok(str_tendril) => Ok(Document::from(str_tendril)),
-            Err(_) => Err(io::Error::new(
-                    io::ErrorKind::InvalidData,
-                    "stream did not contain valid UTF-8")),
+            Err(_) => {
+                Err(io::Error::new(io::ErrorKind::InvalidData,
+                                   "stream did not contain valid UTF-8"))
+            }
         }
     }
 }
@@ -45,19 +47,17 @@ impl From<StrTendril> for Document {
         use html5ever::{parse_document, rcdom};
         use tendril::stream::TendrilSink;
 
-        let mut document = Document {
-            nodes: vec![]
-        };
+        let mut document = Document { nodes: vec![] };
 
-        let rc_dom = parse_document(rcdom::RcDom::default(),
-                                    Default::default()).one(tendril);
+        let rc_dom = parse_document(rcdom::RcDom::default(), Default::default()).one(tendril);
         recur(&mut document, &rc_dom.document, None, None);
         return document;
 
         fn recur(document: &mut Document,
                  node: &rcdom::Handle,
                  parent: Option<usize>,
-                 prev: Option<usize>) -> Option<usize> {
+                 prev: Option<usize>)
+                 -> Option<usize> {
             match node.borrow().node {
                 rcdom::Document => {
                     let mut prev = None;
@@ -65,21 +65,21 @@ impl From<StrTendril> for Document {
                         prev = recur(document, &child, None, prev)
                     }
                     None
-                },
+                }
                 rcdom::Doctype(..) => None,
                 rcdom::Text(ref text) => {
                     let data = node::Data::Text(text.clone());
                     Some(append(document, data, parent, prev))
-                },
+                }
                 rcdom::Comment(ref comment) => {
                     let data = node::Data::Comment(comment.clone());
                     Some(append(document, data, parent, prev))
-                },
+                }
                 rcdom::Element(ref name, ref _element, ref attrs) => {
                     let name = name.local.clone();
-                    let attrs = attrs.iter().map(|attr| {
-                        (attr.name.local.clone(), attr.value.clone())
-                    }).collect();
+                    let attrs = attrs.iter()
+                        .map(|attr| (attr.name.local.clone(), attr.value.clone()))
+                        .collect();
                     let data = node::Data::Element(name, attrs, vec![]);
                     let index = append(document, data, parent, prev);
                     let mut prev = None;
@@ -94,7 +94,8 @@ impl From<StrTendril> for Document {
         fn append(document: &mut Document,
                   data: node::Data,
                   parent: Option<usize>,
-                  prev: Option<usize>) -> usize {
+                  prev: Option<usize>)
+                  -> usize {
             let index = document.nodes.len();
 
             document.nodes.push(node::Raw {
@@ -102,15 +103,15 @@ impl From<StrTendril> for Document {
                 parent: parent,
                 prev: prev,
                 next: None,
-                data: data
+                data: data,
             });
 
             if let Some(parent) = parent {
                 match document.nodes[parent].data {
                     node::Data::Element(_, _, ref mut children) => {
                         children.push(index);
-                    },
-                    _ => unreachable!()
+                    }
+                    _ => unreachable!(),
                 }
             }
 

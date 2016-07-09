@@ -40,9 +40,8 @@ pub struct Class<T>(pub T);
 
 impl<'a> Predicate for Class<&'a str> {
     fn matches(&self, node: &Node) -> bool {
-        node.attr("class").map_or(false, |classes| {
-            classes.split_whitespace().any(|class| class == self.0)
-        })
+        node.attr("class").map_or(false,
+                                  |classes| classes.split_whitespace().any(|class| class == self.0))
     }
 }
 
@@ -88,7 +87,7 @@ impl Predicate for Element {
     fn matches(&self, node: &Node) -> bool {
         match *node.data() {
             node::Data::Element(..) => true,
-            _ => false
+            _ => false,
         }
     }
 }
@@ -101,7 +100,7 @@ impl Predicate for Text {
     fn matches(&self, node: &Node) -> bool {
         match *node.data() {
             node::Data::Text(..) => true,
-            _ => false
+            _ => false,
         }
     }
 }
@@ -114,7 +113,7 @@ impl Predicate for Comment {
     fn matches(&self, node: &Node) -> bool {
         match *node.data() {
             node::Data::Comment(..) => true,
-            _ => false
+            _ => false,
         }
     }
 }

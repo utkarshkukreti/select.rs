@@ -13,7 +13,7 @@ use selection::Selection;
 pub enum Data {
     Text(StrTendril),
     Element(Atom, Vec<(Atom, StrTendril)>, Vec<usize>),
-    Comment(StrTendril)
+    Comment(StrTendril),
 }
 
 /// Internal representation of a Node. Not of much use without a reference to a
@@ -24,14 +24,14 @@ pub struct Raw {
     pub parent: Option<usize>,
     pub prev: Option<usize>,
     pub next: Option<usize>,
-    pub data: Data
+    pub data: Data,
 }
 
 /// A Node.
 #[derive(Copy, Clone, Debug, PartialEq)]
 pub struct Node<'a> {
     document: &'a Document,
-    index: usize
+    index: usize,
 }
 
 impl<'a> Node<'a> {
@@ -39,7 +39,7 @@ impl<'a> Node<'a> {
         if index < document.nodes.len() {
             Some(Node {
                 document: document,
-                index: index
+                index: index,
             })
         } else {
             None
@@ -61,7 +61,7 @@ impl<'a> Node<'a> {
     pub fn name(&self) -> Option<&str> {
         match *self.data() {
             Data::Element(ref name, _, _) => Some(name),
-            _ => None
+            _ => None,
         }
     }
 
@@ -72,8 +72,8 @@ impl<'a> Node<'a> {
                 attrs.iter()
                     .find(|&&(ref name_, _)| name == *name_)
                     .map(|&(_, ref value)| value.as_ref())
-            },
-            _ => None
+            }
+            _ => None,
         }
     }
 
@@ -101,7 +101,7 @@ impl<'a> Node<'a> {
                     for &child in children {
                         recur(document, child, string)
                     }
-                },
+                }
                 Data::Comment(_) => {}
             }
         }
@@ -119,7 +119,8 @@ impl<'a> Node<'a> {
             for &child in children {
                 serialize::serialize(&mut buf,
                                      &self.document.nth(child).unwrap(),
-                                     Default::default()).unwrap();
+                                     Default::default())
+                    .unwrap();
             }
         }
         String::from_utf8(buf).unwrap()
@@ -136,22 +137,23 @@ impl<'a> Node<'a> {
     pub fn as_text(&self) -> Option<&str> {
         match *self.data() {
             Data::Text(ref text) => Some(&text),
-            _ => None
+            _ => None,
         }
     }
 
     pub fn as_comment(&self) -> Option<&str> {
         match *self.data() {
             Data::Comment(ref comment) => Some(&comment),
-            _ => None
+            _ => None,
         }
     }
 
     pub fn children(&self) -> Selection<'a> {
-        Selection::new(self.document, match *self.data() {
-            Data::Element(_, _, ref children) => children.iter().cloned().collect(),
-            _                                 => [].iter().cloned().collect()
-        })
+        Selection::new(self.document,
+                       match *self.data() {
+                           Data::Element(_, _, ref children) => children.iter().cloned().collect(),
+                           _ => [].iter().cloned().collect(),
+                       })
     }
 }
 
@@ -167,27 +169,25 @@ impl<'a> serialize::Serializable for Node<'a> {
                 let name = QualName::new(ns.clone(), name.clone());
 
                 // FIXME: I couldn't get this to work without this awful hack.
-                let attrs = attrs.iter().map(|&(ref name, ref value)| {
-                    (QualName::new(ns.clone(), name.clone()), value.as_ref())
-                }).collect::<Vec<(QualName, &str)>>();
-                let attrs = attrs.iter().map(|&(ref name, ref value)| {
-                    (name, *value)
-                });
+                let attrs = attrs.iter()
+                    .map(|&(ref name, ref value)| {
+                        (QualName::new(ns.clone(), name.clone()), value.as_ref())
+                    })
+                    .collect::<Vec<(QualName, &str)>>();
+                let attrs = attrs.iter().map(|&(ref name, ref value)| (name, *value));
 
                 try!(serializer.start_elem(name.clone(), attrs));
 
                 for &child in children {
                     let child = self.document.nth(child).unwrap();
-                    try!(serialize::Serializable::serialize(&child,
-                                                            serializer,
-                                                            traversal_scope));
+                    try!(serialize::Serializable::serialize(&child, serializer, traversal_scope));
                 }
 
                 try!(serializer.end_elem(name.clone()));
 
                 Ok(())
-            },
-            Data::Comment(ref comment) => serializer.write_comment(&comment)
+            }
+            Data::Comment(ref comment) => serializer.write_comment(&comment),
         }
     }
 }

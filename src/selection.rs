@@ -6,30 +6,31 @@ use predicate::Predicate;
 #[derive(Clone, Debug, PartialEq)]
 pub struct Selection<'a> {
     document: &'a Document,
-    bitset: BitSet
+    bitset: BitSet,
 }
 
 impl<'a> Selection<'a> {
     pub fn new(document: &'a Document, bitset: BitSet) -> Selection<'a> {
         Selection {
             document: document,
-            bitset: bitset
+            bitset: bitset,
         }
     }
 
     pub fn iter(&'a self) -> Iter<'a> {
         Iter {
             selection: self,
-            inner: self.bitset.iter()
+            inner: self.bitset.iter(),
         }
     }
 
     pub fn filter<P: Predicate>(&self, p: P) -> Selection<'a> {
         Selection {
             document: self.document,
-            bitset: self.bitset.iter().filter(|&index| {
-                p.matches(&self.document.nth(index).unwrap())
-            }).collect()
+            bitset: self.bitset
+                .iter()
+                .filter(|&index| p.matches(&self.document.nth(index).unwrap()))
+                .collect(),
         }
     }
 
@@ -42,24 +43,24 @@ impl<'a> Selection<'a> {
 
         return Selection {
             document: self.document,
-            bitset: bitset.iter().filter(|&index| {
-                p.matches(&self.document.nth(index).unwrap())
-            }).collect()
+            bitset: bitset.iter()
+                .filter(|&index| p.matches(&self.document.nth(index).unwrap()))
+                .collect(),
         };
 
         fn recur(document: &Document, bitset: &mut BitSet, index: usize) {
             if bitset.contains(index) {
-                return
+                return;
             }
 
             match document.nodes[index].data {
-                node::Data::Text(..) => {},
+                node::Data::Text(..) => {}
                 node::Data::Element(_, _, ref children) => {
                     for &child in children {
                         recur(document, bitset, child);
                         bitset.insert(child);
                     }
-                },
+                }
                 node::Data::Comment(..) => {}
             }
         }
@@ -68,27 +69,27 @@ impl<'a> Selection<'a> {
     pub fn parent(&self) -> Selection<'a> {
         Selection {
             document: self.document,
-            bitset: self.iter().filter_map(|node| {
-                node.parent().map(|parent| parent.index())
-            }).collect()
+            bitset: self.iter()
+                .filter_map(|node| node.parent().map(|parent| parent.index()))
+                .collect(),
         }
     }
 
     pub fn prev(&self) -> Selection<'a> {
         Selection {
             document: self.document,
-            bitset: self.iter().filter_map(|node| {
-                node.prev().map(|prev| prev.index())
-            }).collect()
+            bitset: self.iter()
+                .filter_map(|node| node.prev().map(|prev| prev.index()))
+                .collect(),
         }
     }
 
     pub fn next(&self) -> Selection<'a> {
         Selection {
             document: self.document,
-            bitset: self.iter().filter_map(|node| {
-                node.next().map(|next| next.index())
-            }).collect()
+            bitset: self.iter()
+                .filter_map(|node| node.next().map(|next| next.index()))
+                .collect(),
         }
     }
 
@@ -103,7 +104,7 @@ impl<'a> Selection<'a> {
 
         Selection {
             document: self.document,
-            bitset: bitset
+            bitset: bitset,
         }
     }
 
@@ -111,19 +112,19 @@ impl<'a> Selection<'a> {
         let mut bitset = BitSet::new();
         for node in self {
             match self.document.nodes[node.index()].data {
-                node::Data::Text(_) => {},
+                node::Data::Text(_) => {}
                 node::Data::Element(_, _, ref children) => {
                     for &child in children {
                         bitset.insert(child);
                     }
-                },
+                }
                 node::Data::Comment(..) => {}
             }
         }
 
         Selection {
             document: self.document,
-            bitset: bitset
+            bitset: bitset,
         }
     }
 
@@ -139,7 +140,7 @@ impl<'a> Selection<'a> {
 #[derive(Clone)]
 pub struct Iter<'a> {
     selection: &'a Selection<'a>,
-    inner: bit_set::Iter<'a, u32>
+    inner: bit_set::Iter<'a, u32>,
 }
 
 impl<'a> Iterator for Iter<'a> {
