@@ -143,5 +143,17 @@ speculate! {
                 Name("span")
             }
         }
+
+        test "Iter (lifetimes)" {
+            let document = Document::from("<html><head></head><body>\
+<article id='post-0' class='post category-foo tag-bar'></article>\
+</body></html>");
+            let html = {
+                let selection = Selection::new(&document,
+                                               [0, 2, 3].iter().cloned().collect());
+                selection.iter().next().unwrap()
+            };
+            assert_eq!(html.name(), Some("html"));
+        }
     }
 }
