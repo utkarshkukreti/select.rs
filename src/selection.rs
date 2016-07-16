@@ -17,7 +17,7 @@ impl<'a> Selection<'a> {
         }
     }
 
-    pub fn iter(&'a self) -> Iter<'a> {
+    pub fn iter<'sel>(&'sel self) -> Iter<'sel, 'a> {
         Iter {
             selection: self,
             inner: self.bit_set.iter(),
@@ -138,22 +138,22 @@ impl<'a> Selection<'a> {
 }
 
 #[derive(Clone)]
-pub struct Iter<'a> {
-    selection: &'a Selection<'a>,
-    inner: bit_set::Iter<'a, u32>,
+pub struct Iter<'sel, 'doc: 'sel> {
+    selection: &'sel Selection<'doc>,
+    inner: bit_set::Iter<'sel, u32>,
 }
 
-impl<'a> Iterator for Iter<'a> {
-    type Item = Node<'a>;
+impl<'sel, 'doc> Iterator for Iter<'sel, 'doc> {
+    type Item = Node<'doc>;
 
-    fn next(&mut self) -> Option<Node<'a>> {
+    fn next(&mut self) -> Option<Node<'doc>> {
         self.inner.next().map(|index| self.selection.document.nth(index).unwrap())
     }
 }
 
-impl<'a> IntoIterator for &'a Selection<'a> {
-    type Item = Node<'a>;
-    type IntoIter = Iter<'a>;
+impl<'sel, 'doc> IntoIterator for &'sel Selection<'doc> {
+    type Item = Node<'doc>;
+    type IntoIter = Iter<'sel, 'doc>;
 
     fn into_iter(self) -> Self::IntoIter {
         self.iter()
