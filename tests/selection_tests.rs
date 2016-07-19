@@ -121,6 +121,15 @@ speculate! {
             assert!(document.find(Name("divv")).first().is_none());
         }
 
+        test "Selection::last()" {
+            use select::predicate::*;
+
+            let document = Document::from(include_str!("fixtures/struct.Vec.html"));
+
+            assert!(document.find(Name("div")).last().is_some());
+            assert!(document.find(Name("divv")).last().is_none());
+        }
+
         test "Selection::len() == Selection::iter().count()" {
             use select::predicate::*;
 
