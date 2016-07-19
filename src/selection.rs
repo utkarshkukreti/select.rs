@@ -130,6 +130,10 @@ impl<'a> Selection<'a> {
             .map(|index| self.document.nth(index).unwrap())
     }
 
+    pub fn last(&self) -> Option<Node<'a>> {
+        self.bit_set.iter().last().map(|index| self.document.nth(index).unwrap())
+    }
+
     pub fn len(&self) -> usize {
         self.bit_set.len()
     }
