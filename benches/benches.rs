@@ -81,5 +81,21 @@ speculate! {
                 b.iter(|| node.attr("z"));
             }
         }
+
+        context "Node::find(Any).len() vs Node::descendants().count()" {
+            before {
+                let document = Document::from(str);
+                let node = document.find(Name("body")).first().unwrap();
+                assert_eq!(node.find(Any).len(), node.descendants().count());
+            }
+
+            bench "Node::find(Any).len()" |b| {
+                b.iter(|| node.find(Any).len());
+            }
+
+            bench "Node::descendants().count()" |b| {
+                b.iter(|| node.descendants().count());
+            }
+        }
     }
 }

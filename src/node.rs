@@ -173,6 +173,14 @@ impl<'a> Node<'a> {
                            _ => [].iter().cloned().collect(),
                        })
     }
+
+    pub fn descendants(&self) -> Descendants<'a> {
+        Descendants {
+            start: *self,
+            current: *self,
+            done: false,
+        }
+    }
 }
 
 impl<'a> serialize::Serializable for Node<'a> {
@@ -207,5 +215,55 @@ impl<'a> serialize::Serializable for Node<'a> {
             }
             Data::Comment(ref comment) => serializer.write_comment(&comment),
         }
+    }
+}
+
+#[derive(Clone, Debug)]
+pub struct Descendants<'a> {
+    start: Node<'a>,
+    current: Node<'a>,
+    done: bool,
+}
+
+impl<'a> Iterator for Descendants<'a> {
+    type Item = Node<'a>;
+
+    fn next(&mut self) -> Option<Node<'a>> {
+        if self.done {
+            return None;
+        }
+
+        // If this is the start, we can only descdend into children.
+        if self.start.index() == self.current.index() {
+            if let Some(first_child) = self.current.first_child() {
+                self.current = first_child;
+            } else {
+                self.done = true;
+                return None;
+            }
+        } else {
+            // Otherwise we can also go to next sibling.
+            if let Some(first_child) = self.current.first_child() {
+                self.current = first_child;
+            } else if let Some(next) = self.current.next() {
+                self.current = next;
+            } else {
+                loop {
+                    // This unwrap should never fail.
+                    let parent = self.current.parent().unwrap();
+                    if parent.index() == self.start.index() {
+                        self.done = true;
+                        return None;
+                    }
+                    if let Some(next) = parent.next() {
+                        self.current = next;
+                        break;
+                    }
+                    self.current = parent;
+                }
+            }
+        }
+
+        Some(self.current)
     }
 }

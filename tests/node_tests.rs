@@ -168,5 +168,17 @@ speculate! {
 
             assert_eq!(quux.children().len(), 1);
         }
+
+        test "Node::descendants()" {
+            use select::predicate::*;
+            let document = Document::from(include_str!("fixtures/struct.Vec.html"));
+            for i in 0..document.nodes.len() {
+                let node = document.nth(i).unwrap();
+                let actual = node.descendants().map(|node| node.index()).collect::<Vec<_>>();
+                let expected = node.find(Any);
+                let expected = expected.iter().map(|node| node.index()).collect::<Vec<_>>();
+                assert_eq!(actual, expected);
+            }
+        }
     }
 }
