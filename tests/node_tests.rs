@@ -73,6 +73,20 @@ speculate! {
             assert_eq!(quux.next(), None);
         }
 
+        test "Node::first_child()" {
+            for i in 0..document.nodes.len() {
+                let node = document.nth(i).unwrap();
+                assert_eq!(node.first_child(), node.children().iter().next());
+            }
+        }
+
+        test "Node::last_child()" {
+            for i in 0..document.nodes.len() {
+                let node = document.nth(i).unwrap();
+                assert_eq!(node.last_child(), node.children().iter().last());
+            }
+        }
+
         test "Node::text()" {
             assert_eq!(html.text(), "foobaz");
             assert_eq!(head.text(), "");

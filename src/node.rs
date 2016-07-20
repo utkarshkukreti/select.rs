@@ -89,6 +89,24 @@ impl<'a> Node<'a> {
         self.raw().next.map(|index| self.document.nth(index).unwrap())
     }
 
+    pub fn first_child(&self) -> Option<Node<'a>> {
+        match *self.data() {
+            Data::Element(_, _, ref children) => {
+                children.first().map(|&index| self.document.nth(index).unwrap())
+            }
+            _ => None,
+        }
+    }
+
+    pub fn last_child(&self) -> Option<Node<'a>> {
+        match *self.data() {
+            Data::Element(_, _, ref children) => {
+                children.last().map(|&index| self.document.nth(index).unwrap())
+            }
+            _ => None,
+        }
+    }
+
     pub fn text(&self) -> String {
         let mut string = String::new();
         recur(&self.document, self.index, &mut string);
