@@ -144,8 +144,12 @@ impl<'a> Node<'a> {
         String::from_utf8(buf).unwrap()
     }
 
-    pub fn find<P: Predicate>(&self, p: P) -> Selection<'a> {
-        Selection::new(self.document, [self.index].iter().cloned().collect()).find(p)
+    pub fn find<P: Predicate>(&self, predicate: P) -> Find<P> {
+        Find {
+            document: self.document,
+            descendants: self.descendants(),
+            predicate: predicate,
+        }
     }
 
     pub fn is<P: Predicate>(&self, p: P) -> bool {
@@ -265,5 +269,30 @@ impl<'a> Iterator for Descendants<'a> {
         }
 
         Some(self.current)
+    }
+}
+
+pub struct Find<'a, P: Predicate> {
+    document: &'a Document,
+    descendants: Descendants<'a>,
+    predicate: P,
+}
+
+impl<'a, P: Predicate> Find<'a, P> {
+    pub fn into_selection(self) -> Selection<'a> {
+        Selection::new(self.document, self.map(|node| node.index()).collect())
+    }
+}
+
+impl<'a, P: Predicate> Iterator for Find<'a, P> {
+    type Item = Node<'a>;
+
+    fn next(&mut self) -> Option<Node<'a>> {
+        for node in &mut self.descendants {
+            if self.predicate.matches(&node) {
+                return Some(node);
+            }
+        }
+        None
     }
 }

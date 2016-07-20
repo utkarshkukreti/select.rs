@@ -104,8 +104,8 @@ speculate! {
                 let main = document.find(Attr("id", "main"));
                 let main = main.iter().next().unwrap();
 
-                assert_eq!(main.find(Name("span")).len(), 1785);
-                assert_eq!(main.find(Name("div")).len(), 204);
+                assert_eq!(main.find(Name("span")).count(), 1785);
+                assert_eq!(main.find(Name("div")).count(), 204);
             };
         }
 
@@ -175,8 +175,7 @@ speculate! {
             for i in 0..document.nodes.len() {
                 let node = document.nth(i).unwrap();
                 let actual = node.descendants().map(|node| node.index()).collect::<Vec<_>>();
-                let expected = node.find(Any);
-                let expected = expected.iter().map(|node| node.index()).collect::<Vec<_>>();
+                let expected = node.find(Any).map(|node| node.index()).collect::<Vec<_>>();
                 assert_eq!(actual, expected);
             }
         }

@@ -86,11 +86,11 @@ speculate! {
             before {
                 let document = Document::from(str);
                 let node = document.find(Name("body")).first().unwrap();
-                assert_eq!(node.find(Any).len(), node.descendants().count());
+                assert_eq!(node.find(Any).count(), node.descendants().count());
             }
 
             bench "Node::find(Any).len()" |b| {
-                b.iter(|| node.find(Any).len());
+                b.iter(|| node.find(Any).count());
             }
 
             bench "Node::descendants().count()" |b| {
