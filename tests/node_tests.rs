@@ -1,5 +1,6 @@
 #![feature(plugin)]
 #![plugin(speculate)]
+#![allow(unused_variables)]
 
 pub use std::collections::HashMap;
 

@@ -1,5 +1,6 @@
 #![feature(plugin)]
 #![plugin(speculate)]
+#![allow(unused_variables)]
 
 extern crate select;
 pub use select::document::Document;
