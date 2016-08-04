@@ -33,6 +33,12 @@ speculate! {
             assert_eq!(bar.name(), Some("bar"));
             assert_eq!(baz.name(), None);
             assert_eq!(quux.name(), Some("quux"));
+
+            // Lifetime
+            let name = {
+                html.clone().name()
+            };
+            assert_eq!(name, Some("html"));
         }
 
         test "Node::attr()" {
@@ -45,6 +51,26 @@ speculate! {
             assert_eq!(baz.attr("id"), None);
             assert_eq!(quux.attr("id"), None);
             assert_eq!(quux.attr("class"), Some("another-thing"));
+
+            // Lifetime
+            let attr = {
+                html.clone().attr("id")
+            };
+            assert_eq!(attr, None);
+        }
+
+        test "Node::raw()" {
+            // Lifetime
+            let raw = {
+                &html.raw().data
+            };
+        }
+
+        test "Node::data()" {
+            // Lifetime
+            let data = {
+                html.data()
+            };
         }
 
         test "Node::parent()" {
@@ -124,11 +150,23 @@ speculate! {
             assert_eq!(foo.as_text(), Some("foo"));
             assert_eq!(bar.as_text(), None);
             assert_eq!(baz.as_text(), Some("baz"));
+
+            // Lifetime
+            let text = {
+                foo.as_text()
+            };
+            assert_eq!(text, Some("foo"));
         }
 
         test "Node::as_comment()" {
             assert_eq!(foo.as_comment(), None);
             assert_eq!(comment.as_comment(), Some("comment"));
+
+            // Lifetime
+            let comment = {
+                comment.as_comment()
+            };
+            assert_eq!(comment, Some("comment"));
         }
 
         test "Node::html()" {

@@ -50,22 +50,22 @@ impl<'a> Node<'a> {
         self.index
     }
 
-    pub fn raw(&self) -> &Raw {
+    pub fn raw(&self) -> &'a Raw {
         &self.document.nodes[self.index]
     }
 
-    pub fn data(&self) -> &Data {
+    pub fn data(&self) -> &'a Data {
         &self.raw().data
     }
 
-    pub fn name(&self) -> Option<&str> {
+    pub fn name(&self) -> Option<&'a str> {
         match *self.data() {
             Data::Element(ref name, _, _) => Some(name),
             _ => None,
         }
     }
 
-    pub fn attr(&self, name: &str) -> Option<&str> {
+    pub fn attr(&self, name: &str) -> Option<&'a str> {
         match *self.data() {
             Data::Element(_, ref attrs, _) => {
                 let name = Atom::from(name);
@@ -156,14 +156,14 @@ impl<'a> Node<'a> {
         p.matches(self)
     }
 
-    pub fn as_text(&self) -> Option<&str> {
+    pub fn as_text(&self) -> Option<&'a str> {
         match *self.data() {
             Data::Text(ref text) => Some(&text),
             _ => None,
         }
     }
 
-    pub fn as_comment(&self) -> Option<&str> {
+    pub fn as_comment(&self) -> Option<&'a str> {
         match *self.data() {
             Data::Comment(ref comment) => Some(&comment),
             _ => None,
