@@ -97,5 +97,24 @@ speculate! {
                 b.iter(|| node.descendants().count());
             }
         }
+
+        context "Node::find().find().len() vs Node::find(Descendant(...)).count()" {
+            before {
+                let document = Document::from(str);
+                let node = document.find(Name("html")).first().unwrap();
+                let (parent, child) = (Name("body"), Name("span"));
+                let expected = 1785;
+            }
+
+            bench "Node::find().find().len()" |b| {
+                assert_eq!(node.find(parent).into_selection().find(child).len(), expected);
+                b.iter(|| node.find(parent).into_selection().find(child).len());
+            }
+
+            bench "Node::find(Descendant(...)).count()" |b| {
+                assert_eq!(node.find(Descendant(parent, child)).count(), expected);
+                b.iter(|| node.find(Descendant(parent, child)).count());
+            }
+        }
     }
 }
