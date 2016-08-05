@@ -82,22 +82,6 @@ speculate! {
             }
         }
 
-        context "Node::find(Any).len() vs Node::descendants().count()" {
-            before {
-                let document = Document::from(str);
-                let node = document.find(Name("body")).next().unwrap();
-                assert_eq!(node.find(Any).count(), node.descendants().count());
-            }
-
-            bench "Node::find(Any).len()" |b| {
-                b.iter(|| node.find(Any).count());
-            }
-
-            bench "Node::descendants().count()" |b| {
-                b.iter(|| node.descendants().count());
-            }
-        }
-
         context "Node::find().find().len() vs Node::find(Descendant(...)).count()" {
             before {
                 let document = Document::from(str);
