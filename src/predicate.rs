@@ -12,6 +12,9 @@ pub trait Predicate: Sized {
     fn not(self) -> Not<Self> {
         Not(self)
     }
+    fn child<T: Predicate>(self, other: T) -> Child<Self, T> {
+        Child(self, other)
+    }
 }
 
 /// Matches any Node.
