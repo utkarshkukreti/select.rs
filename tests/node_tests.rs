@@ -128,8 +128,7 @@ speculate! {
             {
                 use select::predicate::*;
                 let document = Document::from(include_str!("fixtures/struct.Vec.html"));
-                let main = document.find(Attr("id", "main"));
-                let main = main.iter().next().unwrap();
+                let main = document.find(Attr("id", "main")).next().unwrap();
 
                 let (div, span) = (Name("div"), Name("span"));
 
@@ -144,7 +143,7 @@ speculate! {
             {
                 use select::predicate::*;
                 let document = Document::from(include_str!("fixtures/struct.Vec.html"));
-                for div in &document.find(Name("div")) {
+                for div in document.find(Name("div")) {
                     assert!(div.is(Name("div")));
                 }
             };

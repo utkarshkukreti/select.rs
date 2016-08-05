@@ -22,13 +22,13 @@ pub fn main() {
     let document = Document::from(include_str!("stackoverflow.html"));
 
     println!("# Menu");
-    for node in &document.find(Attr("id", "hmenus")).find(Name("a")) {
+    for node in document.find(Attr("id", "hmenus").descendant(Name("a"))) {
         println!("{} ({:?})", node.text(), node.attr("href").unwrap());
     }
     println!("");
 
     println!("# Top 5 Questions");
-    for node in document.find(Class("question-summary")).iter().take(5) {
+    for node in document.find(Class("question-summary")).take(5) {
         let question = node.find(Class("question-hyperlink")).next().unwrap();
         let votes = node.find(Class("vote-count-post")).next().unwrap().text();
         let answers = node.find(Class("status").descendant(Name("strong")))
@@ -54,9 +54,11 @@ pub fn main() {
 
     println!("# Top 10 Related Tags");
     for node in document.find(Attr("id", "h-related-tags"))
+        .next()
+        .unwrap()
         .parent()
+        .unwrap()
         .find(Name("div"))
-        .iter()
         .take(10) {
         let tag = node.find(Name("a")).next().unwrap().text();
         let count = node.find(Class("item-multiplier-count")).next().unwrap().text();

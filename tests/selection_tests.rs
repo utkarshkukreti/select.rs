@@ -27,7 +27,7 @@ speculate! {
             use select::predicate::*;
 
             let document = Document::from(include_str!("fixtures/struct.Vec.html"));
-            let all = document.find(Any);
+            let all = document.find(Any).into_selection();
 
             assert_eq!(all.filter(Any).len(), 11446);
 
@@ -50,7 +50,7 @@ speculate! {
             use select::predicate::*;
 
             let document = Document::from(include_str!("fixtures/struct.Vec.html"));
-            let all = document.find(Any);
+            let all = document.find(Any).into_selection();
 
             let struct_divs = all.find(Class("struct")).find(Name("div"));
             assert_eq!(struct_divs.len(), 204);
@@ -70,8 +70,8 @@ speculate! {
 
             let document = Document::from(include_str!("fixtures/struct.Vec.html"));
 
-            assert_eq!(document.find(Name("div")).parent().len(), 8);
-            assert_eq!(document.find(Name("span")).parent().len(), 205);
+            assert_eq!(document.find(Name("div")).into_selection().parent().len(), 8);
+            assert_eq!(document.find(Name("span")).into_selection().parent().len(), 205);
         }
 
         test "Selection::prev() / Selection::next()" {
@@ -79,10 +79,10 @@ speculate! {
 
             let document = Document::from(include_str!("fixtures/struct.Vec.html"));
 
-            assert_eq!(document.find(Name("div")).prev().len(), 208);
-            assert_eq!(document.find(Name("div")).next().len(), 203);
-            assert_eq!(document.find(Name("span")).prev().len(), 1729);
-            assert_eq!(document.find(Name("span")).next().len(), 1690);
+            assert_eq!(document.find(Name("div")).into_selection().prev().len(), 208);
+            assert_eq!(document.find(Name("div")).into_selection().next().len(), 203);
+            assert_eq!(document.find(Name("span")).into_selection().prev().len(), 1729);
+            assert_eq!(document.find(Name("span")).into_selection().next().len(), 1690);
         }
 
         test "Selection::parents()" {
@@ -90,8 +90,8 @@ speculate! {
 
             let document = Document::from(include_str!("fixtures/struct.Vec.html"));
 
-            assert_eq!(document.find(Name("div")).parents().len(), 10);
-            assert_eq!(document.find(Name("span")).parents().len(), 308);
+            assert_eq!(document.find(Name("div")).into_selection().parents().len(), 10);
+            assert_eq!(document.find(Name("span")).into_selection().parents().len(), 308);
         }
 
         test "Selection::children()" {
@@ -99,13 +99,13 @@ speculate! {
 
             let document = Document::from(include_str!("fixtures/struct.Vec.html"));
 
-            let div_children = document.find(Name("div")).children();
+            let div_children = document.find(Name("div")).into_selection().children();
             assert_eq!(div_children.len(), 1210);
             for div_child in &div_children {
                 assert_eq!(div_child.parent().unwrap().name(), Some("div"));
             }
 
-            let span_children = document.find(Name("span")).children();
+            let span_children = document.find(Name("span")).into_selection().children();
             assert_eq!(span_children.len(), 1986);
             for span_child in &span_children {
                 assert_eq!(span_child.parent().unwrap().name(), Some("span"));
@@ -117,8 +117,8 @@ speculate! {
 
             let document = Document::from(include_str!("fixtures/struct.Vec.html"));
 
-            assert!(document.find(Name("div")).first().is_some());
-            assert!(document.find(Name("divv")).first().is_none());
+            assert!(document.find(Name("div")).into_selection().first().is_some());
+            assert!(document.find(Name("divv")).into_selection().first().is_none());
         }
 
         test "Selection::len() == Selection::iter().count()" {
@@ -129,7 +129,7 @@ speculate! {
             macro_rules! check {
                 ($($selector:expr),*) => {{
                     $({
-                        let selection = document.find($selector);
+                        let selection = document.find($selector).into_selection();
                         assert_eq!(selection.len(), selection.iter().count());
                     })*
                 }}

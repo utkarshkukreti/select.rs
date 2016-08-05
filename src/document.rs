@@ -14,11 +14,12 @@ pub struct Document {
 
 impl Document {
     /// Returns a `Selection` containing nodes passing the given predicate `p`.
-    pub fn find<'a, P: Predicate>(&'a self, p: P) -> Selection<'a> {
-        Selection::new(self,
-                       (0..self.nodes.len())
-                           .filter(|&index| p.matches(&self.nth(index).unwrap()))
-                           .collect())
+    pub fn find<P: Predicate>(&self, predicate: P) -> Find<P> {
+        Find {
+            document: self,
+            next: 0,
+            predicate: predicate,
+        }
     }
 
     /// Returns the `n`th node of the document as a `Some(Node)`, indexed from
@@ -128,5 +129,32 @@ impl<'a> From<&'a str> for Document {
     /// Parses the given `&str` into a `Document`.
     fn from(str: &str) -> Document {
         Document::from(StrTendril::from(str))
+    }
+}
+
+pub struct Find<'a, P> {
+    document: &'a Document,
+    next: usize,
+    predicate: P,
+}
+
+impl<'a, P: Predicate> Find<'a, P> {
+    pub fn into_selection(self) -> Selection<'a> {
+        Selection::new(self.document, self.map(|node| node.index()).collect())
+    }
+}
+
+impl<'a, P: Predicate> Iterator for Find<'a, P> {
+    type Item = Node<'a>;
+
+    fn next(&mut self) -> Option<Node<'a>> {
+        while self.next < self.document.nodes.len() {
+            let node = self.document.nth(self.next).unwrap();
+            self.next += 1;
+            if self.predicate.matches(&node) {
+                return Some(node);
+            }
+        }
+        None
     }
 }

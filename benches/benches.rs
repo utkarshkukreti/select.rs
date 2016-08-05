@@ -38,22 +38,22 @@ speculate! {
             }
 
             bench "Any (11446 Nodes)" |b| {
-                assert_eq!(document.find(Any).len(), 11446);
+                assert_eq!(document.find(Any).count(), 11446);
                 b.iter(|| document.find(Any));
             }
 
             bench "Text (6926 Nodes)" |b| {
-                assert_eq!(document.find(Text).len(), 6926);
+                assert_eq!(document.find(Text).count(), 6926);
                 b.iter(|| document.find(Text));
             }
 
             bench "Element (4519 Nodes)" |b| {
-                assert_eq!(document.find(Element).len(), 4519);
+                assert_eq!(document.find(Element).count(), 4519);
                 b.iter(|| document.find(Element));
             }
 
             bench "Comment (1 Node)" |b| {
-                assert_eq!(document.find(Comment).len(), 1);
+                assert_eq!(document.find(Comment).count(), 1);
                 b.iter(|| document.find(Comment));
             }
         }
@@ -85,7 +85,7 @@ speculate! {
         context "Node::find(Any).len() vs Node::descendants().count()" {
             before {
                 let document = Document::from(str);
-                let node = document.find(Name("body")).first().unwrap();
+                let node = document.find(Name("body")).next().unwrap();
                 assert_eq!(node.find(Any).count(), node.descendants().count());
             }
 
@@ -101,7 +101,7 @@ speculate! {
         context "Node::find().find().len() vs Node::find(Descendant(...)).count()" {
             before {
                 let document = Document::from(str);
-                let node = document.find(Name("html")).first().unwrap();
+                let node = document.find(Name("html")).next().unwrap();
                 let (parent, child) = (Name("body"), Name("span"));
                 let expected = 1785;
             }
