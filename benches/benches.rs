@@ -58,30 +58,6 @@ speculate! {
             }
         }
 
-        context "Node::attr()" {
-            before {
-                let html = "<div a=b c=d e=f g=h i=j k=l m=n o=p q=r s=t u=v w=x y=z>";
-                let document = Document::from(html);
-                let node = document.nth(3).unwrap();
-                assert_eq!(node.name(), Some("div"));
-            }
-
-            bench "hit first" |b| {
-                assert!(node.attr("a").is_some());
-                b.iter(|| node.attr("a"));
-            }
-
-            bench "hit last" |b| {
-                assert!(node.attr("y").is_some());
-                b.iter(|| node.attr("y"));
-            }
-
-            bench "miss" |b| {
-                assert!(node.attr("z").is_none());
-                b.iter(|| node.attr("z"));
-            }
-        }
-
         context "Node::find().find().len() vs Node::find(Descendant(...)).count()" {
             before {
                 let document = Document::from(str);
@@ -99,6 +75,30 @@ speculate! {
                 assert_eq!(node.find(Descendant(parent, child)).count(), expected);
                 b.iter(|| node.find(Descendant(parent, child)).count());
             }
+        }
+    }
+
+    context "Node::attr()" {
+        before {
+            let html = "<div a=b c=d e=f g=h i=j k=l m=n o=p q=r s=t u=v w=x y=z>";
+            let document = Document::from(html);
+            let node = document.nth(3).unwrap();
+            assert_eq!(node.name(), Some("div"));
+        }
+
+        bench "hit first" |b| {
+            assert!(node.attr("a").is_some());
+            b.iter(|| node.attr("a"));
+        }
+
+        bench "hit last" |b| {
+            assert!(node.attr("y").is_some());
+            b.iter(|| node.attr("y"));
+        }
+
+        bench "miss" |b| {
+            assert!(node.attr("z").is_none());
+            b.iter(|| node.attr("z"));
         }
     }
 }
