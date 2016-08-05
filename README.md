@@ -13,7 +13,7 @@ open an issue or send me an email.
 ```rust
 extern crate select;
 use select::document::Document;
-use select::predicate::{Attr, Class, Name};
+use select::predicate::{Predicate, Attr, Class, Name};
 
 pub fn main() {
     // stackoverflow.html was fetched from
@@ -31,18 +31,14 @@ pub fn main() {
     for node in document.find(Class("question-summary")).iter().take(5) {
         let question = node.find(Class("question-hyperlink")).next().unwrap();
         let votes = node.find(Class("vote-count-post")).next().unwrap().text();
-        let answers = node.find(Class("status"))
-            .into_selection()
-            .find(Name("strong"))
-            .first()
+        let answers = node.find(Class("status").descendant(Name("strong")))
+            .next()
             .unwrap()
             .text();
         let tags = node.find(Class("post-tag")).map(|tag| tag.text()).collect::<Vec<_>>();
         let asked_on = node.find(Class("relativetime")).next().unwrap().text();
-        let asker = node.find(Class("user-details"))
-            .into_selection()
-            .find(Name("a"))
-            .first()
+        let asker = node.find(Class("user-details").descendant(Name("a")))
+            .next()
             .unwrap()
             .text();
         println!(" Question: {}", question.text());
