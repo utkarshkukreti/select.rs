@@ -15,6 +15,9 @@ pub trait Predicate: Sized {
     fn child<T: Predicate>(self, other: T) -> Child<Self, T> {
         Child(self, other)
     }
+    fn descendant<T: Predicate>(self, other: T) -> Descendant<Self, T> {
+        Descendant(self, other)
+    }
 }
 
 /// Matches any Node.
