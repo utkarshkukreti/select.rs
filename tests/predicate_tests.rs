@@ -13,6 +13,7 @@ speculate! {
             let document = Document::from("<html><head></head><body>\
 <article id='post-0' class='post category-foo tag-bar'>foo</article>\
 <!--A Comment-->\
+<div class='a'><div class='b'><div class='c'><div class='d'></div></div></div></div>
 </body></html>");
             let html = document.nth(0).unwrap();
             let head = document.nth(1).unwrap();
@@ -20,6 +21,10 @@ speculate! {
             let article = document.nth(3).unwrap();
             let foo = document.nth(4).unwrap();
             let comment = document.nth(5).unwrap();
+            let a = document.nth(6).unwrap();
+            let b = document.nth(7).unwrap();
+            let c = document.nth(8).unwrap();
+            let d = document.nth(9).unwrap();
         }
 
         test "Any" {
@@ -123,6 +128,39 @@ speculate! {
             let body_article = Child(Name("body"), Name("article"));
             assert_eq!(body_article.matches(&html), false);
             assert_eq!(body_article.matches(&article), true);
+        }
+
+        test "Descendant()" {
+            macro_rules! check {
+                ($(($parent:expr, $child:expr) => $matching:expr),+) => {{
+                    $(
+                        let selector = Descendant(Class($parent), Class($child));
+                        for node in &[a, b, c, d] {
+                            let expected = $matching.map_or(false, |index| node.index() == index);
+                            assert_eq!(selector.matches(node), expected);
+                        }
+                    )+
+                }}
+            }
+
+            check! {
+                ("a", "a") => None,
+                ("a", "b") => Some(b.index()),
+                ("a", "c") => Some(c.index()),
+                ("a", "d") => Some(d.index()),
+                ("b", "a") => None,
+                ("b", "b") => None,
+                ("b", "c") => Some(c.index()),
+                ("b", "d") => Some(d.index()),
+                ("c", "a") => None,
+                ("c", "b") => None,
+                ("c", "c") => None,
+                ("c", "d") => Some(d.index()),
+                ("d", "a") => None,
+                ("d", "b") => None,
+                ("d", "c") => None,
+                ("d", "d") => None
+            }
         }
     }
 }

@@ -152,3 +152,23 @@ impl<A: Predicate, B: Predicate> Predicate for Child<A, B> {
         }
     }
 }
+
+/// Matches if inner Predicate `B` matches the node and `A` matches any of the
+/// parents of node.
+#[derive(Copy, Clone, Debug, PartialEq)]
+pub struct Descendant<A, B>(pub A, pub B);
+
+impl<A: Predicate, B: Predicate> Predicate for Descendant<A, B> {
+    fn matches(&self, node: &Node) -> bool {
+        if self.1.matches(node) {
+            let mut node = *node;
+            while let Some(parent) = node.parent() {
+                if self.0.matches(&parent) {
+                    return true;
+                }
+                node = parent;
+            }
+        }
+        return false;
+    }
+}
