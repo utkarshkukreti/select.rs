@@ -114,5 +114,15 @@ speculate! {
             assert_eq!(article_and_post_0.matches(&article), true);
             assert_eq!(article_and_post_0.matches(&foo), false);
         }
+
+        test "Child()" {
+            let html_article = Child(Name("html"), Name("article"));
+            assert_eq!(html_article.matches(&html), false);
+            assert_eq!(html_article.matches(&article), false);
+
+            let body_article = Child(Name("body"), Name("article"));
+            assert_eq!(body_article.matches(&html), false);
+            assert_eq!(body_article.matches(&article), true);
+        }
     }
 }

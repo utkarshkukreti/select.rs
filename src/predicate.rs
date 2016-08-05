@@ -137,3 +137,18 @@ impl<A: Predicate, B: Predicate> Predicate for And<A, B> {
         self.0.matches(node) && self.1.matches(node)
     }
 }
+
+/// Matches if inner Predicate `B` matches the node and `A` matches the parent
+/// of the node.
+#[derive(Copy, Clone, Debug, PartialEq)]
+pub struct Child<A, B>(pub A, pub B);
+
+impl<A: Predicate, B: Predicate> Predicate for Child<A, B> {
+    fn matches(&self, node: &Node) -> bool {
+        if let Some(parent) = node.parent() {
+            self.1.matches(node) && self.0.matches(&parent)
+        } else {
+            false
+        }
+    }
+}
