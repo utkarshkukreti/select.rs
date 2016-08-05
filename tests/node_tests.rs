@@ -131,8 +131,12 @@ speculate! {
                 let main = document.find(Attr("id", "main"));
                 let main = main.iter().next().unwrap();
 
-                assert_eq!(main.find(Name("span")).count(), 1785);
-                assert_eq!(main.find(Name("div")).count(), 204);
+                let (div, span) = (Name("div"), Name("span"));
+
+                assert_eq!(main.find(div).count(), 204);
+                assert_eq!(main.find(span).count(), 1785);
+                assert_eq!(main.find(div.child(div).descendant(span.child(span))).count(), 3);
+                assert_eq!(main.find(div.child(div).descendant(span).child(span)).count(), 3);
             };
         }
 
