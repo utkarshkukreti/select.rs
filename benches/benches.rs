@@ -32,29 +32,29 @@ speculate! {
             b.iter(|| Document::from(str));
         }
 
-        context "Document::find()" {
+        context "Document::find(_).count()" {
             before {
                 let document = Document::from(str);
             }
 
             bench "Any (11446 Nodes)" |b| {
                 assert_eq!(document.find(Any).count(), 11446);
-                b.iter(|| document.find(Any));
+                b.iter(|| document.find(Any).count());
             }
 
             bench "Text (6926 Nodes)" |b| {
                 assert_eq!(document.find(Text).count(), 6926);
-                b.iter(|| document.find(Text));
+                b.iter(|| document.find(Text).count());
             }
 
             bench "Element (4519 Nodes)" |b| {
                 assert_eq!(document.find(Element).count(), 4519);
-                b.iter(|| document.find(Element));
+                b.iter(|| document.find(Element).count());
             }
 
             bench "Comment (1 Node)" |b| {
                 assert_eq!(document.find(Comment).count(), 1);
-                b.iter(|| document.find(Comment));
+                b.iter(|| document.find(Comment).count());
             }
         }
 
