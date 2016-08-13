@@ -220,5 +220,17 @@ speculate! {
                 assert_eq!(actual, expected);
             }
         }
+
+        test "Children::into_selection()" {
+            let document = Document::from(include_str!("fixtures/struct.Vec.html"));
+            for i in 0..document.nodes.len() {
+                let node = document.nth(i).unwrap();
+                let actual = node.children().into_selection().iter().map(|node| {
+                    node.index()
+                }).collect::<Vec<_>>();
+                let expected = node.children().map(|node| node.index()).collect::<Vec<_>>();
+                assert_eq!(actual, expected);
+            }
+        }
     }
 }

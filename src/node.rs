@@ -171,7 +171,10 @@ impl<'a> Node<'a> {
     }
 
     pub fn children(&self) -> Children<'a> {
-        Children { next: self.first_child() }
+        Children {
+            document: self.document,
+            next: self.first_child(),
+        }
     }
 
     pub fn descendants(&self) -> Descendants<'a> {
@@ -294,7 +297,14 @@ impl<'a, P: Predicate> Iterator for Find<'a, P> {
 }
 
 pub struct Children<'a> {
+    document: &'a Document,
     next: Option<Node<'a>>,
+}
+
+impl<'a> Children<'a> {
+    pub fn into_selection(self) -> Selection<'a> {
+        Selection::new(self.document, self.map(|node| node.index()).collect())
+    }
 }
 
 impl<'a> Iterator for Children<'a> {
