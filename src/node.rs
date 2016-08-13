@@ -170,12 +170,8 @@ impl<'a> Node<'a> {
         }
     }
 
-    pub fn children(&self) -> Selection<'a> {
-        Selection::new(self.document,
-                       match *self.data() {
-                           Data::Element(_, _, ref children) => children.iter().cloned().collect(),
-                           _ => [].iter().cloned().collect(),
-                       })
+    pub fn children(&self) -> Children<'a> {
+        Children { next: self.first_child() }
     }
 
     pub fn descendants(&self) -> Descendants<'a> {
@@ -294,5 +290,22 @@ impl<'a, P: Predicate> Iterator for Find<'a, P> {
             }
         }
         None
+    }
+}
+
+pub struct Children<'a> {
+    next: Option<Node<'a>>,
+}
+
+impl<'a> Iterator for Children<'a> {
+    type Item = Node<'a>;
+
+    fn next(&mut self) -> Option<Node<'a>> {
+        if let Some(next) = self.next {
+            self.next = next.next();
+            Some(next)
+        } else {
+            None
+        }
     }
 }

@@ -103,14 +103,14 @@ speculate! {
         test "Node::first_child()" {
             for i in 0..document.nodes.len() {
                 let node = document.nth(i).unwrap();
-                assert_eq!(node.first_child(), node.children().iter().next());
+                assert_eq!(node.first_child(), node.children().next());
             }
         }
 
         test "Node::last_child()" {
             for i in 0..document.nodes.len() {
                 let node = document.nth(i).unwrap();
-                assert_eq!(node.last_child(), node.children().iter().last());
+                assert_eq!(node.last_child(), node.children().last());
             }
         }
 
@@ -198,17 +198,16 @@ speculate! {
         }
 
         test "Node::children()" {
-            let children = html.children();
-            let mut children = children.iter();
+            let mut children = html.children();
             assert_eq!(children.next().unwrap().name(), Some("head"));
             assert_eq!(children.next().unwrap().name(), Some("body"));
             assert_eq!(children.next(), None);
 
-            assert_eq!(body.children().len(), 2);
+            assert_eq!(body.children().count(), 2);
 
-            assert_eq!(baz.children().len(), 0);
+            assert_eq!(baz.children().count(), 0);
 
-            assert_eq!(quux.children().len(), 1);
+            assert_eq!(quux.children().count(), 1);
         }
 
         test "Node::descendants()" {
