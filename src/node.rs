@@ -1,7 +1,8 @@
 use std::io;
 
 use html5ever::serialize;
-use string_cache::{Atom, Namespace, QualName};
+use html5ever_atoms::{LocalNameStaticSet, QualName};
+use string_cache::Atom;
 use tendril::StrTendril;
 
 use document::Document;
@@ -12,7 +13,7 @@ use selection::Selection;
 #[derive(Clone, Debug, PartialEq)]
 pub enum Data {
     Text(StrTendril),
-    Element(Atom, Vec<(Atom, StrTendril)>, Vec<usize>),
+    Element(Atom<LocalNameStaticSet>, Vec<(Atom<LocalNameStaticSet>, StrTendril)>, Vec<usize>),
     Comment(StrTendril),
 }
 
@@ -194,7 +195,7 @@ impl<'a> serialize::Serializable for Node<'a> {
         match *self.data() {
             Data::Text(ref text) => serializer.write_text(&text),
             Data::Element(ref name, ref attrs, ref children) => {
-                let ns = Namespace("".into());
+                let ns = Atom::from("");
                 let name = QualName::new(ns.clone(), name.clone());
 
                 // FIXME: I couldn't get this to work without this awful hack.
