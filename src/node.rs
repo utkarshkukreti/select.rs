@@ -13,7 +13,7 @@ use selection::Selection;
 #[derive(Clone, Debug, PartialEq)]
 pub enum Data {
     Text(StrTendril),
-    Element(Atom<LocalNameStaticSet>, Vec<(Atom<LocalNameStaticSet>, StrTendril)>, Vec<usize>),
+    Element(Atom<LocalNameStaticSet>, Vec<(Atom<LocalNameStaticSet>, StrTendril)>),
     Comment(StrTendril),
 }
 
@@ -25,6 +25,8 @@ pub struct Raw {
     pub parent: Option<usize>,
     pub prev: Option<usize>,
     pub next: Option<usize>,
+    pub first_child: Option<usize>,
+    pub last_child: Option<usize>,
     pub data: Data,
 }
 
@@ -61,14 +63,14 @@ impl<'a> Node<'a> {
 
     pub fn name(&self) -> Option<&'a str> {
         match *self.data() {
-            Data::Element(ref name, _, _) => Some(name),
+            Data::Element(ref name, _) => Some(name),
             _ => None,
         }
     }
 
     pub fn attr(&self, name: &str) -> Option<&'a str> {
         match *self.data() {
-            Data::Element(_, ref attrs, _) => {
+            Data::Element(_, ref attrs) => {
                 let name = Atom::from(name);
                 attrs.iter()
                     .find(|&&(ref name_, _)| name == *name_)
@@ -91,21 +93,11 @@ impl<'a> Node<'a> {
     }
 
     pub fn first_child(&self) -> Option<Node<'a>> {
-        match *self.data() {
-            Data::Element(_, _, ref children) => {
-                children.first().map(|&index| self.document.nth(index).unwrap())
-            }
-            _ => None,
-        }
+        self.raw().first_child.map(|index| self.document.nth(index).unwrap())
     }
 
     pub fn last_child(&self) -> Option<Node<'a>> {
-        match *self.data() {
-            Data::Element(_, _, ref children) => {
-                children.last().map(|&index| self.document.nth(index).unwrap())
-            }
-            _ => None,
-        }
+        self.raw().last_child.map(|index| self.document.nth(index).unwrap())
     }
 
     pub fn text(&self) -> String {
@@ -186,7 +178,7 @@ impl<'a> serialize::Serializable for Node<'a> {
                                    -> io::Result<()> {
         match *self.data() {
             Data::Text(ref text) => serializer.write_text(&text),
-            Data::Element(ref name, ref attrs, _) => {
+            Data::Element(ref name, ref attrs) => {
                 let ns = Atom::from("");
                 let name = QualName::new(ns.clone(), name.clone());
 

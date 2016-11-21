@@ -81,7 +81,7 @@ impl From<StrTendril> for Document {
                     let attrs = attrs.iter()
                         .map(|attr| (attr.name.local.clone(), attr.value.clone()))
                         .collect();
-                    let data = node::Data::Element(name, attrs, vec![]);
+                    let data = node::Data::Element(name, attrs);
                     let index = append(document, data, parent, prev);
                     let mut prev = None;
                     for child in &node.borrow().children {
@@ -104,16 +104,17 @@ impl From<StrTendril> for Document {
                 parent: parent,
                 prev: prev,
                 next: None,
+                first_child: None,
+                last_child: None,
                 data: data,
             });
 
             if let Some(parent) = parent {
-                match document.nodes[parent].data {
-                    node::Data::Element(_, _, ref mut children) => {
-                        children.push(index);
-                    }
-                    _ => unreachable!(),
+                let parent = &mut document.nodes[parent];
+                if parent.first_child.is_none() {
+                    parent.first_child = Some(index);
                 }
+                parent.last_child = Some(index);
             }
 
             if let Some(prev) = prev {
