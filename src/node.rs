@@ -110,18 +110,15 @@ impl<'a> Node<'a> {
 
     pub fn text(&self) -> String {
         let mut string = String::new();
-        recur(&self.document, self.index, &mut string);
+        recur(self, &mut string);
         return string;
 
-        fn recur(document: &Document, index: usize, string: &mut String) {
-            match document.nodes[index].data {
-                Data::Text(ref text) => string.push_str(text),
-                Data::Element(_, _, ref children) => {
-                    for &child in children {
-                        recur(document, child, string)
-                    }
-                }
-                Data::Comment(_) => {}
+        fn recur(node: &Node, string: &mut String) {
+            if let Some(text) = node.as_text() {
+                string.push_str(text);
+            }
+            for child in node.children() {
+                recur(&child, string)
             }
         }
     }
@@ -134,13 +131,8 @@ impl<'a> Node<'a> {
 
     pub fn inner_html(&self) -> String {
         let mut buf = Vec::new();
-        if let Data::Element(_, _, ref children) = *self.data() {
-            for &child in children {
-                serialize::serialize(&mut buf,
-                                     &self.document.nth(child).unwrap(),
-                                     Default::default())
-                    .unwrap();
-            }
+        for child in self.children() {
+            serialize::serialize(&mut buf, &child, Default::default()).unwrap();
         }
         String::from_utf8(buf).unwrap()
     }
@@ -194,7 +186,7 @@ impl<'a> serialize::Serializable for Node<'a> {
                                    -> io::Result<()> {
         match *self.data() {
             Data::Text(ref text) => serializer.write_text(&text),
-            Data::Element(ref name, ref attrs, ref children) => {
+            Data::Element(ref name, ref attrs, _) => {
                 let ns = Atom::from("");
                 let name = QualName::new(ns.clone(), name.clone());
 
@@ -208,8 +200,7 @@ impl<'a> serialize::Serializable for Node<'a> {
 
                 try!(serializer.start_elem(name.clone(), attrs));
 
-                for &child in children {
-                    let child = self.document.nth(child).unwrap();
+                for child in self.children() {
                     try!(serialize::Serializable::serialize(&child, serializer, traversal_scope));
                 }
 

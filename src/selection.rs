@@ -1,6 +1,6 @@
 use document::Document;
 use bit_set::{self, BitSet};
-use node::{self, Node};
+use node::Node;
 use predicate::Predicate;
 
 #[derive(Clone, Debug, PartialEq)]
@@ -37,8 +37,8 @@ impl<'a> Selection<'a> {
     pub fn find<P: Predicate>(&self, p: P) -> Selection<'a> {
         let mut bit_set = BitSet::new();
 
-        for index in &self.bit_set {
-            recur(self.document, &mut bit_set, index);
+        for node in self {
+            recur(&node, &mut bit_set);
         }
 
         return Selection {
@@ -48,20 +48,14 @@ impl<'a> Selection<'a> {
                 .collect(),
         };
 
-        fn recur(document: &Document, bit_set: &mut BitSet, index: usize) {
-            if bit_set.contains(index) {
+        fn recur(node: &Node, bit_set: &mut BitSet) {
+            if bit_set.contains(node.index()) {
                 return;
             }
 
-            match document.nodes[index].data {
-                node::Data::Text(..) => {}
-                node::Data::Element(_, _, ref children) => {
-                    for &child in children {
-                        recur(document, bit_set, child);
-                        bit_set.insert(child);
-                    }
-                }
-                node::Data::Comment(..) => {}
+            for child in node.children() {
+                recur(&child, bit_set);
+                bit_set.insert(child.index());
             }
         }
     }
@@ -111,14 +105,8 @@ impl<'a> Selection<'a> {
     pub fn children(&self) -> Selection<'a> {
         let mut bit_set = BitSet::new();
         for node in self {
-            match self.document.nodes[node.index()].data {
-                node::Data::Text(_) => {}
-                node::Data::Element(_, _, ref children) => {
-                    for &child in children {
-                        bit_set.insert(child);
-                    }
-                }
-                node::Data::Comment(..) => {}
+            for child in node.children() {
+                bit_set.insert(child.index());
             }
         }
 
