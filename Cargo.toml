@@ -17,3 +17,6 @@ html5ever-atoms = "0.2"
 bit-set = "0.4"
 tendril = "0.2"
 string_cache = "0.4"
+
+[badges]
+travis-ci = { repository = "utkarshkukreti/select.rs" }
