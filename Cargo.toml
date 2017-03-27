@@ -4,6 +4,7 @@ version = "0.3.0"
 authors = ["Utkarsh Kukreti <utkarshkukreti@gmail.com>"]
 description = "A library to extract useful data from HTML documents, suitable for web scraping."
 license = "MIT"
+documentation = "https://docs.rs/select"
 homepage = "https://github.com/utkarshkukreti/select.rs"
 repository = "https://github.com/utkarshkukreti/select.rs"
 
