@@ -1,4 +1,4 @@
-use std::io;
+use std::{fmt, io};
 
 use html5ever::serialize;
 use html5ever_atoms::{LocalNameStaticSet, QualName};
@@ -31,7 +31,7 @@ pub struct Raw {
 }
 
 /// A Node.
-#[derive(Copy, Clone, Debug, PartialEq)]
+#[derive(Copy, Clone, PartialEq)]
 pub struct Node<'a> {
     document: &'a Document,
     index: usize,
@@ -167,6 +167,44 @@ impl<'a> Node<'a> {
             start: *self,
             current: *self,
             done: false,
+        }
+    }
+}
+
+impl<'a> fmt::Debug for Node<'a> {
+    fn fmt(&self, f: &mut fmt::Formatter) -> Result<(), fmt::Error> {
+        struct Attrs<'a>(&'a [(Atom<LocalNameStaticSet>, StrTendril)]);
+
+        impl<'a> fmt::Debug for Attrs<'a> {
+            fn fmt(&self, f: &mut fmt::Formatter) -> Result<(), fmt::Error> {
+                self.0
+                    .iter()
+                    .fold(f.debug_list(), |mut f, &(ref name, ref value)| {
+                        f.entry(&(&&**name, &&**value));
+                        f
+                    })
+                    .finish()
+            }
+        }
+
+        struct Children<'a>(&'a Node<'a>);
+
+        impl<'a> fmt::Debug for Children<'a> {
+            fn fmt(&self, f: &mut fmt::Formatter) -> Result<(), fmt::Error> {
+                f.debug_list().entries(self.0.children()).finish()
+            }
+        }
+
+        match *self.data() {
+            Data::Text(ref text) => f.debug_tuple("Text").field(&&**text).finish(),
+            Data::Element(ref name, ref attrs) => {
+                f.debug_struct("Element")
+                    .field("name", &&**name)
+                    .field("attrs", &Attrs(attrs))
+                    .field("children", &Children(self))
+                    .finish()
+            }
+            Data::Comment(ref comment) => f.debug_tuple("Comment").field(&&**comment).finish(),
         }
     }
 }

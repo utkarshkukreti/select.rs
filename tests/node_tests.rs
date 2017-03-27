@@ -221,6 +221,30 @@ speculate! {
             }
         }
 
+        test "std::fmt::Debug for Node" {
+            assert_eq!(format!("{:?}", bar).replace(" ", ""), r#"Element {
+                name: "bar",
+                attrs: [],
+                children: [
+                    Text("baz"),
+                    Element {
+                        name: "quux",
+                        attrs: [("class", "another-thing")],
+                        children: [Comment("comment")]
+                    }
+                ]}"#.replace("\n", "").replace(" ", ""));
+
+            assert_eq!(format!("{:?}", baz), "Text(\"baz\")");
+
+            assert_eq!(format!("{:?}", quux).replace(" ", ""), r#"Element {
+                name: "quux",
+                attrs: [("class", "another-thing")],
+                children: [Comment("comment")]
+            }"#.replace("\n", "").replace(" ", ""));
+
+            assert_eq!(format!("{:?}", comment), "Comment(\"comment\")");
+        }
+
         test "Children::into_selection()" {
             let document = Document::from(include_str!("fixtures/struct.Vec.html"));
             for i in 0..document.nodes.len() {
