@@ -1,7 +1,7 @@
 use std::{fmt, io};
 
 use html5ever::serialize;
-use html5ever_atoms::{LocalNameStaticSet, QualName};
+use html5ever_atoms::QualName;
 use string_cache::Atom;
 use tendril::StrTendril;
 
@@ -13,7 +13,7 @@ use selection::Selection;
 #[derive(Clone, Debug, PartialEq)]
 pub enum Data {
     Text(StrTendril),
-    Element(Atom<LocalNameStaticSet>, Vec<(Atom<LocalNameStaticSet>, StrTendril)>),
+    Element(QualName, Vec<(QualName, StrTendril)>),
     Comment(StrTendril),
 }
 
@@ -63,7 +63,7 @@ impl<'a> Node<'a> {
 
     pub fn name(&self) -> Option<&'a str> {
         match *self.data() {
-            Data::Element(ref name, _) => Some(name),
+            Data::Element(ref name, _) => Some(&name.local),
             _ => None,
         }
     }
@@ -73,7 +73,7 @@ impl<'a> Node<'a> {
             Data::Element(_, ref attrs) => {
                 let name = Atom::from(name);
                 attrs.iter()
-                    .find(|&&(ref name_, _)| name == *name_)
+                    .find(|&&(ref name_, _)| name == name_.local)
                     .map(|&(_, ref value)| value.as_ref())
             }
             _ => None,
@@ -173,14 +173,14 @@ impl<'a> Node<'a> {
 
 impl<'a> fmt::Debug for Node<'a> {
     fn fmt(&self, f: &mut fmt::Formatter) -> Result<(), fmt::Error> {
-        struct Attrs<'a>(&'a [(Atom<LocalNameStaticSet>, StrTendril)]);
+        struct Attrs<'a>(&'a [(QualName, StrTendril)]);
 
         impl<'a> fmt::Debug for Attrs<'a> {
             fn fmt(&self, f: &mut fmt::Formatter) -> Result<(), fmt::Error> {
                 self.0
                     .iter()
                     .fold(f.debug_list(), |mut f, &(ref name, ref value)| {
-                        f.entry(&(&&**name, &&**value));
+                        f.entry(&(&*name.local, &&**value));
                         f
                     })
                     .finish()
@@ -199,7 +199,7 @@ impl<'a> fmt::Debug for Node<'a> {
             Data::Text(ref text) => f.debug_tuple("Text").field(&&**text).finish(),
             Data::Element(ref name, ref attrs) => {
                 f.debug_struct("Element")
-                    .field("name", &&**name)
+                    .field("name", &&*name.local)
                     .field("attrs", &Attrs(attrs))
                     .field("children", &Children(self))
                     .finish()
@@ -217,16 +217,7 @@ impl<'a> serialize::Serializable for Node<'a> {
         match *self.data() {
             Data::Text(ref text) => serializer.write_text(&text),
             Data::Element(ref name, ref attrs) => {
-                let ns = Atom::from("");
-                let name = QualName::new(ns.clone(), name.clone());
-
-                // FIXME: I couldn't get this to work without this awful hack.
-                let attrs = attrs.iter()
-                    .map(|&(ref name, ref value)| {
-                        (QualName::new(ns.clone(), name.clone()), value.as_ref())
-                    })
-                    .collect::<Vec<(QualName, &str)>>();
-                let attrs = attrs.iter().map(|&(ref name, ref value)| (name, *value));
+                let attrs = attrs.iter().map(|&(ref name, ref value)| (name, &**value));
 
                 try!(serializer.start_elem(name.clone(), attrs));
 

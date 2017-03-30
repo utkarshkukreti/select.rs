@@ -77,9 +77,9 @@ impl From<StrTendril> for Document {
                     Some(append(document, data, parent, prev))
                 }
                 rcdom::Element(ref name, ref _element, ref attrs) => {
-                    let name = name.local.clone();
+                    let name = name.clone();
                     let attrs = attrs.iter()
-                        .map(|attr| (attr.name.local.clone(), attr.value.clone()))
+                        .map(|attr| (attr.name.clone(), attr.value.clone()))
                         .collect();
                     let data = node::Data::Element(name, attrs);
                     let index = append(document, data, parent, prev);
