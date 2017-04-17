@@ -1,9 +1,7 @@
 use std::{fmt, io};
 
-use html5ever::serialize;
-use html5ever_atoms::QualName;
-use string_cache::Atom;
-use tendril::StrTendril;
+use html5ever::{serialize, LocalName, QualName};
+use html5ever::tendril::StrTendril;
 
 use document::Document;
 use predicate::Predicate;
@@ -71,7 +69,7 @@ impl<'a> Node<'a> {
     pub fn attr(&self, name: &str) -> Option<&'a str> {
         match *self.data() {
             Data::Element(_, ref attrs) => {
-                let name = Atom::from(name);
+                let name = LocalName::from(name);
                 attrs.iter()
                     .find(|&&(ref name_, _)| name == name_.local)
                     .map(|&(_, ref value)| value.as_ref())

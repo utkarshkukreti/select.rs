@@ -4,7 +4,6 @@
 extern crate test;
 
 extern crate html5ever;
-extern crate tendril;
 
 extern crate select;
 
@@ -19,7 +18,7 @@ speculate! {
 
         bench "constructing html5ever::rcdom::RcDom" |b| {{
             use html5ever::{parse_document, rcdom};
-            use tendril::stream::TendrilSink;
+            use html5ever::tendril::stream::TendrilSink;
 
             b.iter(|| {
                 let rc_dom = parse_document(rcdom::RcDom::default(),

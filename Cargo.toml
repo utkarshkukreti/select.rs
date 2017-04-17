@@ -12,11 +12,8 @@ repository = "https://github.com/utkarshkukreti/select.rs"
 speculate = "0.0.25"
 
 [dependencies]
-html5ever = "0.14"
-html5ever-atoms = "0.2"
+html5ever = "0.15"
 bit-set = "0.4"
-tendril = "0.2"
-string_cache = "0.4"
 
 [badges]
 travis-ci = { repository = "utkarshkukreti/select.rs" }

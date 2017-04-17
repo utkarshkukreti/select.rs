@@ -1,4 +1,4 @@
-use tendril::{StrTendril, ByteTendril, ReadExt};
+use html5ever::tendril::{StrTendril, ByteTendril, ReadExt};
 
 use node::{self, Node};
 use predicate::Predicate;
@@ -46,7 +46,7 @@ impl From<StrTendril> for Document {
     /// Parses the given `StrTendril` into a `Document`.
     fn from(tendril: StrTendril) -> Document {
         use html5ever::{parse_document, rcdom};
-        use tendril::stream::TendrilSink;
+        use html5ever::tendril::stream::TendrilSink;
 
         let mut document = Document { nodes: vec![] };
 
