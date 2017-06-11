@@ -1,6 +1,6 @@
 extern crate select;
 use select::document::Document;
-use select::predicate::{Predicate, Attr, Class, Name};
+use select::predicate::{Composition, Attr, Class, Name};
 
 pub fn main() {
     // stackoverflow.html was fetched from
