@@ -1,8 +1,23 @@
 use node::{self, Node};
 
 /// A trait implemented by all `Node` matchers.
-pub trait Predicate: Sized {
+pub trait Predicate {
     fn matches(&self, node: &Node) -> bool;
+}
+
+pub trait Composition: Sized {
+    fn or<T: Predicate>(self, other: T) -> Or<Self, T>;
+
+    fn and<T: Predicate>(self, other: T) -> And<Self, T>;
+
+    fn not(self) -> Not<Self>;
+
+    fn child<T: Predicate>(self, other: T) -> Child<Self, T>;
+
+    fn descendant<T: Predicate>(self, other: T) -> Descendant<Self, T>;
+}
+
+impl<P: Predicate> Composition for P {
     fn or<T: Predicate>(self, other: T) -> Or<Self, T> {
         Or(self, other)
     }
