@@ -162,5 +162,17 @@ speculate! {
                 ("d", "d") => None
             }
         }
+
+        // https://github.com/utkarshkukreti/select.rs/issues/35
+        test "Box<Predicate>" {
+            let post_0: Box<Predicate> = Box::new(Attr("id", "post-0"));
+            assert_eq!(post_0.matches(&html), false);
+            assert_eq!(post_0.matches(&head), false);
+            assert_eq!(post_0.matches(&article), true);
+            let not_html: Box<Predicate> = Box::new(Not(Name("html")));
+            assert_eq!(not_html.matches(&html), false);
+            assert_eq!(not_html.matches(&head), true);
+            assert_eq!(not_html.matches(&article), true);
+        }
     }
 }
