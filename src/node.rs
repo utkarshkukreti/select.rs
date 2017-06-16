@@ -209,9 +209,9 @@ impl<'a> fmt::Debug for Node<'a> {
 
 impl<'a> serialize::Serialize for Node<'a> {
     fn serialize<S: serialize::Serializer>(&self,
-                                   serializer: &mut S,
-                                   traversal_scope: serialize::TraversalScope)
-                                   -> io::Result<()> {
+                                           serializer: &mut S,
+                                           traversal_scope: serialize::TraversalScope)
+                                           -> io::Result<()> {
         match *self.data() {
             Data::Text(ref text) => serializer.write_text(&text),
             Data::Element(ref name, ref attrs) => {

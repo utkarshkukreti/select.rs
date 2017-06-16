@@ -67,18 +67,19 @@ impl From<StrTendril> for Document {
                     }
                     None
                 }
-                rcdom::NodeData::Doctype{..} => None,
-                rcdom::NodeData::Text{ref contents} => {
+                rcdom::NodeData::Doctype { .. } => None,
+                rcdom::NodeData::Text { ref contents } => {
                     let data = node::Data::Text(contents.borrow().clone());
                     Some(append(document, data, parent, prev))
                 }
-                rcdom::NodeData::Comment{ref contents} => {
+                rcdom::NodeData::Comment { ref contents } => {
                     let data = node::Data::Comment(contents.clone());
                     Some(append(document, data, parent, prev))
                 }
-                rcdom::NodeData::Element{ref name, ref attrs, ..} => {
+                rcdom::NodeData::Element { ref name, ref attrs, .. } => {
                     let name = name.clone();
-                    let attrs = attrs.borrow().iter()
+                    let attrs = attrs.borrow()
+                        .iter()
                         .map(|attr| (attr.name.clone(), attr.value.clone()))
                         .collect();
                     let data = node::Data::Element(name, attrs);
