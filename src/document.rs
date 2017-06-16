@@ -67,7 +67,6 @@ impl From<StrTendril> for Document {
                     }
                     None
                 }
-                rcdom::NodeData::Doctype { .. } => None,
                 rcdom::NodeData::Text { ref contents } => {
                     let data = node::Data::Text(contents.borrow().clone());
                     Some(append(document, data, parent, prev))
