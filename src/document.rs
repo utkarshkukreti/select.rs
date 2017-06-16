@@ -59,36 +59,37 @@ impl From<StrTendril> for Document {
                  parent: Option<usize>,
                  prev: Option<usize>)
                  -> Option<usize> {
-            match node.borrow().node {
-                rcdom::Document => {
+            match node.data {
+                rcdom::NodeData::Document => {
                     let mut prev = None;
-                    for child in &node.borrow().children {
+                    for child in node.children.borrow().iter() {
                         prev = recur(document, &child, None, prev)
                     }
                     None
                 }
-                rcdom::Doctype(..) => None,
-                rcdom::Text(ref text) => {
-                    let data = node::Data::Text(text.clone());
+                rcdom::NodeData::Doctype{..} => None,
+                rcdom::NodeData::Text{ref contents} => {
+                    let data = node::Data::Text(contents.borrow().clone());
                     Some(append(document, data, parent, prev))
                 }
-                rcdom::Comment(ref comment) => {
-                    let data = node::Data::Comment(comment.clone());
+                rcdom::NodeData::Comment{ref contents} => {
+                    let data = node::Data::Comment(contents.clone());
                     Some(append(document, data, parent, prev))
                 }
-                rcdom::Element(ref name, ref _element, ref attrs) => {
+                rcdom::NodeData::Element{ref name, ref attrs, ..} => {
                     let name = name.clone();
-                    let attrs = attrs.iter()
+                    let attrs = attrs.borrow().iter()
                         .map(|attr| (attr.name.clone(), attr.value.clone()))
                         .collect();
                     let data = node::Data::Element(name, attrs);
                     let index = append(document, data, parent, prev);
                     let mut prev = None;
-                    for child in &node.borrow().children {
+                    for child in node.children.borrow().iter() {
                         prev = recur(document, &child, Some(index), prev)
                     }
                     Some(index)
                 }
+                _ => None,
             }
         }
 

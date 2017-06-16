@@ -207,9 +207,9 @@ impl<'a> fmt::Debug for Node<'a> {
     }
 }
 
-impl<'a> serialize::Serializable for Node<'a> {
-    fn serialize<'w, W: io::Write>(&self,
-                                   serializer: &mut serialize::Serializer<'w, W>,
+impl<'a> serialize::Serialize for Node<'a> {
+    fn serialize<S: serialize::Serializer>(&self,
+                                   serializer: &mut S,
                                    traversal_scope: serialize::TraversalScope)
                                    -> io::Result<()> {
         match *self.data() {
@@ -220,7 +220,7 @@ impl<'a> serialize::Serializable for Node<'a> {
                 try!(serializer.start_elem(name.clone(), attrs));
 
                 for child in self.children() {
-                    try!(serialize::Serializable::serialize(&child, serializer, traversal_scope));
+                    try!(serialize::Serialize::serialize(&child, serializer, traversal_scope));
                 }
 
                 try!(serializer.end_elem(name.clone()));
