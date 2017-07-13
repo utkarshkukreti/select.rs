@@ -127,7 +127,7 @@ impl<'a> Node<'a> {
         String::from_utf8(buf).unwrap()
     }
 
-    pub fn find<P: Predicate>(&self, predicate: P) -> Find<P> {
+    pub fn find<P: Predicate>(&self, predicate: P) -> Find<'a, P> {
         Find {
             document: self.document,
             descendants: self.descendants(),
