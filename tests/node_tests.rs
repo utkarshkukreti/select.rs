@@ -256,5 +256,16 @@ speculate! {
                 assert_eq!(actual, expected);
             }
         }
+
+        // https://github.com/utkarshkukreti/select.rs/pull/38
+        test "issue #38" {
+            {
+                use select::predicate::*;
+                let _bar = {
+                    let body = html.find(Name("body")).next().unwrap();
+                    body.find(Name("bar")).next().unwrap()
+                };
+            }
+        }
     }
 }
