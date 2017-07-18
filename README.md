@@ -8,7 +8,7 @@ open an issue or send me an email.
 
 ## Examples
 
-### from `examples/stackoverflow.rs`
+### from [`examples/stackoverflow.rs`](examples/stackoverflow.rs)
 
 ```rust
 extern crate select;
