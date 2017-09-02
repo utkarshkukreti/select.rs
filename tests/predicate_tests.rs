@@ -66,8 +66,11 @@ speculate! {
         test "Attr()" {
             assert_eq!(Attr("id", "post-0").matches(&html), false);
             assert_eq!(Attr("id", "post-0").matches(&article), true);
-            assert_eq!(Attr("id", ()).matches(&html), false);
-            assert_eq!(Attr("id", ()).matches(&article), true);
+        }
+
+        test "HasAttr()" {
+            assert_eq!(HasAttr("id").matches(&html), false);
+            assert_eq!(HasAttr("id").matches(&article), true);
         }
 
         test "Fn(&Node) -> bool" {

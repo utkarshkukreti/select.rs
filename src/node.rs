@@ -1,4 +1,5 @@
 use std::{fmt, io};
+use std::str::SplitWhitespace;
 
 use html5ever::tendril::StrTendril;
 use html5ever::{serialize, LocalName, QualName};
@@ -93,6 +94,16 @@ impl<'a> Node<'a> {
                 inner: Some(attrs.iter()),
             },
             _ => Attrs { inner: None },
+        }
+    }
+
+    pub fn id(&self) -> Option<&'a str> {
+        self.attr("id")
+    }
+
+    pub fn classes(&self) -> Classes<'a> {
+        Classes {
+            inner: self.attr("class").unwrap_or("").split_whitespace(),
         }
     }
 
@@ -270,6 +281,20 @@ impl<'a> serialize::Serialize for Node<'a> {
             }
             Data::Comment(ref comment) => serializer.write_comment(&comment),
         }
+    }
+}
+
+#[derive(Clone, Debug)]
+pub struct Classes<'a> {
+    inner: SplitWhitespace<'a>,
+}
+impl<'a> Iterator for Classes<'a> {
+    type Item = &'a str;
+    fn next(&mut self) -> Option<&'a str> {
+        self.inner.next()
+    }
+    fn size_hint(&self) -> (usize, Option<usize>) {
+        self.inner.size_hint()
     }
 }
 
