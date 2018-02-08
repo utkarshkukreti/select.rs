@@ -76,7 +76,8 @@ impl<'a> Node<'a> {
         match *self.data() {
             Data::Element(_, ref attrs) => {
                 let name = LocalName::from(name);
-                attrs.iter()
+                attrs
+                    .iter()
                     .find(|&&(ref name_, _)| name == name_.local)
                     .map(|&(_, ref value)| value.as_ref())
             }
@@ -85,23 +86,33 @@ impl<'a> Node<'a> {
     }
 
     pub fn parent(&self) -> Option<Node<'a>> {
-        self.raw().parent.map(|index| self.document.nth(index).unwrap())
+        self.raw()
+            .parent
+            .map(|index| self.document.nth(index).unwrap())
     }
 
     pub fn prev(&self) -> Option<Node<'a>> {
-        self.raw().prev.map(|index| self.document.nth(index).unwrap())
+        self.raw()
+            .prev
+            .map(|index| self.document.nth(index).unwrap())
     }
 
     pub fn next(&self) -> Option<Node<'a>> {
-        self.raw().next.map(|index| self.document.nth(index).unwrap())
+        self.raw()
+            .next
+            .map(|index| self.document.nth(index).unwrap())
     }
 
     pub fn first_child(&self) -> Option<Node<'a>> {
-        self.raw().first_child.map(|index| self.document.nth(index).unwrap())
+        self.raw()
+            .first_child
+            .map(|index| self.document.nth(index).unwrap())
     }
 
     pub fn last_child(&self) -> Option<Node<'a>> {
-        self.raw().last_child.map(|index| self.document.nth(index).unwrap())
+        self.raw()
+            .last_child
+            .map(|index| self.document.nth(index).unwrap())
     }
 
     /// Get the combined textual content of a Node and all of its children.
@@ -210,23 +221,22 @@ impl<'a> fmt::Debug for Node<'a> {
 
         match *self.data() {
             Data::Text(ref text) => f.debug_tuple("Text").field(&&**text).finish(),
-            Data::Element(ref name, ref attrs) => {
-                f.debug_struct("Element")
-                    .field("name", &&*name.local)
-                    .field("attrs", &Attrs(attrs))
-                    .field("children", &Children(self))
-                    .finish()
-            }
+            Data::Element(ref name, ref attrs) => f.debug_struct("Element")
+                .field("name", &&*name.local)
+                .field("attrs", &Attrs(attrs))
+                .field("children", &Children(self))
+                .finish(),
             Data::Comment(ref comment) => f.debug_tuple("Comment").field(&&**comment).finish(),
         }
     }
 }
 
 impl<'a> serialize::Serialize for Node<'a> {
-    fn serialize<S: serialize::Serializer>(&self,
-                                           serializer: &mut S,
-                                           traversal_scope: serialize::TraversalScope)
-                                           -> io::Result<()> {
+    fn serialize<S: serialize::Serializer>(
+        &self,
+        serializer: &mut S,
+        traversal_scope: serialize::TraversalScope,
+    ) -> io::Result<()> {
         match *self.data() {
             Data::Text(ref text) => serializer.write_text(&text),
             Data::Element(ref name, ref attrs) => {
@@ -235,7 +245,11 @@ impl<'a> serialize::Serialize for Node<'a> {
                 try!(serializer.start_elem(name.clone(), attrs));
 
                 for child in self.children() {
-                    try!(serialize::Serialize::serialize(&child, serializer, traversal_scope));
+                    try!(serialize::Serialize::serialize(
+                        &child,
+                        serializer,
+                        traversal_scope
+                    ));
                 }
 
                 try!(serializer.end_elem(name.clone()));

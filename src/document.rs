@@ -1,4 +1,4 @@
-use html5ever::tendril::{StrTendril, ByteTendril, ReadExt};
+use html5ever::tendril::{ByteTendril, ReadExt, StrTendril};
 
 use node::{self, Node};
 use predicate::Predicate;
@@ -34,10 +34,10 @@ impl Document {
 
         match byte_tendril.try_reinterpret() {
             Ok(str_tendril) => Ok(Document::from(str_tendril)),
-            Err(_) => {
-                Err(io::Error::new(io::ErrorKind::InvalidData,
-                                   "stream did not contain valid UTF-8"))
-            }
+            Err(_) => Err(io::Error::new(
+                io::ErrorKind::InvalidData,
+                "stream did not contain valid UTF-8",
+            )),
         }
     }
 }
@@ -54,11 +54,12 @@ impl From<StrTendril> for Document {
         recur(&mut document, &rc_dom.document, None, None);
         return document;
 
-        fn recur(document: &mut Document,
-                 node: &rcdom::Handle,
-                 parent: Option<usize>,
-                 prev: Option<usize>)
-                 -> Option<usize> {
+        fn recur(
+            document: &mut Document,
+            node: &rcdom::Handle,
+            parent: Option<usize>,
+            prev: Option<usize>,
+        ) -> Option<usize> {
             match node.data {
                 rcdom::NodeData::Document => {
                     let mut prev = None;
@@ -75,9 +76,14 @@ impl From<StrTendril> for Document {
                     let data = node::Data::Comment(contents.clone());
                     Some(append(document, data, parent, prev))
                 }
-                rcdom::NodeData::Element { ref name, ref attrs, .. } => {
+                rcdom::NodeData::Element {
+                    ref name,
+                    ref attrs,
+                    ..
+                } => {
                     let name = name.clone();
-                    let attrs = attrs.borrow()
+                    let attrs = attrs
+                        .borrow()
                         .iter()
                         .map(|attr| (attr.name.clone(), attr.value.clone()))
                         .collect();
@@ -93,11 +99,12 @@ impl From<StrTendril> for Document {
             }
         }
 
-        fn append(document: &mut Document,
-                  data: node::Data,
-                  parent: Option<usize>,
-                  prev: Option<usize>)
-                  -> usize {
+        fn append(
+            document: &mut Document,
+            data: node::Data,
+            parent: Option<usize>,
+            prev: Option<usize>,
+        ) -> usize {
             let index = document.nodes.len();
 
             document.nodes.push(node::Raw {

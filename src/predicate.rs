@@ -4,27 +4,32 @@ use node::{self, Node};
 pub trait Predicate {
     fn matches(&self, node: &Node) -> bool;
     fn or<T: Predicate>(self, other: T) -> Or<Self, T>
-        where Self: Sized
+    where
+        Self: Sized,
     {
         Or(self, other)
     }
     fn and<T: Predicate>(self, other: T) -> And<Self, T>
-        where Self: Sized
+    where
+        Self: Sized,
     {
         And(self, other)
     }
     fn not(self) -> Not<Self>
-        where Self: Sized
+    where
+        Self: Sized,
     {
         Not(self)
     }
     fn child<T: Predicate>(self, other: T) -> Child<Self, T>
-        where Self: Sized
+    where
+        Self: Sized,
     {
         Child(self, other)
     }
     fn descendant<T: Predicate>(self, other: T) -> Descendant<Self, T>
-        where Self: Sized
+    where
+        Self: Sized,
     {
         Descendant(self, other)
     }
@@ -56,8 +61,9 @@ pub struct Class<T>(pub T);
 
 impl<'a> Predicate for Class<&'a str> {
     fn matches(&self, node: &Node) -> bool {
-        node.attr("class").map_or(false,
-                                  |classes| classes.split_whitespace().any(|class| class == self.0))
+        node.attr("class").map_or(false, |classes| {
+            classes.split_whitespace().any(|class| class == self.0)
+        })
     }
 }
 

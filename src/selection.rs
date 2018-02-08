@@ -43,7 +43,8 @@ impl<'a> Selection<'a> {
 
         return Selection {
             document: self.document,
-            bit_set: bit_set.iter()
+            bit_set: bit_set
+                .iter()
                 .filter(|&index| p.matches(&self.document.nth(index).unwrap()))
                 .collect(),
         };
@@ -117,7 +118,10 @@ impl<'a> Selection<'a> {
     }
 
     pub fn first(&self) -> Option<Node<'a>> {
-        self.bit_set.iter().next().map(|index| self.document.nth(index).unwrap())
+        self.bit_set
+            .iter()
+            .next()
+            .map(|index| self.document.nth(index).unwrap())
     }
 
     pub fn len(&self) -> usize {
@@ -135,7 +139,9 @@ impl<'sel, 'doc> Iterator for Iter<'sel, 'doc> {
     type Item = Node<'doc>;
 
     fn next(&mut self) -> Option<Node<'doc>> {
-        self.inner.next().map(|index| self.selection.document.nth(index).unwrap())
+        self.inner
+            .next()
+            .map(|index| self.selection.document.nth(index).unwrap())
     }
 }
 
