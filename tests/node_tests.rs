@@ -221,6 +221,12 @@ speculate! {
             }
         }
 
+        test "Node::attrs()" {
+            let mut attrs = quux.attrs();
+            assert_eq!(attrs.next(), Some(("class", "another-thing")));
+            assert_eq!(attrs.next(), None);
+        }
+
         test "std::fmt::Debug for Node" {
             assert_eq!(format!("{:?}", bar).replace(" ", ""), r#"Element {
                 name: "bar",
