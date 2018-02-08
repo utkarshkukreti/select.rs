@@ -28,7 +28,7 @@ pub struct Raw {
     pub data: Data,
 }
 
-/// A Node.
+/// A single node of an HTML document. Nodes may be HTML elements, comments, or text nodes.
 #[derive(Copy, Clone, PartialEq)]
 pub struct Node<'a> {
     document: &'a Document,
@@ -36,6 +36,7 @@ pub struct Node<'a> {
 }
 
 impl<'a> Node<'a> {
+    /// Create a Node referring to the `index`th Node of a document.
     pub fn new(document: &'a Document, index: usize) -> Option<Node<'a>> {
         if index < document.nodes.len() {
             Some(Node {
@@ -47,18 +48,22 @@ impl<'a> Node<'a> {
         }
     }
 
+    /// Get the index of this Node in its Document.
     pub fn index(&self) -> usize {
         self.index
     }
 
+    /// Obtain the inner representation of this Node.
     pub fn raw(&self) -> &'a Raw {
         &self.document.nodes[self.index]
     }
 
+    /// Get the text node, HTML element, or comment from a Node.
     pub fn data(&self) -> &'a Data {
         &self.raw().data
     }
 
+    /// Get the name of a Node if it is an HTML element, or None otherwise.
     pub fn name(&self) -> Option<&'a str> {
         match *self.data() {
             Data::Element(ref name, _) => Some(&name.local),
@@ -66,6 +71,7 @@ impl<'a> Node<'a> {
         }
     }
 
+    /// Get the value of the attribute `name` from a Node representing a HTML element.
     pub fn attr(&self, name: &str) -> Option<&'a str> {
         match *self.data() {
             Data::Element(_, ref attrs) => {
@@ -98,6 +104,7 @@ impl<'a> Node<'a> {
         self.raw().last_child.map(|index| self.document.nth(index).unwrap())
     }
 
+    /// Get the combined textual content of a Node and all of its children.
     pub fn text(&self) -> String {
         let mut string = String::new();
         recur(self, &mut string);
@@ -113,12 +120,14 @@ impl<'a> Node<'a> {
         }
     }
 
+    /// Serialize a Node to an HTML string.
     pub fn html(&self) -> String {
         let mut buf = Vec::new();
         serialize::serialize(&mut buf, self, Default::default()).unwrap();
         String::from_utf8(buf).unwrap()
     }
 
+    /// Serialize a Node's children to an HTML string.
     pub fn inner_html(&self) -> String {
         let mut buf = Vec::new();
         for child in self.children() {
@@ -127,6 +136,7 @@ impl<'a> Node<'a> {
         String::from_utf8(buf).unwrap()
     }
 
+    /// Search for Nodes fulfilling `predicate` in the descendants of a Node.
     pub fn find<P: Predicate>(&self, predicate: P) -> Find<'a, P> {
         Find {
             document: self.document,
@@ -135,10 +145,12 @@ impl<'a> Node<'a> {
         }
     }
 
+    /// Evaluate a predicate on this Node.
     pub fn is<P: Predicate>(&self, p: P) -> bool {
         p.matches(self)
     }
 
+    /// Get the text of a text Node, or None if the node is not text.
     pub fn as_text(&self) -> Option<&'a str> {
         match *self.data() {
             Data::Text(ref text) => Some(&text),
@@ -146,6 +158,7 @@ impl<'a> Node<'a> {
         }
     }
 
+    /// Get the text of a comment Node, or None if the node is not a comment.
     pub fn as_comment(&self) -> Option<&'a str> {
         match *self.data() {
             Data::Comment(ref comment) => Some(&comment),
@@ -153,6 +166,7 @@ impl<'a> Node<'a> {
         }
     }
 
+    /// Construct an iterator over a Node's child Nodes.
     pub fn children(&self) -> Children<'a> {
         Children {
             document: self.document,
@@ -160,6 +174,7 @@ impl<'a> Node<'a> {
         }
     }
 
+    /// Construct an iterator over a Node's descendant (transitive children) Nodes.
     pub fn descendants(&self) -> Descendants<'a> {
         Descendants {
             start: *self,
