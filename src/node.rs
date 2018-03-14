@@ -259,7 +259,7 @@ impl<'a> serialize::Serialize for Node<'a> {
                     try!(serialize::Serialize::serialize(
                         &child,
                         serializer,
-                        traversal_scope
+                        traversal_scope.clone()
                     ));
                 }
 
