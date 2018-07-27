@@ -1,5 +1,7 @@
-#![feature(plugin)]
-#![plugin(speculate)]
+#![feature(proc_macro_gen, use_extern_macros)]
+
+extern crate speculate;
+use speculate::speculate;
 
 extern crate select;
 pub use select::document::Document;

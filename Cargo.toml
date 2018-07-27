@@ -9,7 +9,7 @@ homepage = "https://github.com/utkarshkukreti/select.rs"
 repository = "https://github.com/utkarshkukreti/select.rs"
 
 [dev-dependencies]
-speculate = "0.0.25"
+speculate = {path = "/Users/utkarsh/dev/git/speculate.rs" }
 
 [dependencies]
 html5ever = "0.18"

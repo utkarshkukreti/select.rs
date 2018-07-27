@@ -1,6 +1,8 @@
-#![feature(plugin)]
-#![plugin(speculate)]
+#![feature(proc_macro_gen, use_extern_macros)]
 #![allow(unused_variables)]
+
+extern crate speculate;
+use speculate::speculate;
 
 pub use std::collections::HashMap;
 
