@@ -1,11 +1,13 @@
-#![feature(plugin)]
-#![plugin(speculate)]
+#![feature(proc_macro_hygiene)]
 #![allow(unused_variables)]
 
 extern crate select;
 pub use select::document::Document;
 pub use select::node;
 pub use select::predicate::*;
+
+extern crate speculate;
+use speculate::speculate;
 
 speculate! {
     describe "predicate" {

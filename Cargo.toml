@@ -9,11 +9,11 @@ homepage = "https://github.com/utkarshkukreti/select.rs"
 repository = "https://github.com/utkarshkukreti/select.rs"
 
 [dev-dependencies]
-speculate = "0.0.25"
+speculate = "0.1.2"
 
 [dependencies]
-html5ever = "0.22"
-bit-set = "0.4"
+html5ever = "0.23"
+bit-set = "0.5"
 
 [badges]
 travis-ci = { repository = "utkarshkukreti/select.rs" }
