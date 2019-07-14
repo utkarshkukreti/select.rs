@@ -1,4 +1,3 @@
-#![feature(proc_macro_hygiene)]
 #![allow(unused_variables)]
 
 extern crate select;
@@ -133,36 +132,30 @@ speculate! {
         }
 
         test "Descendant()" {
-            macro_rules! check {
-                ($(($parent:expr, $child:expr) => $matching:expr),+) => {{
-                    $(
-                        let selector = Descendant(Class($parent), Class($child));
-                        for node in &[a, b, c, d] {
-                            let expected = $matching.map_or(false, |index| node.index() == index);
-                            assert_eq!(selector.matches(node), expected);
-                        }
-                    )+
-                }}
-            }
+            let check = |parent: &str, child: &str, matching: Option<usize>| {
+                let selector = Descendant(Class(parent), Class(child));
+                for node in &[a, b, c, d] {
+                    let expected = matching.map_or(false, |index| node.index() == index);
+                    assert_eq!(selector.matches(node), expected);
+                }
+            };
 
-            check! {
-                ("a", "a") => None,
-                ("a", "b") => Some(b.index()),
-                ("a", "c") => Some(c.index()),
-                ("a", "d") => Some(d.index()),
-                ("b", "a") => None,
-                ("b", "b") => None,
-                ("b", "c") => Some(c.index()),
-                ("b", "d") => Some(d.index()),
-                ("c", "a") => None,
-                ("c", "b") => None,
-                ("c", "c") => None,
-                ("c", "d") => Some(d.index()),
-                ("d", "a") => None,
-                ("d", "b") => None,
-                ("d", "c") => None,
-                ("d", "d") => None
-            }
+            check("a", "a", None);
+            check("a", "b", Some(b.index()));
+            check("a", "c", Some(c.index()));
+            check("a", "d", Some(d.index()));
+            check("b", "a", None);
+            check("b", "b", None);
+            check("b", "c", Some(c.index()));
+            check("b", "d", Some(d.index()));
+            check("c", "a", None);
+            check("c", "b", None);
+            check("c", "c", None);
+            check("c", "d", Some(d.index()));
+            check("d", "a", None);
+            check("d", "b", None);
+            check("d", "c", None);
+            check("d", "d", None);
         }
 
         // https://github.com/utkarshkukreti/select.rs/issues/35

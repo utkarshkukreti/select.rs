@@ -1,5 +1,3 @@
-#![feature(proc_macro_hygiene)]
-
 extern crate select;
 pub use select::document::Document;
 pub use select::selection::*;
@@ -128,22 +126,16 @@ speculate! {
 
             let document = Document::from(include_str!("fixtures/struct.Vec.html"));
 
-            macro_rules! check {
-                ($($selector:expr),*) => {{
-                    $({
-                        let selection = document.find($selector).into_selection();
-                        assert_eq!(selection.len(), selection.iter().count());
-                    })*
-                }}
+            fn check<P: Predicate>(document: &Document, predicate: P) {
+                let selection = document.find(predicate).into_selection();
+                assert_eq!(selection.len(), selection.iter().count());
             }
 
-            check! {
-                Any,
-                Attr("id", "main"),
-                Class("struct"),
-                Name("div"),
-                Name("span")
-            }
+            check(&document, Any);
+            check(&document, Attr("id", "main"));
+            check(&document, Class("struct"));
+            check(&document, Name("div"));
+            check(&document, Name("span"));
         }
 
         test "Iter (lifetimes)" {
