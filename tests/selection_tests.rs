@@ -1,9 +1,11 @@
-#![feature(plugin)]
-#![plugin(speculate)]
+#![feature(proc_macro_hygiene)]
 
 extern crate select;
 pub use select::document::Document;
 pub use select::selection::*;
+
+extern crate speculate;
+use speculate::speculate;
 
 speculate! {
     describe "selection" {

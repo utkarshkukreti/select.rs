@@ -1,5 +1,4 @@
-#![feature(plugin, test)]
-#![plugin(speculate)]
+#![feature(test)]
 
 extern crate test;
 
@@ -9,6 +8,9 @@ extern crate select;
 
 pub use select::document::Document;
 pub use select::predicate::*;
+
+extern crate speculate;
+use speculate::speculate;
 
 speculate! {
     context "struct.Vec.html (228,512 bytes)" {
