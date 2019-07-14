@@ -1,7 +1,7 @@
 use std::{fmt, io};
 
-use html5ever::{serialize, LocalName, QualName};
 use html5ever::tendril::StrTendril;
+use html5ever::{serialize, LocalName, QualName};
 
 use document::Document;
 use predicate::Predicate;
@@ -232,7 +232,8 @@ impl<'a> fmt::Debug for Node<'a> {
 
         match *self.data() {
             Data::Text(ref text) => f.debug_tuple("Text").field(&&**text).finish(),
-            Data::Element(ref name, ref attrs) => f.debug_struct("Element")
+            Data::Element(ref name, ref attrs) => f
+                .debug_struct("Element")
                 .field("name", &&*name.local)
                 .field("attrs", &Attrs(attrs))
                 .field("children", &Children(self))

@@ -18,15 +18,18 @@ pub fn main() {
     for node in document.find(Class("question-summary")).take(5) {
         let question = node.find(Class("question-hyperlink")).next().unwrap();
         let votes = node.find(Class("vote-count-post")).next().unwrap().text();
-        let answers = node.find(Class("status").descendant(Name("strong")))
+        let answers = node
+            .find(Class("status").descendant(Name("strong")))
             .next()
             .unwrap()
             .text();
-        let tags = node.find(Class("post-tag"))
+        let tags = node
+            .find(Class("post-tag"))
             .map(|tag| tag.text())
             .collect::<Vec<_>>();
         let asked_on = node.find(Class("relativetime")).next().unwrap().text();
-        let asker = node.find(Class("user-details").descendant(Name("a")))
+        let asker = node
+            .find(Class("user-details").descendant(Name("a")))
             .next()
             .unwrap()
             .text();
@@ -54,7 +57,8 @@ pub fn main() {
         .take(10)
     {
         let tag = node.find(Name("a")).next().unwrap().text();
-        let count = node.find(Class("item-multiplier-count"))
+        let count = node
+            .find(Class("item-multiplier-count"))
             .next()
             .unwrap()
             .text();

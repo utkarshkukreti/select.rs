@@ -1,5 +1,5 @@
-use document::Document;
 use bit_set::{self, BitSet};
+use document::Document;
 use node::Node;
 use predicate::Predicate;
 
@@ -27,7 +27,8 @@ impl<'a> Selection<'a> {
     pub fn filter<P: Predicate>(&self, p: P) -> Selection<'a> {
         Selection {
             document: self.document,
-            bit_set: self.bit_set
+            bit_set: self
+                .bit_set
                 .iter()
                 .filter(|&index| p.matches(&self.document.nth(index).unwrap()))
                 .collect(),
@@ -64,7 +65,8 @@ impl<'a> Selection<'a> {
     pub fn parent(&self) -> Selection<'a> {
         Selection {
             document: self.document,
-            bit_set: self.iter()
+            bit_set: self
+                .iter()
                 .filter_map(|node| node.parent().map(|parent| parent.index()))
                 .collect(),
         }
@@ -73,7 +75,8 @@ impl<'a> Selection<'a> {
     pub fn prev(&self) -> Selection<'a> {
         Selection {
             document: self.document,
-            bit_set: self.iter()
+            bit_set: self
+                .iter()
                 .filter_map(|node| node.prev().map(|prev| prev.index()))
                 .collect(),
         }
@@ -82,7 +85,8 @@ impl<'a> Selection<'a> {
     pub fn next(&self) -> Selection<'a> {
         Selection {
             document: self.document,
-            bit_set: self.iter()
+            bit_set: self
+                .iter()
                 .filter_map(|node| node.next().map(|next| next.index()))
                 .collect(),
         }

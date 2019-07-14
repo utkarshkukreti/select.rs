@@ -45,8 +45,8 @@ impl Document {
 impl From<StrTendril> for Document {
     /// Parses the given `StrTendril` into a `Document`.
     fn from(tendril: StrTendril) -> Document {
-        use html5ever::{parse_document, rcdom};
         use html5ever::tendril::stream::TendrilSink;
+        use html5ever::{parse_document, rcdom};
 
         let mut document = Document { nodes: vec![] };
 
