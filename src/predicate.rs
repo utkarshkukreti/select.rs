@@ -116,9 +116,19 @@ impl Predicate for Element {
 
 /// Matches any Text Node.
 #[derive(Copy, Clone, Debug, PartialEq)]
-pub struct Text;
+pub struct Text<T>(pub T);
 
-impl Predicate for Text {
+impl<'a> Predicate for Text<&'a str> {
+    fn matches(&self, node: &Node) -> bool {
+        match *node.data() {
+            node::Data::Text(ref text) => &**text == self.0,
+            _ => false,
+        }
+    }
+}
+
+
+impl Predicate for Text<()> {
     fn matches(&self, node: &Node) -> bool {
         match *node.data() {
             node::Data::Text(..) => true,
