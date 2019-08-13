@@ -85,13 +85,15 @@ speculate! {
             assert_eq!(super::Element.matches(&foo), false);
         }
 
-        test "Text" {
-            assert_eq!(super::Text.matches(&html), false);
-            assert_eq!(super::Text.matches(&head), false);
-            assert_eq!(super::Text.matches(&body), false);
-            assert_eq!(super::Text.matches(&article), false);
-            assert_eq!(super::Text.matches(&foo), true);
-            assert_eq!(super::Text.matches(&comment), false);
+        test "Text()" {
+            assert_eq!(super::Text(()).matches(&html), false);
+            assert_eq!(super::Text(()).matches(&head), false);
+            assert_eq!(super::Text(()).matches(&body), false);
+            assert_eq!(super::Text(()).matches(&article), false);
+            assert_eq!(super::Text(()).matches(&foo), true);
+            assert_eq!(super::Text(()).matches(&comment), false);
+            assert_eq!(super::Text("foo").matches(&foo), true);
+            assert_eq!(super::Text("bar").matches(&foo), false);
         }
 
         test "Comment" {
