@@ -46,37 +46,38 @@ impl From<StrTendril> for Document {
     /// Parses the given `StrTendril` into a `Document`.
     fn from(tendril: StrTendril) -> Document {
         use html5ever::tendril::stream::TendrilSink;
-        use html5ever::{parse_document, rcdom};
+        use html5ever::parse_document;
+        use markup5ever_rcdom::{RcDom, NodeData, Handle};
 
         let mut document = Document { nodes: vec![] };
 
-        let rc_dom = parse_document(rcdom::RcDom::default(), Default::default()).one(tendril);
+        let rc_dom = parse_document(RcDom::default(), Default::default()).one(tendril);
         recur(&mut document, &rc_dom.document, None, None);
         return document;
 
         fn recur(
             document: &mut Document,
-            node: &rcdom::Handle,
+            node: &Handle,
             parent: Option<usize>,
             prev: Option<usize>,
         ) -> Option<usize> {
             match node.data {
-                rcdom::NodeData::Document => {
+                NodeData::Document => {
                     let mut prev = None;
                     for child in node.children.borrow().iter() {
                         prev = recur(document, &child, None, prev)
                     }
                     None
                 }
-                rcdom::NodeData::Text { ref contents } => {
+                NodeData::Text { ref contents } => {
                     let data = node::Data::Text(contents.borrow().clone());
                     Some(append(document, data, parent, prev))
                 }
-                rcdom::NodeData::Comment { ref contents } => {
+                NodeData::Comment { ref contents } => {
                     let data = node::Data::Comment(contents.clone());
                     Some(append(document, data, parent, prev))
                 }
-                rcdom::NodeData::Element {
+                NodeData::Element {
                     ref name,
                     ref attrs,
                     ..

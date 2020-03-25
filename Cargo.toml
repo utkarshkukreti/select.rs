@@ -14,6 +14,7 @@ speculate = "0.1.2"
 [dependencies]
 html5ever = "0.25"
 bit-set = "0.5"
+markup5ever_rcdom = "0.1"
 
 [badges]
 travis-ci = { repository = "utkarshkukreti/select.rs" }
