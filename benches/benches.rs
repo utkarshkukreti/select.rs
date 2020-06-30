@@ -4,6 +4,8 @@ extern crate test;
 
 extern crate html5ever;
 
+extern crate markup5ever_rcdom;
+
 extern crate select;
 
 pub use select::document::Document;
@@ -18,12 +20,13 @@ speculate! {
             let str = include_str!("../tests/fixtures/struct.Vec.html");
         }
 
-        bench "constructing html5ever::rcdom::RcDom" |b| {{
-            use html5ever::{parse_document, rcdom};
+        bench "constructing markup5ever_rcdom::RcDom" |b| {{
+            use html5ever::parse_document;
+            use markup5ever_rcdom::RcDom;
             use html5ever::tendril::stream::TendrilSink;
 
             b.iter(|| {
-                let rc_dom = parse_document(rcdom::RcDom::default(),
+                let rc_dom = parse_document(RcDom::default(),
                                             Default::default()).one(str);
                 rc_dom
             });
