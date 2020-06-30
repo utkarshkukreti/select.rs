@@ -254,17 +254,17 @@ impl<'a> serialize::Serialize for Node<'a> {
             Data::Element(ref name, ref attrs) => {
                 let attrs = attrs.iter().map(|&(ref name, ref value)| (name, &**value));
 
-                try!(serializer.start_elem(name.clone(), attrs));
+                serializer.start_elem(name.clone(), attrs)?;
 
                 for child in self.children() {
-                    try!(serialize::Serialize::serialize(
+                    serialize::Serialize::serialize(
                         &child,
                         serializer,
                         traversal_scope.clone()
-                    ));
+                    )?;
                 }
 
-                try!(serializer.end_elem(name.clone()));
+                serializer.end_elem(name.clone())?;
 
                 Ok(())
             }
