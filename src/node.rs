@@ -329,6 +329,16 @@ pub struct Find<'a, P: Predicate> {
     predicate: P,
 }
 
+impl<'a, P: Predicate> std::fmt::Debug for Find<'a, P> {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        f.debug_struct("Find")
+            .field("document", &self.document)
+            .field("descendants", &self.descendants)
+            // predicate may be closure not implementing Debug
+            .finish()
+    }
+}
+
 impl<'a, P: Predicate> Find<'a, P> {
     pub fn into_selection(self) -> Selection<'a> {
         Selection::new(self.document, self.map(|node| node.index()).collect())
