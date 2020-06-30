@@ -39,10 +39,7 @@ impl<'a> Node<'a> {
     /// Create a Node referring to the `index`th Node of a document.
     pub fn new(document: &'a Document, index: usize) -> Option<Node<'a>> {
         if index < document.nodes.len() {
-            Some(Node {
-                document: document,
-                index: index,
-            })
+            Some(Node { document, index })
         } else {
             None
         }
@@ -163,7 +160,7 @@ impl<'a> Node<'a> {
         Find {
             document: self.document,
             descendants: self.descendants(),
-            predicate: predicate,
+            predicate,
         }
     }
 
@@ -257,11 +254,7 @@ impl<'a> serialize::Serialize for Node<'a> {
                 serializer.start_elem(name.clone(), attrs)?;
 
                 for child in self.children() {
-                    serialize::Serialize::serialize(
-                        &child,
-                        serializer,
-                        traversal_scope.clone()
-                    )?;
+                    serialize::Serialize::serialize(&child, serializer, traversal_scope.clone())?;
                 }
 
                 serializer.end_elem(name.clone())?;

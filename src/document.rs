@@ -18,7 +18,7 @@ impl Document {
         Find {
             document: self,
             next: 0,
-            predicate: predicate,
+            predicate,
         }
     }
 
@@ -109,13 +109,13 @@ impl From<StrTendril> for Document {
             let index = document.nodes.len();
 
             document.nodes.push(node::Raw {
-                index: index,
-                parent: parent,
-                prev: prev,
+                index,
+                parent,
+                prev,
                 next: None,
                 first_child: None,
                 last_child: None,
-                data: data,
+                data,
             });
 
             if let Some(parent) = parent {

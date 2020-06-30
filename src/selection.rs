@@ -11,10 +11,7 @@ pub struct Selection<'a> {
 
 impl<'a> Selection<'a> {
     pub fn new(document: &'a Document, bit_set: BitSet) -> Selection<'a> {
-        Selection {
-            document: document,
-            bit_set: bit_set,
-        }
+        Selection { document, bit_set }
     }
 
     pub fn iter<'sel>(&'sel self) -> Iter<'sel, 'a> {
@@ -103,7 +100,7 @@ impl<'a> Selection<'a> {
 
         Selection {
             document: self.document,
-            bit_set: bit_set,
+            bit_set,
         }
     }
 
@@ -117,7 +114,7 @@ impl<'a> Selection<'a> {
 
         Selection {
             document: self.document,
-            bit_set: bit_set,
+            bit_set,
         }
     }
 
@@ -130,6 +127,10 @@ impl<'a> Selection<'a> {
 
     pub fn len(&self) -> usize {
         self.bit_set.len()
+    }
+
+    pub fn is_empty(&self) -> bool {
+        self.bit_set.is_empty()
     }
 }
 

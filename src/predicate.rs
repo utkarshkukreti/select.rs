@@ -191,6 +191,6 @@ impl<A: Predicate, B: Predicate> Predicate for Descendant<A, B> {
                 node = parent;
             }
         }
-        return false;
+        false
     }
 }
