@@ -13,6 +13,7 @@ repository = "https://github.com/utkarshkukreti/select.rs"
 bit-set = "0.5"
 html5ever = "0.25"
 markup5ever_rcdom = "0.1"
+regex = "1.3.9"
 
 [dev-dependencies]
 speculate = "0.1.2"

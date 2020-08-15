@@ -70,6 +70,9 @@ speculate! {
             assert_eq!(Attr("id", "post-0").matches(&article), true);
             assert_eq!(Attr("id", ()).matches(&html), false);
             assert_eq!(Attr("id", ()).matches(&article), true);
+            assert_eq!(Attr("id", regex::Regex::new("post").unwrap()).matches(&article), true);
+            assert_eq!(Attr("class", regex::Regex::new("^category$").unwrap()).matches(&article), false);
+            assert_eq!(Attr("class", regex::Regex::new("category").unwrap()).matches(&article), true);
         }
 
         test "Fn(&Node) -> bool" {

@@ -1,4 +1,5 @@
 use crate::node::{self, Node};
+use regex::Regex;
 
 /// A trait implemented by all `Node` matchers.
 pub trait Predicate {
@@ -93,6 +94,16 @@ impl<'a> Predicate for Attr<&'a str, ()> {
         node.attr(self.0).is_some()
     }
 }
+
+impl<'a> Predicate for Attr<&'a str, Regex> {
+    fn matches(&self, node: &Node) -> bool {
+        if let Some(attr) = node.attr(self.0) {
+            return self.1.is_match(attr)
+        }
+        false
+    }
+}
+
 
 /// Matches if the function returns true.
 impl<F: Fn(&Node) -> bool> Predicate for F {
