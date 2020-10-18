@@ -81,13 +81,13 @@ impl<'a> Node<'a> {
 
     /// Get an iterator over the names and values of attributes of the Element.
     /// Returns an empty iterator for non Element nodes.
-    pub fn attrs(&self) -> Attrs<'a> {
+    pub fn attrs(&self) -> impl Iterator<Item = (&'a str, &'a str)> {
         match *self.data() {
-            Data::Element(_, ref attrs) => Attrs {
-                inner: Some(attrs.iter()),
-            },
-            _ => Attrs { inner: None },
+            Data::Element(_, ref attrs) => &attrs,
+            _ => [].as_ref(),
         }
+        .iter()
+        .map(|(name, value)| (name.local.as_ref(), value.as_ref()))
     }
 
     pub fn parent(&self) -> Option<Node<'a>> {
@@ -369,20 +369,5 @@ impl<'a> Iterator for Children<'a> {
         } else {
             None
         }
-    }
-}
-
-pub struct Attrs<'a> {
-    inner: Option<::std::slice::Iter<'a, (QualName, StrTendril)>>,
-}
-
-impl<'a> Iterator for Attrs<'a> {
-    type Item = (&'a str, &'a str);
-
-    fn next(&mut self) -> Option<Self::Item> {
-        self.inner.as_mut().and_then(|it| {
-            it.next()
-                .map(|&(ref name, ref value)| (name.local.as_ref(), value.as_ref()))
-        })
     }
 }
