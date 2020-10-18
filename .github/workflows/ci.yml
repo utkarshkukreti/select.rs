@@ -1,10 +1,10 @@
-name: Build
+name: CI
 
 on: [push, pull_request]
 
 jobs:
-  build:
-    name: ${{ matrix.os }}
+  ci:
+    name: ${{ matrix.os }} - ${{ matrix.rust }}
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
@@ -15,7 +15,9 @@ jobs:
       - uses: actions-rs/toolchain@v1
         with:
           toolchain: ${{ matrix.rust }}
-      - run: cargo build --verbose
-      - run: cargo test --verbose
+          override: true
+          components: clippy, rustfmt
+      - run: cargo build
+      - run: cargo test
+      - run: cargo fmt -- --check
       - run: cargo clippy
-        continue-on-error: true
