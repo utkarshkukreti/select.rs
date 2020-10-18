@@ -2,9 +2,11 @@
 
 > A library to extract useful data from HTML documents, suitable for web scraping.
 
-Note: All the API is currently unstable and will change as I use this library
-more in real world projects. If you have any suggestions or feedback, please
-open an issue or send me an email.
+---
+
+> NOTE: The following example only works in the upcoming release of this library. Check out the [0.5.0 tag](https://github.com/utkarshkukreti/select.rs/tree/0.5.0#readme) for the latest public release.
+
+---
 
 ## Examples
 
