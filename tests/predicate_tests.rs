@@ -1,4 +1,8 @@
-#![allow(unused_variables)]
+#![allow(
+    unused_variables,
+    clippy::blacklisted_name,
+    clippy::many_single_char_names
+)]
 
 extern crate select;
 pub use select::document::Document;

@@ -1,4 +1,4 @@
-#![allow(unused_variables)]
+#![allow(unused_variables, clippy::blacklisted_name)]
 
 pub use std::collections::HashMap;
 

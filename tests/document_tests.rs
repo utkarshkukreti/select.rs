@@ -1,3 +1,4 @@
+#![allow(clippy::many_single_char_names)]
 pub use std::collections::HashMap;
 
 extern crate select;

@@ -12,7 +12,7 @@ pub fn main() {
     for node in document.find(Attr("id", "hmenus").descendant(Name("a"))) {
         println!("{} ({:?})", node.text(), node.attr("href").unwrap());
     }
-    println!("");
+    println!();
 
     println!("# Top 5 Questions");
     for node in document.find(Class("question-summary")).take(5) {
@@ -43,7 +43,7 @@ pub fn main() {
             "Permalink: http://stackoverflow.com{}",
             question.attr("href").unwrap()
         );
-        println!("");
+        println!();
     }
 
     println!("# Top 10 Related Tags");
