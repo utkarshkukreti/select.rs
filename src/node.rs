@@ -71,13 +71,10 @@ impl<'a> Node<'a> {
     /// Get the value of the attribute `name` from a Node representing a HTML element.
     pub fn attr(&self, name: &str) -> Option<&'a str> {
         match *self.data() {
-            Data::Element(_, ref attrs) => {
-                let name = QualName::from(name);
-                attrs
-                    .iter()
-                    .find(|&&(ref name_, _)| name == name_.local)
-                    .map(|&(_, ref value)| value.as_ref())
-            }
+            Data::Element(_, ref attrs) => attrs
+                .iter()
+                .find(|&&(ref name_, _)| name == &name_.local)
+                .map(|&(_, ref value)| value.as_ref()),
             _ => None,
         }
     }
