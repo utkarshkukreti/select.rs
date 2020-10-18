@@ -1,8 +1,6 @@
-extern crate select;
 pub use select::document::Document;
 pub use select::selection::*;
 
-extern crate speculate;
 use speculate::speculate;
 
 speculate! {

@@ -11,7 +11,7 @@ open an issue or send me an email.
 ### from [`examples/stackoverflow.rs`](examples/stackoverflow.rs)
 
 ```rust
-extern crate select;
+
 use select::document::Document;
 use select::predicate::{Predicate, Attr, Class, Name};
 

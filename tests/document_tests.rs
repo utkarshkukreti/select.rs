@@ -1,11 +1,9 @@
 #![allow(clippy::many_single_char_names)]
 pub use std::collections::HashMap;
 
-extern crate select;
 pub use select::document::Document;
 pub use select::node;
 
-extern crate speculate;
 use speculate::speculate;
 
 speculate! {

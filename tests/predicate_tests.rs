@@ -4,12 +4,10 @@
     clippy::many_single_char_names
 )]
 
-extern crate select;
 pub use select::document::Document;
 pub use select::node;
 pub use select::predicate::*;
 
-extern crate speculate;
 use speculate::speculate;
 
 speculate! {
