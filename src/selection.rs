@@ -32,7 +32,7 @@ impl<'a> Selection<'a> {
         }
     }
 
-    pub fn find<P: Predicate>(&self, p: P) -> Selection<'a> {
+    pub fn select<P: Predicate>(&self, p: P) -> Selection<'a> {
         let mut bit_set = BitSet::new();
 
         for node in self {
@@ -57,6 +57,11 @@ impl<'a> Selection<'a> {
                 bit_set.insert(child.index());
             }
         }
+    }
+
+    #[deprecated = "renamed to select()"]
+    pub fn find<P: Predicate>(&self, p: P) -> Selection<'a> {
+        self.select(p)
     }
 
     pub fn parent(&self) -> Selection<'a> {
