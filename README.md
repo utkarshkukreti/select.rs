@@ -1,4 +1,4 @@
-# select.rs [![Build Status](https://travis-ci.org/utkarshkukreti/select.rs.svg?branch=master)](https://travis-ci.org/utkarshkukreti/select.rs) [![Join the chat at https://gitter.im/select-rs/Lobby](https://badges.gitter.im/select-rs/Lobby.svg)](https://gitter.im/select-rs/Lobby) [![Documentation](https://docs.rs/select/badge.svg)](https://docs.rs/select/)
+# select.rs ![CI](https://github.com/utkarshkukreti/select.rs/workflows/CI/badge.svg) [![Documentation](https://docs.rs/select/badge.svg)](https://docs.rs/select/)
 
 > A library to extract useful data from HTML documents, suitable for web scraping.
 
