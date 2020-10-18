@@ -8,10 +8,10 @@ documentation = "https://docs.rs/select"
 homepage = "https://github.com/utkarshkukreti/select.rs"
 repository = "https://github.com/utkarshkukreti/select.rs"
 
+[dependencies]
+bit-set = "0.5"
+html5ever = "0.25"
+markup5ever_rcdom = "0.1"
+
 [dev-dependencies]
 speculate = "0.1.2"
-
-[dependencies]
-html5ever = "0.25"
-bit-set = "0.5"
-markup5ever_rcdom = "0.1"
