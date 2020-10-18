@@ -124,8 +124,8 @@ speculate! {
 
             let document = Document::from(include_str!("fixtures/struct.Vec.html"));
 
-            assert!(document.find(Name("div")).last().is_some());
-            assert!(document.find(Name("divv")).last().is_none());
+            assert!(document.select(Name("div")).into_selection().last().is_some());
+            assert!(document.select(Name("divv")).into_selection().last().is_none());
         }
 
         test "Selection::len() == Selection::iter().count()" {
