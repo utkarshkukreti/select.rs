@@ -1,8 +1,8 @@
 use html5ever::tendril::{ByteTendril, ReadExt, StrTendril};
 
-use node::{self, Node};
-use predicate::Predicate;
-use selection::Selection;
+use crate::node::{self, Node};
+use crate::predicate::Predicate;
+use crate::selection::Selection;
 
 use std::io;
 

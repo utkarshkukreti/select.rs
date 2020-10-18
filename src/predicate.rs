@@ -1,4 +1,4 @@
-use node::{self, Node};
+use crate::node::{self, Node};
 
 /// A trait implemented by all `Node` matchers.
 pub trait Predicate {

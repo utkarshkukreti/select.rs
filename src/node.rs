@@ -1,11 +1,11 @@
 use std::{fmt, io};
 
 use html5ever::tendril::StrTendril;
-use html5ever::{serialize, LocalName, QualName};
+use html5ever::{serialize, QualName};
 
-use document::Document;
-use predicate::Predicate;
-use selection::Selection;
+use crate::document::Document;
+use crate::predicate::Predicate;
+use crate::selection::Selection;
 
 /// The Node type specific data stored by every Node.
 #[derive(Clone, Debug, PartialEq)]
@@ -72,7 +72,7 @@ impl<'a> Node<'a> {
     pub fn attr(&self, name: &str) -> Option<&'a str> {
         match *self.data() {
             Data::Element(_, ref attrs) => {
-                let name = LocalName::from(name);
+                let name = QualName::from(name);
                 attrs
                     .iter()
                     .find(|&&(ref name_, _)| name == name_.local)

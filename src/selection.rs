@@ -1,7 +1,7 @@
+use crate::document::Document;
+use crate::node::Node;
+use crate::predicate::Predicate;
 use bit_set::{self, BitSet};
-use document::Document;
-use node::Node;
-use predicate::Predicate;
 
 #[derive(Clone, Debug, PartialEq)]
 pub struct Selection<'a> {
