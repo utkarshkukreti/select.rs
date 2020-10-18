@@ -123,18 +123,18 @@ speculate! {
             assert_eq!(quux.text(), "");
         }
 
-        test "Node::find()" {
+        test "Node::select()" {
             {
                 use select::predicate::*;
                 let document = Document::from(include_str!("fixtures/struct.Vec.html"));
-                let main = document.find(Attr("id", "main")).next().unwrap();
+                let main = document.select(Attr("id", "main")).next().unwrap();
 
                 let (div, span) = (Name("div"), Name("span"));
 
-                assert_eq!(main.find(div).count(), 204);
-                assert_eq!(main.find(span).count(), 1785);
-                assert_eq!(main.find(div.child(div).descendant(span.child(span))).count(), 3);
-                assert_eq!(main.find(div.child(div).descendant(span).child(span)).count(), 3);
+                assert_eq!(main.select(div).count(), 204);
+                assert_eq!(main.select(span).count(), 1785);
+                assert_eq!(main.select(div.child(div).descendant(span.child(span))).count(), 3);
+                assert_eq!(main.select(div.child(div).descendant(span).child(span)).count(), 3);
             };
         }
 
@@ -142,7 +142,7 @@ speculate! {
             {
                 use select::predicate::*;
                 let document = Document::from(include_str!("fixtures/struct.Vec.html"));
-                for div in document.find(Name("div")) {
+                for div in document.select(Name("div")) {
                     assert!(div.is(Name("div")));
                 }
             };
@@ -215,7 +215,7 @@ speculate! {
             for i in 0..document.nodes.len() {
                 let node = document.nth(i).unwrap();
                 let actual = node.descendants().map(|node| node.index()).collect::<Vec<_>>();
-                let expected = node.find(Any).map(|node| node.index()).collect::<Vec<_>>();
+                let expected = node.select(Any).map(|node| node.index()).collect::<Vec<_>>();
                 assert_eq!(actual, expected);
             }
         }
@@ -267,8 +267,8 @@ speculate! {
             {
                 use select::predicate::*;
                 let _bar = {
-                    let body = html.find(Name("body")).next().unwrap();
-                    body.find(Name("bar")).next().unwrap()
+                    let body = html.select(Name("body")).next().unwrap();
+                    body.select(Name("bar")).next().unwrap()
                 };
             }
         }

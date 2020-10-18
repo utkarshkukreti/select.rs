@@ -36,48 +36,48 @@ speculate! {
             b.iter(|| Document::from(str));
         }
 
-        context "Document::find(_).count()" {
+        context "Document::select(_).count()" {
             before {
                 let document = Document::from(str);
             }
 
             bench "Any (11446 Nodes)" |b| {
-                assert_eq!(document.find(Any).count(), 11446);
-                b.iter(|| document.find(Any).count());
+                assert_eq!(document.select(Any).count(), 11446);
+                b.iter(|| document.select(Any).count());
             }
 
             bench "Text (6926 Nodes)" |b| {
-                assert_eq!(document.find(Text).count(), 6926);
-                b.iter(|| document.find(Text).count());
+                assert_eq!(document.select(Text).count(), 6926);
+                b.iter(|| document.select(Text).count());
             }
 
             bench "Element (4519 Nodes)" |b| {
-                assert_eq!(document.find(Element).count(), 4519);
-                b.iter(|| document.find(Element).count());
+                assert_eq!(document.select(Element).count(), 4519);
+                b.iter(|| document.select(Element).count());
             }
 
             bench "Comment (1 Node)" |b| {
-                assert_eq!(document.find(Comment).count(), 1);
-                b.iter(|| document.find(Comment).count());
+                assert_eq!(document.select(Comment).count(), 1);
+                b.iter(|| document.select(Comment).count());
             }
         }
 
-        context "Node::find().find().len() vs Node::find(Descendant(...)).count()" {
+        context "Node::select().select().len() vs Node::select(Descendant(...)).count()" {
             before {
                 let document = Document::from(str);
-                let node = document.find(Name("html")).next().unwrap();
+                let node = document.select(Name("html")).next().unwrap();
                 let (parent, child) = (Name("body"), Name("span"));
                 let expected = 1785;
             }
 
-            bench "Node::find().find().len()" |b| {
-                assert_eq!(node.find(parent).into_selection().find(child).len(), expected);
-                b.iter(|| node.find(parent).into_selection().find(child).len());
+            bench "Node::select().select().len()" |b| {
+                assert_eq!(node.select(parent).into_selection().select(child).len(), expected);
+                b.iter(|| node.select(parent).into_selection().select(child).len());
             }
 
-            bench "Node::find(Descendant(...)).count()" |b| {
-                assert_eq!(node.find(Descendant(parent, child)).count(), expected);
-                b.iter(|| node.find(Descendant(parent, child)).count());
+            bench "Node::select(Descendant(...)).count()" |b| {
+                assert_eq!(node.select(Descendant(parent, child)).count(), expected);
+                b.iter(|| node.select(Descendant(parent, child)).count());
             }
         }
     }

@@ -68,17 +68,17 @@ speculate! {
             let document = Document::from_read(cursor);
 
             assert!(document.is_ok());
-            assert_eq!(document.unwrap().find(Name("p")).count(), 1);
+            assert_eq!(document.unwrap().select(Name("p")).count(), 1);
         }
 
-        test "Document::find()" {
+        test "Document::select()" {
             use select::predicate::*;
 
             let document = Document::from(include_str!("fixtures/struct.Vec.html"));
-            assert_eq!(document.find(Any).count(), 11446);
-            assert_eq!(document.find(Name("div")).count(), 208);
-            assert_eq!(document.find(Attr("id", "main")).count(), 1);
-            assert_eq!(document.find(Class("struct")).count(), 168);
+            assert_eq!(document.select(Any).count(), 11446);
+            assert_eq!(document.select(Name("div")).count(), 208);
+            assert_eq!(document.select(Attr("id", "main")).count(), 1);
+            assert_eq!(document.select(Class("struct")).count(), 168);
         }
     }
 }
