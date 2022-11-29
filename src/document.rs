@@ -7,7 +7,7 @@ use crate::selection::Selection;
 use std::io;
 
 /// An HTML document.
-#[derive(Clone, Debug, PartialEq)]
+#[derive(Clone, Debug, PartialEq, Eq)]
 pub struct Document {
     pub nodes: Vec<node::Raw>,
 }
@@ -70,7 +70,7 @@ impl From<StrTendril> for Document {
                 NodeData::Document => {
                     let mut prev = None;
                     for child in node.children.borrow().iter() {
-                        prev = recur(document, &child, None, prev)
+                        prev = recur(document, child, None, prev)
                     }
                     None
                 }
@@ -97,7 +97,7 @@ impl From<StrTendril> for Document {
                     let index = append(document, data, parent, prev);
                     let mut prev = None;
                     for child in node.children.borrow().iter() {
-                        prev = recur(document, &child, Some(index), prev)
+                        prev = recur(document, child, Some(index), prev)
                     }
                     Some(index)
                 }

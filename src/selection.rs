@@ -3,7 +3,7 @@ use crate::node::Node;
 use crate::predicate::Predicate;
 use bit_set::{self, BitSet};
 
-#[derive(Clone, Debug, PartialEq)]
+#[derive(Clone, Debug, PartialEq, Eq)]
 pub struct Selection<'a> {
     document: &'a Document,
     bit_set: BitSet,
