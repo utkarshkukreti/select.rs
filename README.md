@@ -4,10 +4,6 @@
 
 ---
 
-> NOTE: The following example only works in the upcoming release of this library. Check out the [0.5.0 tag](https://github.com/utkarshkukreti/select.rs/tree/0.5.0#readme) for the latest public release.
-
----
-
 ## Examples
 
 ### from [`examples/stackoverflow.rs`](examples/stackoverflow.rs)
