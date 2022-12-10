@@ -1,6 +1,6 @@
 #![allow(
     unused_variables,
-    clippy::blacklisted_name,
+    clippy::disallowed_names,
     clippy::many_single_char_names
 )]
 
@@ -31,106 +31,106 @@ speculate! {
         }
 
         test "Any" {
-            assert_eq!(super::Any.matches(&html), true);
-            assert_eq!(super::Any.matches(&head), true);
-            assert_eq!(super::Any.matches(&body), true);
-            assert_eq!(super::Any.matches(&article), true);
+            assert!(super::Any.matches(&html));
+            assert!(super::Any.matches(&head));
+            assert!(super::Any.matches(&body));
+            assert!(super::Any.matches(&article));
         }
 
         test "Name()" {
-            assert_eq!(Name("html").matches(&html), true);
-            assert_eq!(Name("head").matches(&html), false);
-            assert_eq!(Name("body").matches(&html), false);
-            assert_eq!(Name("html").matches(&head), false);
-            assert_eq!(Name("head").matches(&head), true);
-            assert_eq!(Name("body").matches(&head), false);
-            assert_eq!(Name("html").matches(&body), false);
-            assert_eq!(Name("head").matches(&body), false);
-            assert_eq!(Name("body").matches(&body), true);
+            assert!(Name("html").matches(&html));
+            assert!(!Name("head").matches(&html));
+            assert!(!Name("body").matches(&html));
+            assert!(!Name("html").matches(&head));
+            assert!(Name("head").matches(&head));
+            assert!(!Name("body").matches(&head));
+            assert!(!Name("html").matches(&body));
+            assert!(!Name("head").matches(&body));
+            assert!(Name("body").matches(&body));
         }
 
         test "Class()" {
-            assert_eq!(Class("post").matches(&html), false);
-            assert_eq!(Class("post").matches(&article), true);
-            assert_eq!(Class("category-foo").matches(&article), true);
-            assert_eq!(Class("tag-bar").matches(&article), true);
-            assert_eq!(Class("foo").matches(&article), false);
-            assert_eq!(Class("bar").matches(&article), false);
+            assert!(!Class("post").matches(&html));
+            assert!(Class("post").matches(&article));
+            assert!(Class("category-foo").matches(&article));
+            assert!(Class("tag-bar").matches(&article));
+            assert!(!Class("foo").matches(&article));
+            assert!(!Class("bar").matches(&article));
         }
 
         test "Not()" {
-            assert_eq!(Not(Name("html")).matches(&html), false);
-            assert_eq!(Not(Name("html")).matches(&head), true);
-            assert_eq!(Not(Name("head")).matches(&html), true);
-            assert_eq!(Not(Name("head")).matches(&head), false);
+            assert!(!Not(Name("html")).matches(&html));
+            assert!(Not(Name("html")).matches(&head));
+            assert!(Not(Name("head")).matches(&html));
+            assert!(!Not(Name("head")).matches(&head));
         }
 
         test "Attr()" {
-            assert_eq!(Attr("id", "post-0").matches(&html), false);
-            assert_eq!(Attr("id", "post-0").matches(&article), true);
-            assert_eq!(Attr("id", ()).matches(&html), false);
-            assert_eq!(Attr("id", ()).matches(&article), true);
+            assert!(!Attr("id", "post-0").matches(&html));
+            assert!(Attr("id", "post-0").matches(&article));
+            assert!(!Attr("id", ()).matches(&html));
+            assert!(Attr("id", ()).matches(&article));
         }
 
         test "Fn(&Node) -> bool" {
             let f = |node: &node::Node| node.name() == Some("html");
-            assert_eq!(f.matches(&html), true);
-            assert_eq!(f.matches(&head), false);
-            assert_eq!(f.matches(&body), false);
+            assert!(f.matches(&html));
+            assert!(!f.matches(&head));
+            assert!(!f.matches(&body));
         }
 
         test "Element" {
-            assert_eq!(super::Element.matches(&html), true);
-            assert_eq!(super::Element.matches(&head), true);
-            assert_eq!(super::Element.matches(&body), true);
-            assert_eq!(super::Element.matches(&article), true);
-            assert_eq!(super::Element.matches(&foo), false);
+            assert!(super::Element.matches(&html));
+            assert!(super::Element.matches(&head));
+            assert!(super::Element.matches(&body));
+            assert!(super::Element.matches(&article));
+            assert!(!super::Element.matches(&foo));
         }
 
         test "Text" {
-            assert_eq!(super::Text.matches(&html), false);
-            assert_eq!(super::Text.matches(&head), false);
-            assert_eq!(super::Text.matches(&body), false);
-            assert_eq!(super::Text.matches(&article), false);
-            assert_eq!(super::Text.matches(&foo), true);
-            assert_eq!(super::Text.matches(&comment), false);
+            assert!(!super::Text.matches(&html));
+            assert!(!super::Text.matches(&head));
+            assert!(!super::Text.matches(&body));
+            assert!(!super::Text.matches(&article));
+            assert!(super::Text.matches(&foo));
+            assert!(!super::Text.matches(&comment));
         }
 
         test "Comment" {
-            assert_eq!(super::Comment.matches(&html), false);
-            assert_eq!(super::Comment.matches(&head), false);
-            assert_eq!(super::Comment.matches(&body), false);
-            assert_eq!(super::Comment.matches(&article), false);
-            assert_eq!(super::Comment.matches(&foo), false);
-            assert_eq!(super::Comment.matches(&comment), true);
+            assert!(!super::Comment.matches(&html));
+            assert!(!super::Comment.matches(&head));
+            assert!(!super::Comment.matches(&body));
+            assert!(!super::Comment.matches(&article));
+            assert!(!super::Comment.matches(&foo));
+            assert!(super::Comment.matches(&comment));
         }
 
         test "Or()" {
             let html_or_head = Or(Name("html"), Name("head"));
-            assert_eq!(html_or_head.matches(&html), true);
-            assert_eq!(html_or_head.matches(&head), true);
-            assert_eq!(html_or_head.matches(&body), false);
-            assert_eq!(html_or_head.matches(&article), false);
-            assert_eq!(html_or_head.matches(&foo), false);
+            assert!(html_or_head.matches(&html));
+            assert!(html_or_head.matches(&head));
+            assert!(!html_or_head.matches(&body));
+            assert!(!html_or_head.matches(&article));
+            assert!(!html_or_head.matches(&foo));
         }
 
         test "And()" {
             let article_and_post_0 = And(Name("article"), Attr("id", "post-0"));
-            assert_eq!(article_and_post_0.matches(&html), false);
-            assert_eq!(article_and_post_0.matches(&head), false);
-            assert_eq!(article_and_post_0.matches(&body), false);
-            assert_eq!(article_and_post_0.matches(&article), true);
-            assert_eq!(article_and_post_0.matches(&foo), false);
+            assert!(!article_and_post_0.matches(&html));
+            assert!(!article_and_post_0.matches(&head));
+            assert!(!article_and_post_0.matches(&body));
+            assert!(article_and_post_0.matches(&article));
+            assert!(!article_and_post_0.matches(&foo));
         }
 
         test "Child()" {
             let html_article = Child(Name("html"), Name("article"));
-            assert_eq!(html_article.matches(&html), false);
-            assert_eq!(html_article.matches(&article), false);
+            assert!(!html_article.matches(&html));
+            assert!(!html_article.matches(&article));
 
             let body_article = Child(Name("body"), Name("article"));
-            assert_eq!(body_article.matches(&html), false);
-            assert_eq!(body_article.matches(&article), true);
+            assert!(!body_article.matches(&html));
+            assert!(body_article.matches(&article));
         }
 
         test "Descendant()" {
@@ -163,13 +163,13 @@ speculate! {
         // https://github.com/utkarshkukreti/select.rs/issues/35
         test "Box<Predicate>" {
             let post_0: Box<dyn Predicate> = Box::new(Attr("id", "post-0"));
-            assert_eq!(post_0.matches(&html), false);
-            assert_eq!(post_0.matches(&head), false);
-            assert_eq!(post_0.matches(&article), true);
+            assert!(!post_0.matches(&html));
+            assert!(!post_0.matches(&head));
+            assert!(post_0.matches(&article));
             let not_html: Box<dyn Predicate> = Box::new(Not(Name("html")));
-            assert_eq!(not_html.matches(&html), false);
-            assert_eq!(not_html.matches(&head), true);
-            assert_eq!(not_html.matches(&article), true);
+            assert!(!not_html.matches(&html));
+            assert!(not_html.matches(&head));
+            assert!(not_html.matches(&article));
         }
     }
 }

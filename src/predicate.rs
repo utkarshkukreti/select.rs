@@ -36,7 +36,7 @@ pub trait Predicate {
 }
 
 /// Matches any Node.
-#[derive(Copy, Clone, Debug, PartialEq)]
+#[derive(Copy, Clone, Debug, PartialEq, Eq)]
 pub struct Any;
 
 impl Predicate for Any {
@@ -46,7 +46,7 @@ impl Predicate for Any {
 }
 
 /// Matches Element Node with name `T`.
-#[derive(Copy, Clone, Debug, PartialEq)]
+#[derive(Copy, Clone, Debug, PartialEq, Eq)]
 pub struct Name<T>(pub T);
 
 impl<'a> Predicate for Name<&'a str> {
@@ -56,7 +56,7 @@ impl<'a> Predicate for Name<&'a str> {
 }
 
 /// Matches Element Node containing class `T`.
-#[derive(Copy, Clone, Debug, PartialEq)]
+#[derive(Copy, Clone, Debug, PartialEq, Eq)]
 pub struct Class<T>(pub T);
 
 impl<'a> Predicate for Class<&'a str> {
@@ -68,7 +68,7 @@ impl<'a> Predicate for Class<&'a str> {
 }
 
 /// Matches if the Predicate `T` does not match.
-#[derive(Copy, Clone, Debug, PartialEq)]
+#[derive(Copy, Clone, Debug, PartialEq, Eq)]
 pub struct Not<T>(pub T);
 
 impl<T: Predicate> Predicate for Not<T> {
@@ -79,7 +79,7 @@ impl<T: Predicate> Predicate for Not<T> {
 
 /// Matches Element Node containing attribute `N` with value `V` if `V` is an
 /// `&str`, or any value if `V` is `()`.
-#[derive(Copy, Clone, Debug, PartialEq)]
+#[derive(Copy, Clone, Debug, PartialEq, Eq)]
 pub struct Attr<N, V>(pub N, pub V);
 
 impl<'a> Predicate for Attr<&'a str, &'a str> {
@@ -102,7 +102,7 @@ impl<F: Fn(&Node) -> bool> Predicate for F {
 }
 
 /// Matches any Element Node.
-#[derive(Copy, Clone, Debug, PartialEq)]
+#[derive(Copy, Clone, Debug, PartialEq, Eq)]
 pub struct Element;
 
 impl Predicate for Element {
@@ -112,7 +112,7 @@ impl Predicate for Element {
 }
 
 /// Matches any Text Node.
-#[derive(Copy, Clone, Debug, PartialEq)]
+#[derive(Copy, Clone, Debug, PartialEq, Eq)]
 pub struct Text;
 
 impl Predicate for Text {
@@ -122,7 +122,7 @@ impl Predicate for Text {
 }
 
 /// Matches any Comment Node.
-#[derive(Copy, Clone, Debug, PartialEq)]
+#[derive(Copy, Clone, Debug, PartialEq, Eq)]
 pub struct Comment;
 
 impl Predicate for Comment {
@@ -132,7 +132,7 @@ impl Predicate for Comment {
 }
 
 /// Matches if either inner Predicate `A` or `B` matches the Node.
-#[derive(Copy, Clone, Debug, PartialEq)]
+#[derive(Copy, Clone, Debug, PartialEq, Eq)]
 pub struct Or<A, B>(pub A, pub B);
 
 impl<A: Predicate, B: Predicate> Predicate for Or<A, B> {
@@ -142,7 +142,7 @@ impl<A: Predicate, B: Predicate> Predicate for Or<A, B> {
 }
 
 /// Matches if the inner Predicate `A` and `B` both match the Node.
-#[derive(Copy, Clone, Debug, PartialEq)]
+#[derive(Copy, Clone, Debug, PartialEq, Eq)]
 pub struct And<A, B>(pub A, pub B);
 
 impl<A: Predicate, B: Predicate> Predicate for And<A, B> {
@@ -153,7 +153,7 @@ impl<A: Predicate, B: Predicate> Predicate for And<A, B> {
 
 /// Matches if inner Predicate `B` matches the node and `A` matches the parent
 /// of the node.
-#[derive(Copy, Clone, Debug, PartialEq)]
+#[derive(Copy, Clone, Debug, PartialEq, Eq)]
 pub struct Child<A, B>(pub A, pub B);
 
 impl<A: Predicate, B: Predicate> Predicate for Child<A, B> {
@@ -168,7 +168,7 @@ impl<A: Predicate, B: Predicate> Predicate for Child<A, B> {
 
 /// Matches if inner Predicate `B` matches the node and `A` matches any of the
 /// parents of node.
-#[derive(Copy, Clone, Debug, PartialEq)]
+#[derive(Copy, Clone, Debug, PartialEq, Eq)]
 pub struct Descendant<A, B>(pub A, pub B);
 
 impl<A: Predicate, B: Predicate> Predicate for Descendant<A, B> {

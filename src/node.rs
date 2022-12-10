@@ -8,7 +8,7 @@ use crate::predicate::Predicate;
 use crate::selection::Selection;
 
 /// The Node type specific data stored by every Node.
-#[derive(Clone, Debug, PartialEq)]
+#[derive(Clone, Debug, PartialEq, Eq)]
 pub enum Data {
     Text(StrTendril),
     Element(QualName, Vec<(QualName, StrTendril)>),
@@ -17,7 +17,7 @@ pub enum Data {
 
 /// Internal representation of a Node. Not of much use without a reference to a
 /// Document.
-#[derive(Clone, Debug, PartialEq)]
+#[derive(Clone, Debug, PartialEq, Eq)]
 pub struct Raw {
     pub index: usize,
     pub parent: Option<usize>,
@@ -29,7 +29,7 @@ pub struct Raw {
 }
 
 /// A single node of an HTML document. Nodes may be HTML elements, comments, or text nodes.
-#[derive(Copy, Clone, PartialEq)]
+#[derive(Copy, Clone, PartialEq, Eq)]
 pub struct Node<'a> {
     document: &'a Document,
     index: usize,
@@ -83,7 +83,7 @@ impl<'a> Node<'a> {
     /// Returns an empty iterator for non Element nodes.
     pub fn attrs(&self) -> impl Iterator<Item = (&'a str, &'a str)> {
         match *self.data() {
-            Data::Element(_, ref attrs) => &attrs,
+            Data::Element(_, ref attrs) => attrs,
             _ => [].as_ref(),
         }
         .iter()
@@ -174,7 +174,7 @@ impl<'a> Node<'a> {
     /// Get the text of a text Node, or None if the node is not text.
     pub fn as_text(&self) -> Option<&'a str> {
         match *self.data() {
-            Data::Text(ref text) => Some(&text),
+            Data::Text(ref text) => Some(text),
             _ => None,
         }
     }
@@ -182,7 +182,7 @@ impl<'a> Node<'a> {
     /// Get the text of a comment Node, or None if the node is not a comment.
     pub fn as_comment(&self) -> Option<&'a str> {
         match *self.data() {
-            Data::Comment(ref comment) => Some(&comment),
+            Data::Comment(ref comment) => Some(comment),
             _ => None,
         }
     }
@@ -249,7 +249,7 @@ impl<'a> serialize::Serialize for Node<'a> {
         traversal_scope: serialize::TraversalScope,
     ) -> io::Result<()> {
         match *self.data() {
-            Data::Text(ref text) => serializer.write_text(&text),
+            Data::Text(ref text) => serializer.write_text(text),
             Data::Element(ref name, ref attrs) => {
                 let attrs = attrs.iter().map(|&(ref name, ref value)| (name, &**value));
 
@@ -263,7 +263,7 @@ impl<'a> serialize::Serialize for Node<'a> {
 
                 Ok(())
             }
-            Data::Comment(ref comment) => serializer.write_comment(&comment),
+            Data::Comment(ref comment) => serializer.write_comment(comment),
         }
     }
 }
@@ -344,12 +344,7 @@ impl<'a, P: Predicate> Iterator for Select<'a, P> {
     type Item = Node<'a>;
 
     fn next(&mut self) -> Option<Node<'a>> {
-        for node in &mut self.descendants {
-            if self.predicate.matches(&node) {
-                return Some(node);
-            }
-        }
-        None
+        self.descendants.find(|&node| self.predicate.matches(&node))
     }
 }
 
