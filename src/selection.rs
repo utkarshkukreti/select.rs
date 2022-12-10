@@ -147,6 +147,16 @@ pub struct Iter<'sel, 'doc: 'sel> {
     inner: bit_set::Iter<'sel, u32>,
 }
 
+impl<'sel, 'doc: 'sel> std::fmt::Debug for Iter<'sel, 'doc> {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.debug_struct("Iter")
+            .field("selection", &self.selection)
+            // TODO once inner implements Debug, uncomment the following or derive(Debug) for Iter
+            //.field("inner", &self.inner)
+            .finish()
+    }
+}
+
 impl<'sel, 'doc> Iterator for Iter<'sel, 'doc> {
     type Item = Node<'doc>;
 

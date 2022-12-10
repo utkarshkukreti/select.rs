@@ -343,6 +343,7 @@ impl<'a, P: Predicate> Iterator for Find<'a, P> {
     }
 }
 
+#[derive(Debug)]
 pub struct Children<'a> {
     document: &'a Document,
     next: Option<Node<'a>>,
