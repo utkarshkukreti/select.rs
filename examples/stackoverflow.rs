@@ -8,27 +8,27 @@ pub fn main() {
     let document = Document::from(include_str!("stackoverflow.html"));
 
     println!("# Menu");
-    for node in document.select(Attr("id", "hmenus").descendant(Name("a"))) {
+    for node in document.find(Attr("id", "hmenus").descendant(Name("a"))) {
         println!("{} ({:?})", node.text(), node.attr("href").unwrap());
     }
     println!();
 
     println!("# Top 5 Questions");
-    for node in document.select(Class("question-summary")).take(5) {
-        let question = node.select(Class("question-hyperlink")).next().unwrap();
-        let votes = node.select(Class("vote-count-post")).next().unwrap().text();
+    for node in document.find(Class("question-summary")).take(5) {
+        let question = node.find(Class("question-hyperlink")).next().unwrap();
+        let votes = node.find(Class("vote-count-post")).next().unwrap().text();
         let answers = node
-            .select(Class("status").descendant(Name("strong")))
+            .find(Class("status").descendant(Name("strong")))
             .next()
             .unwrap()
             .text();
         let tags = node
-            .select(Class("post-tag"))
+            .find(Class("post-tag"))
             .map(|tag| tag.text())
             .collect::<Vec<_>>();
-        let asked_on = node.select(Class("relativetime")).next().unwrap().text();
+        let asked_on = node.find(Class("relativetime")).next().unwrap().text();
         let asker = node
-            .select(Class("user-details").descendant(Name("a")))
+            .find(Class("user-details").descendant(Name("a")))
             .next()
             .unwrap()
             .text();
@@ -47,17 +47,17 @@ pub fn main() {
 
     println!("# Top 10 Related Tags");
     for node in document
-        .select(Attr("id", "h-related-tags"))
+        .find(Attr("id", "h-related-tags"))
         .next()
         .unwrap()
         .parent()
         .unwrap()
-        .select(Name("div"))
+        .find(Name("div"))
         .take(10)
     {
-        let tag = node.select(Name("a")).next().unwrap().text();
+        let tag = node.find(Name("a")).next().unwrap().text();
         let count = node
-            .select(Class("item-multiplier-count"))
+            .find(Class("item-multiplier-count"))
             .next()
             .unwrap()
             .text();

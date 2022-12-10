@@ -153,17 +153,12 @@ impl<'a> Node<'a> {
     }
 
     /// Search for Nodes fulfilling `predicate` in the descendants of a Node.
-    pub fn select<P: Predicate>(&self, predicate: P) -> Select<'a, P> {
-        Select {
+    pub fn find<P: Predicate>(&self, predicate: P) -> Find<'a, P> {
+        Find {
             document: self.document,
             descendants: self.descendants(),
             predicate,
         }
-    }
-
-    #[deprecated = "renamed to select()"]
-    pub fn find<P: Predicate>(&self, predicate: P) -> Select<'a, P> {
-        self.select(predicate)
     }
 
     /// Evaluate a predicate on this Node.
@@ -318,15 +313,15 @@ impl<'a> Iterator for Descendants<'a> {
     }
 }
 
-pub struct Select<'a, P: Predicate> {
+pub struct Find<'a, P: Predicate> {
     document: &'a Document,
     descendants: Descendants<'a>,
     predicate: P,
 }
 
-impl<'a, P: Predicate> std::fmt::Debug for Select<'a, P> {
+impl<'a, P: Predicate> std::fmt::Debug for Find<'a, P> {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        f.debug_struct("Select")
+        f.debug_struct("Find")
             .field("document", &self.document)
             .field("descendants", &self.descendants)
             // predicate may be closure not implementing Debug
@@ -334,13 +329,13 @@ impl<'a, P: Predicate> std::fmt::Debug for Select<'a, P> {
     }
 }
 
-impl<'a, P: Predicate> Select<'a, P> {
+impl<'a, P: Predicate> Find<'a, P> {
     pub fn into_selection(self) -> Selection<'a> {
         Selection::new(self.document, self.map(|node| node.index()).collect())
     }
 }
 
-impl<'a, P: Predicate> Iterator for Select<'a, P> {
+impl<'a, P: Predicate> Iterator for Find<'a, P> {
     type Item = Node<'a>;
 
     fn next(&mut self) -> Option<Node<'a>> {
