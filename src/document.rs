@@ -12,6 +12,8 @@ pub struct Document {
     pub nodes: Vec<node::Raw>,
 }
 
+unsafe impl Send for Document {}
+
 impl Document {
     /// Returns a `Selection` containing nodes passing the given predicate `p`.
     pub fn find<P: Predicate>(&self, predicate: P) -> Find<P> {
