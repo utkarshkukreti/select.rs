@@ -10,6 +10,7 @@ use std::io;
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct Document {
     pub nodes: Vec<node::Raw>,
+    last_child: Option<usize>,
 }
 
 impl Document {
@@ -49,33 +50,29 @@ impl From<StrTendril> for Document {
         use html5ever::tendril::stream::TendrilSink;
         use markup5ever_rcdom::{Handle, NodeData, RcDom};
 
-        let mut document = Document { nodes: vec![] };
+        let mut document = Document {
+            nodes: vec![],
+            last_child: None,
+        };
 
         let rc_dom = parse_document(RcDom::default(), Default::default()).one(tendril);
-        recur(&mut document, &rc_dom.document, None, None);
+        recur(&mut document, &rc_dom.document, None);
         return document;
 
-        fn recur(
-            document: &mut Document,
-            node: &Handle,
-            parent: Option<usize>,
-            prev: Option<usize>,
-        ) -> Option<usize> {
+        fn recur(document: &mut Document, node: &Handle, parent: Option<usize>) {
             match node.data {
                 NodeData::Document => {
-                    let mut prev = None;
                     for child in node.children.borrow().iter() {
-                        prev = recur(document, child, None, prev)
+                        recur(document, child, None);
                     }
-                    None
                 }
                 NodeData::Text { ref contents } => {
                     let data = node::Data::Text(contents.borrow().clone());
-                    Some(append(document, data, parent, prev))
+                    append(document, data, parent);
                 }
                 NodeData::Comment { ref contents } => {
                     let data = node::Data::Comment(contents.clone());
-                    Some(append(document, data, parent, prev))
+                    append(document, data, parent);
                 }
                 NodeData::Element {
                     ref name,
@@ -89,24 +86,30 @@ impl From<StrTendril> for Document {
                         .map(|attr| (attr.name.clone(), attr.value.clone()))
                         .collect();
                     let data = node::Data::Element(name, attrs);
-                    let index = append(document, data, parent, prev);
-                    let mut prev = None;
+                    let index = append(document, data, parent);
                     for child in node.children.borrow().iter() {
-                        prev = recur(document, child, Some(index), prev)
+                        recur(document, child, Some(index));
                     }
-                    Some(index)
                 }
-                _ => None,
-            }
+                _ => (),
+            };
         }
 
-        fn append(
-            document: &mut Document,
-            data: node::Data,
-            parent: Option<usize>,
-            prev: Option<usize>,
-        ) -> usize {
+        fn append(document: &mut Document, data: node::Data, parent: Option<usize>) -> usize {
             let index = document.nodes.len();
+
+            let mut prev = None;
+            if let Some(parent) = parent {
+                let parent = &mut document.nodes[parent];
+                if parent.first_child.is_none() {
+                    parent.first_child = Some(index);
+                }
+                prev = parent.last_child;
+                parent.last_child = Some(index);
+            } else {
+                prev = document.last_child;
+                document.last_child = Some(index);
+            }
 
             document.nodes.push(node::Raw {
                 index,
@@ -118,18 +121,9 @@ impl From<StrTendril> for Document {
                 data,
             });
 
-            if let Some(parent) = parent {
-                let parent = &mut document.nodes[parent];
-                if parent.first_child.is_none() {
-                    parent.first_child = Some(index);
-                }
-                parent.last_child = Some(index);
-            }
-
             if let Some(prev) = prev {
                 document.nodes[prev].next = Some(index);
             }
-
             index
         }
     }
