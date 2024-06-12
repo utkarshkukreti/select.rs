@@ -5,6 +5,7 @@ use crate::predicate::Predicate;
 use crate::selection::Selection;
 
 use std::io;
+use std::rc::Rc;
 
 /// An HTML document.
 #[derive(Clone, Debug, PartialEq, Eq)]
@@ -48,7 +49,7 @@ impl From<StrTendril> for Document {
     fn from(tendril: StrTendril) -> Document {
         use html5ever::parse_document;
         use html5ever::tendril::stream::TendrilSink;
-        use markup5ever_rcdom::{Handle, NodeData, RcDom};
+        use markup5ever_rcdom::{NodeData, RcDom};
 
         let mut document = Document {
             nodes: vec![],
@@ -56,23 +57,23 @@ impl From<StrTendril> for Document {
         };
 
         let rc_dom = parse_document(RcDom::default(), Default::default()).one(tendril);
-        recur(&mut document, &rc_dom.document, None);
-        return document;
 
-        fn recur(document: &mut Document, node: &Handle, parent: Option<usize>) {
+        let mut node_stack = vec![(Rc::clone(&rc_dom.document), None)];
+        while let Some((node, parent)) = node_stack.pop() {
             match node.data {
                 NodeData::Document => {
-                    for child in node.children.borrow().iter() {
-                        recur(document, child, None);
+                    // reverse iterate since it's going on a stack
+                    for child in node.children.borrow().iter().rev() {
+                        node_stack.push((Rc::clone(&child), None));
                     }
                 }
                 NodeData::Text { ref contents } => {
                     let data = node::Data::Text(contents.borrow().clone());
-                    append(document, data, parent);
+                    append(&mut document, data, parent);
                 }
                 NodeData::Comment { ref contents } => {
                     let data = node::Data::Comment(contents.clone());
-                    append(document, data, parent);
+                    append(&mut document, data, parent);
                 }
                 NodeData::Element {
                     ref name,
@@ -86,19 +87,22 @@ impl From<StrTendril> for Document {
                         .map(|attr| (attr.name.clone(), attr.value.clone()))
                         .collect();
                     let data = node::Data::Element(name, attrs);
-                    let index = append(document, data, parent);
-                    for child in node.children.borrow().iter() {
-                        recur(document, child, Some(index));
+                    let index = append(&mut document, data, parent);
+                    // reverse iterate since it's going on a stack
+                    for child in node.children.borrow().iter().rev() {
+                        node_stack.push((Rc::clone(&child), Some(index)));
                     }
                 }
                 _ => (),
             };
         }
 
+        return document;
+
         fn append(document: &mut Document, data: node::Data, parent: Option<usize>) -> usize {
             let index = document.nodes.len();
 
-            let mut prev = None;
+            let prev: Option<usize>;
             if let Some(parent) = parent {
                 let parent = &mut document.nodes[parent];
                 if parent.first_child.is_none() {
