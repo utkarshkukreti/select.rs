@@ -8,6 +8,12 @@ license = "MIT"
 documentation = "https://docs.rs/select"
 homepage = "https://github.com/utkarshkukreti/select.rs"
 repository = "https://github.com/utkarshkukreti/select.rs"
+exclude = [
+    "/benches/",
+    "/examples/",
+    "/tests/",
+    "/.github/",
+]
 
 [dependencies]
 bit-set = "0.5"
